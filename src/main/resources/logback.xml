@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+            <pattern>%date{HH:mm:ss.SSS} %-5level [%logger] %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.context" level="WARN"/>
+    <logger name="org.springframework.beans" level="WARN"/>
+    <logger name="org.springframework.boot" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.jmx" level="WARN"/>
+    <logger name="org.springframework.orm" level="WARN"/>
+    <logger name="org.springframework.remoting" level="WARN"/>
+    <logger name="org.springframework.scheduling" level="WARN"/>
+    <logger name="org.springframework.messaging" level="WARN"/>
+    <logger name="org.activiti.engine" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.SQL" level="WARN"/>
+    <logger name="org.hibernate.type" level="WARN"/>
+    <logger name="de.flapdoodle.embed.mongo.tests" level="WARN"/>
+    <logger name="de.flapdoodle.embed.process.runtime" level="WARN"/>
+    <logger name="org.elasticsearch" level="WARN"/>
+    <logger name="org.apache.catalina.core" level="WARN"/>
+    <logger name="org.apache.coyote" level="WARN"/>
+    <logger name="org.apache.tomcat" level="WARN"/>
+    <logger name="org.flywaydb.core.internal" level="WARN"/>
+    <logger name="com.mangofactory.swagger" level="WARN"/>
+    <logger name="org.springframework.amqp" level="WARN"/>
+    
+</configuration>
+

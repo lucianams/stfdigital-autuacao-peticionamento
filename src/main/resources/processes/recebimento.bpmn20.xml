@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="Examples" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20151224021340" modeler:modelId="968821" modeler:modelVersion="1" modeler:modelLastUpdated="1450923196562">
+
+	<process id="recebimento" name="recebimento" isExecutable="true">
+
+		<startEvent id="inicio" />
+		
+        <sequenceFlow id="decidir-preautuacao" sourceRef="inicio" targetRef="preautuacao-transicoes" />
+        
+        <exclusiveGateway id="preautuacao-transicoes" />
+        
+        <!-- Pré-Autuação de Recursais -->
+        
+        <sequenceFlow id="preautuar-recursal" name="recursal" sourceRef="preautuacao-transicoes" targetRef="preautuacao">
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'recursal'}</conditionExpression>
+        </sequenceFlow>
+        
+        <userTask id="preautuacao" name="Pré-Autuar Remessa de Processo Recursal" activiti:candidateGroups="recebedor-recursais">
+            <documentation>PREAUTUACAO</documentation>
+        </userTask>
+        
+        <sequenceFlow id="autuar-recursal" name="autuar" sourceRef="preautuacao" targetRef="recursal-recebido">
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'autuar'}</conditionExpression>
+        </sequenceFlow>
+        
+        <endEvent id="recursal-recebido" name="Remessa Recebida">
+            <documentation>RECEBIDA</documentation>
+        </endEvent>    
+        
+        <sequenceFlow id="devolver-recursal" name="devolver" sourceRef="preautuacao" targetRef="devolucao">
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'devolver'}</conditionExpression>
+        </sequenceFlow>
+        
+        <!-- Pré-Autuação de Originários -->
+        
+        <sequenceFlow id="preautuar-originario" name="originario" sourceRef="preautuacao-transicoes" targetRef="preautuacao-originario">
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'originario'}</conditionExpression>
+        </sequenceFlow>
+        
+        <userTask id="preautuacao-originario" name="Pré-Autuar Remessa de Processo Originário" activiti:candidateGroups="recebedor-originarios">
+            <documentation>PREAUTUACAO</documentation>
+        </userTask>
+        
+        <sequenceFlow id="autuar-originario" name="autuar" sourceRef="preautuacao-originario" targetRef="originario-recebido">
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'autuar'}</conditionExpression>
+        </sequenceFlow>
+        
+        <endEvent id="originario-recebido" name="Remessa Recebida">
+            <documentation>RECEBIDA</documentation>
+	        <extensionElements>
+	            <activiti:executionListener expression="${recebimentoFinalizadoListener.handle(execution.getVariable('informationId'))}" event="end" />
+	        </extensionElements>
+        </endEvent>    
+        
+        <sequenceFlow id="devolver-originario" name="devolver" sourceRef="preautuacao-originario" targetRef="devolucao">
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'devolver'}</conditionExpression>
+        </sequenceFlow>
+        
+        <!-- Devolução -->
+        
+		<userTask id="devolucao" name="Elaborar Ofício para Devolução" activiti:candidateGroups="cartoraria">
+			<documentation>DEVOLUCAO</documentation>
+		</userTask>
+		
+		<sequenceFlow id="assinar" sourceRef="devolucao" targetRef="assinatura" />
+		
+		<userTask id="assinatura" name="Assinar Ofício de Devolução" activiti:candidateUsers="gestor-recebimento">
+            <documentation>ASSINATURA</documentation>
+        </userTask>
+		
+		<sequenceFlow id="rejeitar" sourceRef="assinatura" targetRef="devolvido" />
+		
+		<endEvent id="devolvido" name="Remessa Rejeitada">
+			<documentation>REJEITADA</documentation>
+			<terminateEventDefinition/>
+		</endEvent>
+		
+	</process>
+	
+</definitions>
