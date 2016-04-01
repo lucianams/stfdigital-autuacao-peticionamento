@@ -13,6 +13,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,9 +33,15 @@ public class RabbitConfiguration {
 
 	public static final String PARTE_REGISTRADA_QUEUE = "autuacao.peticao.envolvido.registrado";
 
+	@Value("${rabbitmq.host:localhost}")
+	private String host;
+	
+	@Value("${rabbitmq.port:5672}")
+	private Integer port;
+	
 	@Bean
 	public ConnectionFactory connectionFactory() {
-		return new CachingConnectionFactory("localhost");
+		return new CachingConnectionFactory(host, port);
 	}
 	
     /**
