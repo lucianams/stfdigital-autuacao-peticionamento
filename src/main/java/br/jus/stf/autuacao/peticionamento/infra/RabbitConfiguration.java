@@ -31,6 +31,8 @@ public class RabbitConfiguration {
 	
 	public static final String PETICAO_REGISTRADA_ROUTE = "autuacao.peticao.registrada";
 
+	public static final String PETICAO_REGISTRADA_QUEUE = "autuacao.peticao.registrada";
+
 	public static final String PARTE_REGISTRADA_QUEUE = "autuacao.peticao.envolvido.registrado";
 
 	@Value("${rabbitmq.host:localhost}")
