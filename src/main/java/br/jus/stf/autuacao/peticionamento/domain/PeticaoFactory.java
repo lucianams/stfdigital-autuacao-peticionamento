@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import br.jus.stf.autuacao.peticionamento.domain.model.Envolvido;
 import br.jus.stf.autuacao.peticionamento.domain.model.Peticao;
+import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 
 /**
@@ -20,7 +21,7 @@ import br.jus.stf.core.shared.protocolo.Protocolo;
 @Component
 public class PeticaoFactory {
 
-    public Peticao novaPeticao(Protocolo protocolo, String classeId, Long orgaoId, List<String> poloAtivo, List<String> poloPassivo) {
+    public Peticao novaPeticao(Protocolo protocolo, ClasseId classeId, Long orgaoId, List<String> poloAtivo, List<String> poloPassivo) {
     	Set<Envolvido> envolvidos = new TreeSet<>(Comparator.comparing(Envolvido::nome));
     	poloAtivo.forEach(nome -> envolvidos.add(new Envolvido(nome)));
     	poloPassivo.forEach(nome -> envolvidos.add(new Envolvido(nome)));

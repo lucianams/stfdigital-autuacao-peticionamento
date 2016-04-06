@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 
@@ -15,13 +17,16 @@ import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
  * @since 29.02.2016
  */
 @Entity
+@Table(name = "ENVOLVIDO", schema = "PETICIONAMENTO")
 public class Envolvido extends EntitySupport<Envolvido, Long> {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@Column(name = "SEQ_ENVOLVIDO")
+	@SequenceGenerator(name = "ENVOLVIDO_ID", sequenceName = "PETICIONAMENTO.SEQ_ENVOLVIDO", allocationSize = 1)
+	@GeneratedValue(generator = "ENVOLVIDO_ID", strategy=GenerationType.SEQUENCE)
 	private Long id;
 	
-	@Column
+	@Column(name = "NOM_ENVOLVIDO")
 	private String nome;
 	
 	public Envolvido() {

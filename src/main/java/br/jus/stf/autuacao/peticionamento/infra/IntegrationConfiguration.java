@@ -13,6 +13,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.core.MessageSource;
 import org.springframework.integration.dsl.IntegrationFlow;
@@ -40,9 +41,9 @@ import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
 @EnableIntegration
 public class IntegrationConfiguration {
 
-	private static final String EVENTOS_QUERY = "select * from evento where status = 1";
+	private static final String EVENTOS_QUERY = "SELECT * FROM peticionamento.evento WHERE tip_status = 1";
 
-	private static final String EVENTOS_UPDATE = "update evento set status = 2 where id in (:id)";
+	private static final String EVENTOS_UPDATE = "UPDATE peticionamento.evento SET tip_status = 2 WHERE seq_evento IN (:seq_evento)";
 
 	private static Map<String, DomainEventMessage> queues = new HashMap<>();
 	
@@ -67,6 +68,7 @@ public class IntegrationConfiguration {
 	}
 
 	@Bean
+	@DependsOn("flyway")
 	public MessageSource<Object> eventosDatatable() {
 		JdbcPollingChannelAdapter adapter = new JdbcPollingChannelAdapter(dataSource, EVENTOS_QUERY);
 	    adapter.setUpdateSql(EVENTOS_UPDATE);
@@ -90,11 +92,11 @@ public class IntegrationConfiguration {
 		
 		@Override
 		protected Object doTransform(Message<?> originalMessage) throws Exception {
-			DomainEventMessage message = queues.get(((Map<String, String>) originalMessage.getPayload()).get("TIPO"));
+			DomainEventMessage message = queues.get(((Map<String, String>) originalMessage.getPayload()).get("NOM_EVENTO"));
 			
 			Map<String, Object> headers = ImmutableMap.of("routingKey", message.routingKey(), "exchange", message.exchange());
 			
-			String payload = ((Map<String, String>) originalMessage.getPayload()).get("DETALHES");
+			String payload = ((Map<String, String>) originalMessage.getPayload()).get("BIN_DETALHE");
 			
 			GenericMessage<String> genericMessage = new GenericMessage<>(payload, new MessageHeaders(headers));
 			
