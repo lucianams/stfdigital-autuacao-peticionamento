@@ -6,7 +6,11 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,22 +23,26 @@ import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
  * @since 03.03.2016
  */
 @Entity
+@Table(name = "EVENTO", schema = "PETICIONAMENTO")
 public class Evento extends EntitySupport<Evento, Long> {
 
 	@Id
-	@GeneratedValue
+	@Column(name = "SEQ_EVENTO")
+	@SequenceGenerator(name = "EVENTO_ID", sequenceName = "PETICIONAMENTO.SEQ_EVENTO", allocationSize = 1)
+	@GeneratedValue(generator = "EVENTO_ID", strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@Column
+	@Column(name = "NOM_EVENTO")
 	private String tipo;
 	
-	@Column
+	@Column(name = "DAT_CRIACAO")
 	private Date criacao;
 	
-	@Column
+	@Column(name = "BIN_DETALHE")
+	@Lob
 	private String detalhes;
 	
-	@Column
+	@Column(name = "TIP_STATUS")
 	private Integer status = 1;
 	
 	public Evento() {
