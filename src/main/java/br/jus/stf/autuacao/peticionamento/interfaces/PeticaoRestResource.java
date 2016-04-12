@@ -30,7 +30,7 @@ public class PeticaoRestResource {
         if (binding.hasErrors()) {
             throw new IllegalArgumentException("Petição Inválida: " + binding.getAllErrors());
         }
-        
+
         peticionarCommandHandler.handle(command);
     }
 
