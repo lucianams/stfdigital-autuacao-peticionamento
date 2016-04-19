@@ -12,7 +12,7 @@
         <!-- Pré-Autuação de Recursais -->
         
         <sequenceFlow id="preautuar-recursal" name="recursal" sourceRef="preautuacao-transicoes" targetRef="preautuacao">
-            <conditionExpression xsi:type="tFormalExpression">${transition == 'recursal'}</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'RECURSAL'}</conditionExpression>
         </sequenceFlow>
         
         <userTask id="preautuacao" name="Pré-Autuar Remessa de Processo Recursal" activiti:candidateGroups="recebedor-recursais">
@@ -20,7 +20,7 @@
         </userTask>
         
         <sequenceFlow id="autuar-recursal" name="autuar" sourceRef="preautuacao" targetRef="recursal-recebido">
-            <conditionExpression xsi:type="tFormalExpression">${transition == 'autuar'}</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'AUTUAR'}</conditionExpression>
         </sequenceFlow>
         
         <endEvent id="recursal-recebido" name="Remessa Recebida">
@@ -28,13 +28,13 @@
         </endEvent>    
         
         <sequenceFlow id="devolver-recursal" name="devolver" sourceRef="preautuacao" targetRef="devolucao">
-            <conditionExpression xsi:type="tFormalExpression">${transition == 'devolver'}</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'DEVOLVER'}</conditionExpression>
         </sequenceFlow>
         
         <!-- Pré-Autuação de Originários -->
         
         <sequenceFlow id="preautuar-originario" name="originario" sourceRef="preautuacao-transicoes" targetRef="preautuacao-originario">
-            <conditionExpression xsi:type="tFormalExpression">${transition == 'originario'}</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'ORIGINARIO'}</conditionExpression>
         </sequenceFlow>
         
         <userTask id="preautuacao-originario" name="Pré-Autuar Remessa de Processo Originário" activiti:candidateGroups="recebedor-originarios">
@@ -42,7 +42,7 @@
         </userTask>
         
         <sequenceFlow id="autuar-originario" name="autuar" sourceRef="preautuacao-originario" targetRef="originario-recebido">
-            <conditionExpression xsi:type="tFormalExpression">${transition == 'autuar'}</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'AUTUAR'}</conditionExpression>
         </sequenceFlow>
         
         <endEvent id="originario-recebido" name="Remessa Recebida">
@@ -53,7 +53,7 @@
         </endEvent>    
         
         <sequenceFlow id="devolver-originario" name="devolver" sourceRef="preautuacao-originario" targetRef="devolucao">
-            <conditionExpression xsi:type="tFormalExpression">${transition == 'devolver'}</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">${transition == 'DEVOLVER'}</conditionExpression>
         </sequenceFlow>
         
         <!-- Devolução -->

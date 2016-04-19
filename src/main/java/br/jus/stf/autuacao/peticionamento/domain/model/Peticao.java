@@ -3,22 +3,23 @@ package br.jus.stf.autuacao.peticionamento.domain.model;
 import static java.util.Comparator.comparing;
 import static javax.persistence.CascadeType.ALL;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.jus.stf.autuacao.peticionamento.domain.model.support.ClassePeticionavel;
+import br.jus.stf.autuacao.peticionamento.domain.model.support.OrgaoPeticionador;
 import br.jus.stf.core.framework.domaindrivendesign.AggregateRoot;
 import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
-import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
 import br.jus.stf.core.shared.protocolo.Protocolo;
@@ -37,35 +38,41 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     @EmbeddedId
     private ProtocoloId protocoloId;
 	
-    @Embedded
-	private ClasseId classeId;
+    @ManyToOne
+    @JoinColumn(name = "SIG_CLASSE", nullable = false)
+	private ClassePeticionavel classe;
 
-    @Column(name = "SEQ_ORGAO")
-	private Long orgaoId;
+    @ManyToOne
+    @JoinColumn(name = "SEQ_ORGAO", referencedColumnName = "SEQ_PESSOA")
+	private OrgaoPeticionador orgao;
     
     @OneToMany(cascade = ALL)
-    @JoinTable(name = "PETICAO_ENVOLVIDO", schema = "PETICIONAMENTO", joinColumns = @JoinColumn(name = "SEQ_PROTOCOLO", nullable = false),
-    	inverseJoinColumns = @JoinColumn(name = "SEQ_ENVOLVIDO", nullable = false))
-    private Set<Envolvido> envolvidos = new TreeSet<>(comparing(Envolvido::nome));
+    @JoinColumn(name = "SEQ_PROTOCOLO", referencedColumnName = "SEQ_PROTOCOLO", nullable = false)
+    private Set<Envolvido> envolvidos = new TreeSet<>(comparing(Envolvido::apresentacao));
+    
+    @OneToMany(cascade = ALL)
+    @JoinColumn(name = "SEQ_PROTOCOLO", referencedColumnName = "SEQ_PROTOCOLO", nullable = false)
+    private Set<Anexo> anexos = new HashSet<>();
     
     @OneToMany(cascade = ALL)
     @JoinTable(name = "PETICAO_EVENTO", schema = "PETICIONAMENTO", joinColumns = @JoinColumn(name = "SEQ_PROTOCOLO", nullable = false),
 		inverseJoinColumns = @JoinColumn(name = "SEQ_EVENTO", nullable = false))
     private Set<Evento> eventos = new TreeSet<>(comparing(Evento::criacao));
     
-	public Peticao() {
+    public Peticao() {
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
     }
 
-    public Peticao(Protocolo protocolo, ClasseId classeId, Long orgaoId, Set<Envolvido> envolvidos) {
+    public Peticao(Protocolo protocolo, ClassePeticionavel classe, OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos) {
     	this.protocoloId = protocolo.identity();
-    	this.envolvidos = envolvidos;
-        this.classeId = classeId;
-        this.orgaoId = orgaoId;
+    	this.classe = classe;
+        this.orgao = orgao;
+        this.envolvidos = envolvidos;
+        this.anexos = anexos;
         
         registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString()));
         
-        envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(), protocolo.toString(), envolvido.nome())));
+        envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(), protocolo.toString(), envolvido.apresentacao())));
     }
 
 	private void registrarEvento(DomainEvent<?> evento) {
