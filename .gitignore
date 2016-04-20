@@ -1,0 +1,16 @@
+# --------------------------------
+# Mac OS
+.DS_Store
+.project
+
+# --------------------------------
+# Eclipse
+.settings/
+.classpath
+.project
+
+# Gradle
+.gradle
+build
+bin
+data
