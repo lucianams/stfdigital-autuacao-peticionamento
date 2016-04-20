@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.Validate;
+
 import br.jus.stf.core.framework.domaindrivendesign.ValueObjectSupport;
 import br.jus.stf.core.shared.identidade.PessoaId;
 import br.jus.stf.core.shared.processo.Polo;
@@ -47,6 +49,9 @@ public class Envolvido extends ValueObjectSupport<Envolvido> {
 	}
 	
 	public Envolvido(String apresentacao, Polo polo, PessoaId pessoa) {
+		Validate.notBlank(apresentacao, "Apresentação requerida.");
+		Validate.notNull(polo, "Polo requerido.");
+		
 		this.apresentacao = apresentacao;
 		this.polo = polo;
 		this.pessoa = pessoa;

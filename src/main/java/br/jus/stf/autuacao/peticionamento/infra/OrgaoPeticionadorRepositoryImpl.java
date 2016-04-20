@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.support.OrgaoPeticionador;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.OrgaoPeticionadorRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
+import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
 import br.jus.stf.core.shared.identidade.PessoaId;
 
 /**

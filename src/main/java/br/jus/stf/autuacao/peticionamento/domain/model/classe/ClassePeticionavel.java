@@ -1,4 +1,4 @@
-package br.jus.stf.autuacao.peticionamento.domain.model.support;
+package br.jus.stf.autuacao.peticionamento.domain.model.classe;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.classe.ClasseId;
 

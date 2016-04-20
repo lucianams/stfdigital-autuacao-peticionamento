@@ -1,4 +1,4 @@
-package br.jus.stf.autuacao.peticionamento.domain.model.support;
+package br.jus.stf.autuacao.peticionamento.domain.model.identidade;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -46,6 +46,10 @@ public class OrgaoPeticionador extends EntitySupport<OrgaoPeticionador, PessoaId
 	
 	public Set<Associado> associados() {
 		return Collections.unmodifiableSet(associados);
+	}
+	
+	public boolean isRepresentadoPor(PessoaId pessoa) {
+		return associados.stream().anyMatch(associado -> associado.isRepresentante(pessoa));
 	}
 	
 	@Override

@@ -11,7 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.support.TipoAnexo;
+import org.apache.commons.lang3.Validate;
+
+import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexo;
 import br.jus.stf.core.framework.domaindrivendesign.ValueObjectSupport;
 import br.jus.stf.core.shared.documento.DocumentoId;
 
@@ -47,6 +49,9 @@ public class Anexo extends ValueObjectSupport<Anexo> {
 	}
 	
 	public Anexo(TipoAnexo tipo, DocumentoId documento) {
+		Validate.notNull(tipo, "Tipo requerido.");
+		Validate.notNull(documento, "Documento requerido.");
+		
 		this.tipo = tipo;
 		this.documento = documento;
 		this.descricao = tipo.nome();

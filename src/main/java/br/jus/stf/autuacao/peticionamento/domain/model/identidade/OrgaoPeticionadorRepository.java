@@ -1,4 +1,4 @@
-package br.jus.stf.autuacao.peticionamento.domain.model.support;
+package br.jus.stf.autuacao.peticionamento.domain.model.identidade;
 
 import java.util.List;
 

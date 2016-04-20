@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.support.TipoAnexo;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.TipoAnexoRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexo;
+import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexoRepository;
 import br.jus.stf.core.shared.documento.TipoDocumentoId;
 
 /**

@@ -1,4 +1,6 @@
-package br.jus.stf.autuacao.peticionamento.domain.model.support;
+package br.jus.stf.autuacao.peticionamento.domain.model.identidade;
+
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -59,6 +61,10 @@ public class Associado extends ValueObjectSupport<Associado> {
 		return id;
 	}
 	
+	public PessoaId pessoa() {
+		return pessoa;
+	}
+	
 	public String nome() {
 		return nome;
 	}
@@ -69,6 +75,11 @@ public class Associado extends ValueObjectSupport<Associado> {
 	
 	public String cargoFuncao() {
 		return cargoFuncao;
+	}
+	
+	public boolean isRepresentante(PessoaId pessoa) {
+		return Optional.ofNullable(pessoa).isPresent() && pessoa.equals(this.pessoa)
+				&& TipoAssociado.REPRESENTANTE.equals(this.tipo);
 	}
 	
 	@Override

@@ -30,3 +30,6 @@ create table peticionamento.associado (seq_associado number not null, seq_pessoa
 alter table peticionamento.associado add constraint fk_orgao_peticionador_asso foreign key (seq_pessoa_orgao) references peticionamento.orgao_peticionador(seq_pessoa);
 alter table peticionamento.associado add constraint uk_orpe_seq_pessoa unique key (seq_pessoa, seq_pessoa_orgao);
 alter table peticionamento.associado add constraint ck_orpe_tip_associado check (tip_associado in ('ASSOCIADO', 'GESTOR', 'REPRESENTANTE'));
+
+alter table peticionamento.peticao add column sig_peticionador varchar2(30) not null;
+alter table peticionamento.peticao add column dat_peticionamento date not null;

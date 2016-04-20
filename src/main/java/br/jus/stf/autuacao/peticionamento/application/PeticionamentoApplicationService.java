@@ -14,12 +14,13 @@ import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.model.Anexo;
 import br.jus.stf.autuacao.peticionamento.domain.model.Peticao;
 import br.jus.stf.autuacao.peticionamento.domain.model.PeticaoRepository;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.ClassePeticionavel;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.ClassePeticionavelRepository;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.OrgaoPeticionador;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.OrgaoPeticionadorRepository;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.TipoAnexo;
-import br.jus.stf.autuacao.peticionamento.domain.model.support.TipoAnexoRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.Peticionador;
+import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
+import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavelRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexo;
+import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexoRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
+import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
 import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.documento.DocumentoId;
 import br.jus.stf.core.shared.documento.TipoDocumentoId;
@@ -64,8 +65,10 @@ public class PeticionamentoApplicationService {
         	
         	return new Anexo(tipo, new DocumentoId(anexoDto.getDocumento()));
         }).collect(Collectors.toSet());
+        //TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
+        Peticionador peticionador = new Peticionador("USUARIO_FALSO", new PessoaId(1L));
         
-        Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, orgao, command.getPoloAtivo(), command.getPoloPassivo(), anexos);
+        Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, orgao, command.getPoloAtivo(), command.getPoloPassivo(), anexos, peticionador);
         
         peticaoRepository.save(peticao);
     }
