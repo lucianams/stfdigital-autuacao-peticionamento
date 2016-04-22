@@ -3,7 +3,22 @@
 .DS_Store
 .project
 
+# Node
+node_modules
+node
+
+# Typings
+typings
+
+# JS Main
+src/main/resources/public/**/*.js
+src/main/resources/public/**/*.js.map
+
 # --------------------------------
+
+# Visual Studio Code
+.vscode
+
 # Eclipse
 .settings/
 .classpath

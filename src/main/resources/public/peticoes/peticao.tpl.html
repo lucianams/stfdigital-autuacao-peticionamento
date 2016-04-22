@@ -1,0 +1,48 @@
+<div id="forms" class="page-layout simple fullwidth doc-page" layout="column">
+
+    <stf-header
+        fab-icon="{{ vm.selectedTab == 1 ? 'icon-content-save' : 'icon-magnify' }}" 
+        fab-text="{{ 'PROCESSOS.PESQUISA-AVANCADA.' + (vm.selectedTab == 1 ? 'SALVAR-PESQUISA' : 'BUSCAR') | translate }}">
+
+    </stf-header>
+
+    <!-- CONTENT -->
+    <div class="content" layout="column">
+
+        <div class="md-title mt-10">Nova Petição</div>
+        <div class="pb-16">Informe a classe, as preferências, os envolvidos e os documentos para enviar a petição</div>
+
+        <div layout="row">
+
+            <!-- BASIC FORM -->
+            <div class="form-wrapper md-whiteframe-1dp" flex="100">
+
+                <form name="basicForm" ng-submit="vm.sendForm(this)" class="md-inline-form" novalidate>
+
+                    <div class="form-title">Classificação</div>
+
+                    <div layout="column" layout-gt-xs="row">
+                        <md-input-container flex>
+                            <label>Classe</label>
+                            <md-select ng-model="vm.basicForm.state">
+                                <md-option ng-repeat="state in vm.states" value="{{state.abbrev}}">
+                                    {{state.abbrev}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                    <md-button type="submit" class="md-raised md-accent" aria-label="Submit" ng-disabled="basicForm.$invalid || basicForm.$pristine">
+                        Submit
+                    </md-button>
+                </form>
+
+            </div>
+            <!-- / BASIC FORM -->
+
+        </div>
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>
