@@ -96,9 +96,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-test")
 }
 
-processResources.dependsOn gulp_build
-
+npmInstall.dependsOn npm_prune
 gulp_build.dependsOn tasks.npmInstall
+processResources.dependsOn gulp_build
 
 docker {
     name jar.baseName
