@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.ALL;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.Validate;
 
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.identidade.PessoaId;
@@ -38,6 +41,15 @@ public class OrgaoPeticionador extends EntitySupport<OrgaoPeticionador, PessoaId
 	
 	public OrgaoPeticionador() {
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
+	}
+	
+	public OrgaoPeticionador(PessoaId id, String nome, Set<Associado> associados) {
+		Validate.notNull(id, "Id é requerido.");
+		Validate.notBlank(nome, "Nome é requerido.");
+		
+		this.id = id;
+		this.nome = nome;
+		this.associados = Optional.ofNullable(associados).orElse(new HashSet<>(0));
 	}
 	
 	public String nome() {

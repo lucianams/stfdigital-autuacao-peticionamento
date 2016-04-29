@@ -2,7 +2,6 @@ package br.jus.stf.autuacao.peticionamento.domain;
 
 import static java.util.Comparator.comparing;
 
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -14,7 +13,7 @@ import br.jus.stf.autuacao.peticionamento.domain.model.Peticao;
 import br.jus.stf.autuacao.peticionamento.domain.model.Peticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
-import br.jus.stf.core.shared.processo.Polo;
+import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 
 /**
@@ -26,13 +25,14 @@ import br.jus.stf.core.shared.protocolo.Protocolo;
 @Component
 public class PeticaoFactory {
 
-	public Peticao novaPeticao(Protocolo protocolo, ClassePeticionavel classe, OrgaoPeticionador orgao,
-			List<String> poloAtivo, List<String> poloPassivo, Set<Anexo> anexos, Peticionador peticionador) {
+	public Peticao novaPeticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias, OrgaoPeticionador orgao,
+			Set<Envolvido> poloAtivo, Set<Envolvido> poloPassivo, Set<Anexo> anexos, Peticionador peticionador) {
     	Set<Envolvido> envolvidos = new TreeSet<>(comparing(Envolvido::apresentacao));
+    	//TODO: Verificar como será encontrado o PessoaId
+    	envolvidos.addAll(poloAtivo);
+    	envolvidos.addAll(poloPassivo);
     	
-    	poloAtivo.forEach(apresentacao -> envolvidos.add(new Envolvido(apresentacao, Polo.ATIVO, null)));
-    	poloPassivo.forEach(apresentacao -> envolvidos.add(new Envolvido(apresentacao, Polo.PASSIVO, null)));
-    	return new Peticao(protocolo, classe, orgao, envolvidos, anexos, peticionador);
+    	return new Peticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, peticionador);
     }
 
 }

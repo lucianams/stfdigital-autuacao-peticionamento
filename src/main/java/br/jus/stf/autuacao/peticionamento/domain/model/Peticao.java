@@ -23,6 +23,7 @@ import org.apache.commons.lang3.Validate;
 
 import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
+import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
 import br.jus.stf.core.framework.domaindrivendesign.AggregateRoot;
 import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
@@ -47,6 +48,11 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     @ManyToOne
     @JoinColumn(name = "SIG_CLASSE", nullable = false)
 	private ClassePeticionavel classe;
+    
+    @OneToMany(cascade = ALL)
+    @JoinTable(name = "PETICAO_PREFERENCIA", schema = "PETICIONAMENTO", joinColumns = @JoinColumn(name = "SEQ_PROTOCOLO", nullable = false),
+		inverseJoinColumns = @JoinColumn(name = "SEQ_PREFERENCIA", nullable = false))
+    private Set<Preferencia> preferencias = new HashSet<>(0);
 
     @ManyToOne
     @JoinColumn(name = "SEQ_ORGAO", referencedColumnName = "SEQ_PESSOA")
@@ -58,7 +64,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     
     @OneToMany(cascade = ALL)
     @JoinColumn(name = "SEQ_PROTOCOLO", referencedColumnName = "SEQ_PROTOCOLO", nullable = false)
-    private Set<Anexo> anexos = new HashSet<>();
+    private Set<Anexo> anexos = new HashSet<>(0);
     
     @OneToMany(cascade = ALL)
     @JoinTable(name = "PETICAO_EVENTO", schema = "PETICIONAMENTO", joinColumns = @JoinColumn(name = "SEQ_PROTOCOLO", nullable = false),
@@ -76,7 +82,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
     }
 
-	public Peticao(Protocolo protocolo, ClassePeticionavel classe, OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Peticionador peticionador) {
+	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias, OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Peticionador peticionador) {
     	Validate.notNull(protocolo, "Protocolo requerido.");
     	Validate.notNull(classe, "Classe requerida.");
     	Validate.notEmpty(envolvidos, "Envolvidos requeridos.");
@@ -84,9 +90,12 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     	Validate.notNull(peticionador, "Peticionador requerido.");
 		Validate.isTrue(!Optional.ofNullable(orgao).isPresent() || orgao.isRepresentadoPor(peticionador.pessoa()),
 				"Peticionador não é representante do Órgão.");
+		Validate.isTrue(!Optional.ofNullable(preferencias).isPresent() || classe.preferencias().containsAll(preferencias),
+				"Alguma(s) preferência(s) não pertence(m) à classe selecionada.");
 		
     	this.protocoloId = protocolo.identity();
     	this.classe = classe;
+    	this.preferencias = Optional.ofNullable(preferencias).orElse(new HashSet<>(0));
         this.orgao = orgao;
         this.envolvidos = envolvidos;
         this.anexos = anexos;

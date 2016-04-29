@@ -29,15 +29,15 @@ public class ProtocoloRestAdapter implements ProtocoloAdapter {
     
 	@Override
 	public Protocolo novoProtocolo() {
-		URI servicesUri = discoveryClient.getInstances("services").get(0).getUri();
+		URI servicesUri = discoveryClient.getInstances("gateway").get(0).getUri();
 		
-		URI uri = UriComponentsBuilder.fromUri(servicesUri).path("/api/identificadores").queryParam("categoria", String.valueOf(now().getValue())).build().toUri();
+		URI uri = UriComponentsBuilder.fromUri(servicesUri).path("/services/api/identificadores").queryParam("categoria", String.valueOf(now().getValue())).build().toUri();
 		
 		IdentificacaoDto identficador = new RestTemplate().getForObject(uri, IdentificacaoDto.class);
 		
     	Numero numero = new Numero(identficador.getNumero(), Integer.valueOf(identficador.getCategoria()));
     	
-		uri = UriComponentsBuilder.fromUri(servicesUri).path("/api/identificadores").build().toUri();
+		uri = UriComponentsBuilder.fromUri(servicesUri).path("/services/api/identificadores").build().toUri();
 		
     	Long identificadorId = new RestTemplate().getForObject(uri, Long.class);
     	

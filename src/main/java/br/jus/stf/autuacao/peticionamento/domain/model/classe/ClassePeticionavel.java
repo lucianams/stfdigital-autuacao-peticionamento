@@ -5,6 +5,7 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.Validate;
 
 import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
@@ -42,6 +45,15 @@ public class ClassePeticionavel extends EntitySupport<ClassePeticionavel, Classe
 	
 	public ClassePeticionavel() {
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
+	}
+	
+	public ClassePeticionavel(ClasseId sigla, String nome, Set<Preferencia> preferencias) {
+		Validate.notNull(sigla, "Sigla é requerida.");
+		Validate.notBlank(nome, "Nome é requerido.");
+		
+		this.sigla = sigla;
+		this.nome = nome;
+		this.preferencias = Optional.ofNullable(preferencias).orElse(new HashSet<>(0));
 	}
 	
 	public String nome() {
