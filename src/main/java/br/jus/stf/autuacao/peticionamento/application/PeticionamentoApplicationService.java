@@ -1,5 +1,6 @@
 package br.jus.stf.autuacao.peticionamento.application;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -70,18 +71,6 @@ public class PeticionamentoApplicationService {
         	
         	return new Anexo(tipo, anexoDto.getDocumento());
         }).collect(Collectors.toSet());
-        Set<Envolvido> poloAtivo = command.getPoloAtivo().stream().map(envolvidoDto -> {
-			PessoaId pessoaId = Optional.ofNullable(envolvidoDto.getPessoa()).isPresent()
-					? envolvidoDto.getPessoa() : null;
-        	
-        	return new Envolvido(envolvidoDto.getApresentacao(), Polo.ATIVO, pessoaId);
-        }).collect(Collectors.toSet());
-        Set<Envolvido> poloPassivo = command.getPoloPassivo().stream().map(envolvidoDto -> {
-        	PessoaId pessoaId = Optional.ofNullable(envolvidoDto.getPessoa()).isPresent()
-					? envolvidoDto.getPessoa() : null;
-        	
-        	return new Envolvido(envolvidoDto.getApresentacao(), Polo.PASSIVO, pessoaId);
-        }).collect(Collectors.toSet());
         Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
 				? command.getPreferencias().stream().map(pref -> {
 					return preferenciaRepository.findOne(pref);
@@ -89,9 +78,13 @@ public class PeticionamentoApplicationService {
         //TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
 		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()
 				? orgao.associados().iterator().next().pessoa() : new PessoaId(1L));
+		//TODO: Verificar como reutilizar pessoas.
+		Set<Envolvido> envolvidos = new HashSet<>(0);
+        command.getPoloAtivo().forEach(parteDto -> envolvidos.add(new Envolvido(parteDto.getApresentacao(), Polo.ATIVO, parteDto.getPessoa())));
+        command.getPoloPassivo().forEach(parteDto -> envolvidos.add(new Envolvido(parteDto.getApresentacao(), Polo.PASSIVO, parteDto.getPessoa())));
         
-		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, poloAtivo, poloPassivo,
-				anexos, peticionador);
+		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, envolvidos, anexos,
+				peticionador);
         
         peticaoRepository.save(peticao);
     }
