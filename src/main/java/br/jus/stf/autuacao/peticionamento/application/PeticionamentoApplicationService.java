@@ -28,7 +28,6 @@ import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.documento.DocumentoId;
 import br.jus.stf.core.shared.documento.TipoDocumentoId;
 import br.jus.stf.core.shared.identidade.PessoaId;
-import br.jus.stf.core.shared.preferencia.PreferenciaId;
 import br.jus.stf.core.shared.processo.Polo;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 
@@ -67,7 +66,7 @@ public class PeticionamentoApplicationService {
         Protocolo protocolo = protocoloAdapter.novoProtocolo();
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
 		OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()
-				? orgaoRepository.findOne(new PessoaId(command.getOrgaoId())) : null;
+				? orgaoRepository.findOne(command.getOrgaoId()) : null;
         Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> {
         	TipoAnexo tipo = tipoAnexoRepository.findOne(new TipoDocumentoId(anexoDto.getTipo()));
         	
@@ -86,8 +85,8 @@ public class PeticionamentoApplicationService {
         	return new Envolvido(envolvidoDto.getApresentacao(), Polo.PASSIVO, pessoaId);
         }).collect(Collectors.toSet());
         Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
-				? command.getPreferencias().stream().map(id -> {
-					return preferenciaRepository.findOne(new PreferenciaId(id));
+				? command.getPreferencias().stream().map(pref -> {
+					return preferenciaRepository.findOne(pref);
 				}).collect(Collectors.toSet()) : null;
         //TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
 		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()

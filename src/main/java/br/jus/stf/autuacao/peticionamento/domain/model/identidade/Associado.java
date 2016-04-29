@@ -53,9 +53,9 @@ public class Associado extends ValueObjectSupport<Associado> {
 	}
 	
 	public Associado(PessoaId pessoa, String nome, TipoAssociado tipo, String cargoFuncao) {
-		Validate.notNull(pessoa, "Pessoa é requerida.");
-		Validate.notBlank(nome, "Nome é requerido.");
-		Validate.notNull(tipo, "Tipo é requerido.");
+		Validate.notNull(pessoa, "Pessoa requerida.");
+		Validate.notBlank(nome, "Nome requerido.");
+		Validate.notNull(tipo, "Tipo requerido.");
 		
 		this.pessoa = pessoa;
 		this.nome = nome;

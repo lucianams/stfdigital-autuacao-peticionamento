@@ -44,8 +44,8 @@ public class OrgaoPeticionador extends EntitySupport<OrgaoPeticionador, PessoaId
 	}
 	
 	public OrgaoPeticionador(PessoaId id, String nome, Set<Associado> associados) {
-		Validate.notNull(id, "Id é requerido.");
-		Validate.notBlank(nome, "Nome é requerido.");
+		Validate.notNull(id, "Id requerido.");
+		Validate.notBlank(nome, "Nome requerido.");
 		
 		this.id = id;
 		this.nome = nome;

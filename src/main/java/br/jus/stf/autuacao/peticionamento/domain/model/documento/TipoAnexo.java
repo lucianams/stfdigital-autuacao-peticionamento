@@ -31,8 +31,8 @@ public class TipoAnexo extends EntitySupport<TipoAnexo, TipoDocumentoId> {
 	}
 	
 	public TipoAnexo(TipoDocumentoId id, String nome) {
-		Validate.notNull(id, "Id é requerido.");
-		Validate.notBlank(nome, "Nome é requerido.");
+		Validate.notNull(id, "Id requerido.");
+		Validate.notBlank(nome, "Nome requerido.");
 		
 		this.id = id;
 		this.nome = nome;

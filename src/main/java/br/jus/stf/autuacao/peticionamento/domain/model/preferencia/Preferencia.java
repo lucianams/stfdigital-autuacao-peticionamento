@@ -31,8 +31,8 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 	}
 	
 	public Preferencia(PreferenciaId id, String nome) {
-		Validate.notNull(id, "Id é preferencia.");
-		Validate.notBlank(nome, "Nome é requerido.");
+		Validate.notNull(id, "Id preferencia.");
+		Validate.notBlank(nome, "Nome requerido.");
 		
 		this.id = id;
 		this.nome = nome;

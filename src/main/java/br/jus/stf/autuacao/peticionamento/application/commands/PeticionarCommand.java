@@ -9,6 +9,8 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.AnexoDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDto;
+import br.jus.stf.core.shared.identidade.PessoaId;
+import br.jus.stf.core.shared.preferencia.PreferenciaId;
 
 /**
  * @author Rodrigo Barreiros
@@ -23,10 +25,10 @@ public class PeticionarCommand {
     private String classeId;
     
     @ApiModelProperty(value = "Lista com as preferências da petição.")
-	private List<Long> preferencias;
+	private List<PreferenciaId> preferencias;
     
     @ApiModelProperty(value = "Identificador do órgão para o qual o seu representante está peticionando, se for o caso", required=false)
-    private Long orgaoId;
+    private PessoaId orgaoId;
     
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com as pessoas envolvidas no polo ativo", required=true)
@@ -52,11 +54,11 @@ public class PeticionarCommand {
         return classeId;
     }
     
-    public List<Long> getPreferencias() {
+    public List<PreferenciaId> getPreferencias() {
 		return preferencias;
 	}
     
-    public Long getOrgaoId() {
+    public PessoaId getOrgaoId() {
         return orgaoId;
     }
     

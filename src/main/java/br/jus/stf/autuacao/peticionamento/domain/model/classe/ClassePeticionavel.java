@@ -41,15 +41,15 @@ public class ClassePeticionavel extends EntitySupport<ClassePeticionavel, Classe
 	@OneToMany(cascade = ALL, fetch = EAGER)
     @JoinTable(name = "CLASSE_PREFERENCIA", schema = "PETICIONAMENTO", joinColumns = @JoinColumn(name = "SIG_CLASSE", nullable = false),
 		inverseJoinColumns = @JoinColumn(name = "SEQ_PREFERENCIA", nullable = false))
-	private Set<Preferencia> preferencias = new HashSet<>();
+	private Set<Preferencia> preferencias = new HashSet<>(0);
 	
 	public ClassePeticionavel() {
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
 	public ClassePeticionavel(ClasseId sigla, String nome, Set<Preferencia> preferencias) {
-		Validate.notNull(sigla, "Sigla é requerida.");
-		Validate.notBlank(nome, "Nome é requerido.");
+		Validate.notNull(sigla, "Sigla requerida.");
+		Validate.notBlank(nome, "Nome requerido.");
 		
 		this.sigla = sigla;
 		this.nome = nome;
