@@ -25,8 +25,6 @@ import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticiona
 import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
 import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.PreferenciaRepository;
 import br.jus.stf.core.shared.classe.ClasseId;
-import br.jus.stf.core.shared.documento.DocumentoId;
-import br.jus.stf.core.shared.documento.TipoDocumentoId;
 import br.jus.stf.core.shared.identidade.PessoaId;
 import br.jus.stf.core.shared.processo.Polo;
 import br.jus.stf.core.shared.protocolo.Protocolo;
@@ -68,19 +66,19 @@ public class PeticionamentoApplicationService {
 		OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()
 				? orgaoRepository.findOne(command.getOrgaoId()) : null;
         Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> {
-        	TipoAnexo tipo = tipoAnexoRepository.findOne(new TipoDocumentoId(anexoDto.getTipo()));
+        	TipoAnexo tipo = tipoAnexoRepository.findOne(anexoDto.getTipo());
         	
-        	return new Anexo(tipo, new DocumentoId(anexoDto.getDocumento()));
+        	return new Anexo(tipo, anexoDto.getDocumento());
         }).collect(Collectors.toSet());
         Set<Envolvido> poloAtivo = command.getPoloAtivo().stream().map(envolvidoDto -> {
 			PessoaId pessoaId = Optional.ofNullable(envolvidoDto.getPessoa()).isPresent()
-					? new PessoaId(envolvidoDto.getPessoa()) : null;
+					? envolvidoDto.getPessoa() : null;
         	
         	return new Envolvido(envolvidoDto.getApresentacao(), Polo.ATIVO, pessoaId);
         }).collect(Collectors.toSet());
         Set<Envolvido> poloPassivo = command.getPoloPassivo().stream().map(envolvidoDto -> {
         	PessoaId pessoaId = Optional.ofNullable(envolvidoDto.getPessoa()).isPresent()
-					? new PessoaId(envolvidoDto.getPessoa()) : null;
+					? envolvidoDto.getPessoa() : null;
         	
         	return new Envolvido(envolvidoDto.getApresentacao(), Polo.PASSIVO, pessoaId);
         }).collect(Collectors.toSet());

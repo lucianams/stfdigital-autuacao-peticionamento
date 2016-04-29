@@ -1,5 +1,8 @@
 package br.jus.stf.autuacao.peticionamento.interfaces.dto;
 
+import br.jus.stf.core.shared.documento.DocumentoId;
+import br.jus.stf.core.shared.documento.TipoDocumentoId;
+
 /**
  * @author Rafael Alencar
  * 
@@ -8,32 +11,32 @@ package br.jus.stf.autuacao.peticionamento.interfaces.dto;
  */
 public class AnexoDto {
 	
-	private Long tipo;
+	private TipoDocumentoId tipo;
 	
-	private Long documento;
+	private DocumentoId documento;
 	
 	public AnexoDto() {
 		
 	}
 	
-	public AnexoDto(Long tipo, Long documento) {
+	public AnexoDto(TipoDocumentoId tipo, DocumentoId documento) {
 		this.tipo = tipo;
 		this.documento = documento;
 	}
 	
-	public Long getTipo() {
+	public TipoDocumentoId getTipo() {
 		return tipo;
 	}
 	
-	public void setTipo(Long tipo) {
+	public void setTipo(TipoDocumentoId tipo) {
 		this.tipo = tipo;
 	}
 	
-	public Long getDocumento() {
+	public DocumentoId getDocumento() {
 		return documento;
 	}
 	
-	public void setDocumento(Long documento) {
+	public void setDocumento(DocumentoId documento) {
 		this.documento = documento;
 	}
 	
