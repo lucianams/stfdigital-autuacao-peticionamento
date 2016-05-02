@@ -1,3 +1,5 @@
+/// <reference path="browser/ambient/angular-cookies/index.d.ts" />
+/// <reference path="browser/ambient/angular-file-upload/index.d.ts" />
 /// <reference path="browser/ambient/angular-material/index.d.ts" />
 /// <reference path="browser/ambient/angular-translate/index.d.ts" />
 /// <reference path="browser/ambient/angular-ui-router/index.d.ts" />

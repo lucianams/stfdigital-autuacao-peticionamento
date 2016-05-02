@@ -29,7 +29,7 @@ function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider
     });
 }
 
-let peticionamento: IModule = angular.module('app.novo-processo.peticionamento', ['app.novo-processo', 'classy']);
+let peticionamento: IModule = angular.module('app.novo-processo.peticionamento', ['app.novo-processo', 'classy', 'angularFileUpload', 'ngCookies']);
 peticionamento.config(config);
 
 export default peticionamento;

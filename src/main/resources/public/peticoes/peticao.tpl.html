@@ -17,32 +17,145 @@
             <!-- BASIC FORM -->
             <div class="form-wrapper md-whiteframe-1dp" flex="100">
 
-                <form name="basicForm" ng-submit="vm.sendForm(this)" class="md-inline-form" novalidate>
+                <form name="basicForm" ng-submit="vm.peticionar(this)" class="md-inline-form" novalidate>
 
-                    <div class="form-title">Classificação</div>
+                    <div class="form-title">Classificação do Processo</div>
 
-                    <div layout="column" layout-gt-xs="row">
+                    <div layout="column">
                         <md-input-container flex>
                             <label>Classe</label>
-                            <md-select ng-model="vm.basicForm.state">
-                                <md-option ng-repeat="state in vm.states" value="{{state.abbrev}}">
-                                    {{state.abbrev}}
+                            <md-select ng-model="vm.classe">
+                                <md-option ng-repeat="classe in vm.classes" value="{{classe.sigla}}">
+                                    {{classe.nome}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
-
-                    <md-button type="submit" class="md-raised md-accent" aria-label="Submit" ng-disabled="basicForm.$invalid || basicForm.$pristine">
-                        Submit
+                    <div class="form-title">Partes</div>
+                    <div layout="column" layout-gt-sm="row" class="layout-gt-sm-row layout-column">
+                        
+                        <md-input-container flex="" class="md-icon-float flex md-default-theme md-input-invalid">
+                            <label>Informe o nome da parte do polo ativo</label>
+                            <input type="text" name="txtPartePoloAtivo" ng-model="vm.partePoloAtivo" required="" class="ng-pristine ng-empty ng-invalid ng-invalid-required 
+                                ng-touched" aria-label="" aria-invalid="true" ng-keydown="$event.which === 13 && vm.adicionarPartePoloAtivo()" ng-click= "$event.stopPropagation()">
+                             
+                        </md-input-container>
+                        <md-input-container flex="" class="md-icon-float flex md-default-theme md-input-invalid">    
+                            <label>Informe o nome da parte do polo passivo</label>
+                            <input type="text" name="txtPartePoloPassivo" ng-model="vm.partePoloPassivo" required="" class="ng-pristine ng-empty ng-invalid ng-invalid-required 
+                            ng-touched" aria-label="" aria-invalid="true"  ng-keydown="$event.which === 13 && vm.adicionarPartePoloPassivo()" ng-click= "$event.stopPropagation()">
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.partesPoloAtivo.length > 0">
+                            <div class="simple-table-container md-whiteframe-4dp">
+                                <div class="ms-responsive-table-wrapper">
+                                    <table class="simple" ms-responsive-table>
+                                        <thead>
+                                            <tr>
+                                                <th>Polo Ativo</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="parte in vm.partesPoloAtivo">
+											    <td>{{parte}}</td>
+											    <td align="right">
+                                                    <span class="hint-text small">
+                                                        <a href="#" ng-click="vm.removerPartePoloAtivo(parte)">Remover</a>
+                                                    </span>
+                                                </td>
+										    </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.partesPoloPassivo.length > 0">
+                            <div class="simple-table-container md-whiteframe-4dp">
+                                <div class="ms-responsive-table-wrapper">
+                                    <table class="simple" ms-responsive-table>
+                                        <thead>
+                                            <tr>
+                                                <th>Polo Passivo</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="parte in vm.partesPoloPassivo">
+											    <td>{{parte}}</td>
+											    <td align="right">
+                                                    <span class="hint-text small">
+                                                        <a href="#" ng-click="vm.removerPartePoloPassivo(parte)">Remover</a>
+                                                    </span>
+                                                </td>
+										    </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout="column">
+                        <div nv-file-drop="" uploader="vm.uploader">
+                            <div nv-file-over="" uploader="vm.uploader" over-class="another-file-over-class" class="force-pointer" data-ng-class="vm.uploader.isHTML5 ? 'my-drop-zone' : 'my-drop-zone-single'" onclick="$('#idSelectFilePecas').click();">
+                            </div>
+                        </div>
+                        <input  id="idSelectFilePecas" type="file" name="file" nv-file-select="" uploader="vm.uploader" multiple  ng-class="vm.uploader.isHTML5 ? 'invisible' : ''"/><br/>
+                    </div>
+                    <div layout="column">
+                        <md-input-container class="simple-table-container md-whiteframe-4dp" ng-show="vm.pecas.length > 0">
+		                    <div class="table-title">Anexos</div>
+                            <div class="ms-responsive-table-wrapper">
+                                <table class="simple" ms-responsive-table>
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center;">Título</th>
+                                            <th style="text-align:right;" ng-show="vm.uploader.isHTML5">Tamanho</th>
+                                            <th style="text-align:center;" ng-show="vm.uploader.isHTML5">Progresso</th>
+                                            <th style="text-align:center;">Tipo de Peça</th>
+                                            <th style="text-align:center;">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="peca in vm.pecas">
+                                            <td style="text-align:left;" data-ng-click="vm.visualizar(peca)" class="force-pointer"><strong>{{ peca.arquivo.file.name }}</strong></td>
+                                            <td style="text-align:right;" ng-show="vm.uploader.isHTML5" nowrap>{{ peca.arquivo.file.size/1024/1024|number:2 }} MB</td>
+                                            <td class="text-center"class="progress-row" ng-show="vm.uploader.isHTML5" ng-class="{'upload-finished': vm.peca.isUploadConcluido}">
+                                                <div class="progress" style="margin-bottom: 0;">
+                                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': vm.peca.arquivo.progress + '%' }"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select required id="tipoPecaId-{{$index}}" ng-model="vm.peca.tipo" style="max-width: 110px; min-width: 110px;" ui-select2="vm.configurarSelect2({{$index}})">
+                                                    <option value=""></option>
+                                                    <option data-ng-repeat="tipoPeca in vm.tiposPecas" value="{{tipoPeca.id}}">{{tipoPeca.descricao}}</option>
+                                                </select>
+                                            </td>
+                                            <td nowrap  class="text-center">
+                                                <a  ng-click="vm.visualizarPeca(peca)" data-placement="top" ng-disabled="!vm.peca.arquivo.isUploading">
+                                                    <i class="icon icon-close s40"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout="row" layout-align="end center">
+                        <div>
+                            <button type="button" class="md-raised md-warn md-button md-default-theme md-ink-ripple" ng-click="vm.limparPecas()">
+                                <span class="glyphicon glyphicon-trash"></span> Apagar Tudo
+                            </button>
+                        </div>
+                    </div>
+                    <md-button type="submit" class="md-raised md-primary md-button md-default-theme md-ink-ripple" aria-label="Peticionar" 
+                        ng-disabled="basicForm.$invalid || basicForm.$pristine">
+                        Peticionar
                     </md-button>
                 </form>
-
             </div>
-            <!-- / BASIC FORM -->
-
         </div>
-
     </div>
-    <!-- / CONTENT -->
-
 </div>
