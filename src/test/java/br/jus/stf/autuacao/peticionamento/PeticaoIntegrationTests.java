@@ -23,11 +23,29 @@ import br.jus.stf.core.framework.testing.IntegrationTestsSupport;
 @SpringApplicationConfiguration(ApplicationContextInitializer.class)
 public class PeticaoIntegrationTests extends IntegrationTestsSupport {
     
+	@Test
+    public void registrarUmaPeticao() throws Exception {
+        String peticaoValida = "{\"classeId\":\"ADI\", \"preferencias\":[3,8], \"poloAtivo\": [{\"apresentacao\":\"Maria\",\"pessoa\":1}, {\"apresentacao\":\"João\"}], \"poloPassivo\": [{\"apresentacao\":\"Antônia\",\"pessoa\":3}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
+        
+        ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoValida));
+        
+        result.andExpect(status().isOk());
+    }
+	
+	@Test
+    public void registrarUmaPeticaoComRepresentacao() throws Exception {
+        String peticaoValida = "{\"classeId\":\"ADI\", \"orgaoId\":12452261, \"poloAtivo\": [{\"apresentacao\":\"Maria\"}], \"poloPassivo\": [{\"apresentacao\":\"João\", \"pessoa\":3}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
+        
+        ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoValida));
+        
+        result.andExpect(status().isOk());
+    }
+	
     @Test
     public void naoDeveRegistrarUmaPeticaoInvalida() throws Exception {
-        String peticao = "{\"classeId\":\"\", \"envolvidos\": [{\"ativo\":[1, 2]}, {\"passivo\":[3, 4]}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
+        String peticaoInvalida = "{\"classeId\":\"\", \"envolvidos\": [{\"ativo\":[1, 2]}, {\"passivo\":[3, 4]}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
         
-        ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticao));
+        ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoInvalida));
         
         result.andExpect(status().isBadRequest());
     }

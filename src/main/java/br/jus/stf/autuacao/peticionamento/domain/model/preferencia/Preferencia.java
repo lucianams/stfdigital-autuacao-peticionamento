@@ -5,6 +5,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.Validate;
+
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.preferencia.PreferenciaId;
 
@@ -26,6 +28,14 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 	
 	public Preferencia() {
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
+	}
+	
+	public Preferencia(PreferenciaId id, String nome) {
+		Validate.notNull(id, "Id preferencia.");
+		Validate.notBlank(nome, "Nome requerido.");
+		
+		this.id = id;
+		this.nome = nome;
 	}
 	
 	public String nome() {

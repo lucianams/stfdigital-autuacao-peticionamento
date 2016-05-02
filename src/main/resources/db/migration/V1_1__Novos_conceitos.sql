@@ -6,6 +6,10 @@ create table peticionamento.classe_preferencia (sig_classe varchar2(6) not null,
 alter table peticionamento.classe_preferencia add constraint fk_classe_peticionavel_clpr foreign key (sig_classe) references peticionamento.classe_peticionavel(sig_classe);
 alter table peticionamento.classe_preferencia add constraint fk_preferencia_clpr foreign key (seq_preferencia) references peticionamento.preferencia(seq_preferencia);
 
+create table peticionamento.peticao_preferencia (seq_protocolo number not null, seq_preferencia number not null, constraint pk_peticao_preferencia primary key (seq_protocolo, seq_preferencia));
+alter table peticionamento.peticao_preferencia add constraint fk_peticao_pepr foreign key (seq_protocolo) references peticionamento.peticao(seq_protocolo);
+alter table peticionamento.peticao_preferencia add constraint fk_preferencia_pepr foreign key (seq_preferencia) references peticionamento.preferencia(seq_preferencia);
+
 drop table peticionamento.peticao_envolvido;
 alter table peticionamento.envolvido add column tip_polo varchar2(11) not null;
 alter table peticionamento.envolvido add constraint ck_envo_tip_polo check (tip_polo in ('ATIVO', 'PASSIVO', 'INTERESSADO'));
@@ -21,6 +25,7 @@ create table peticionamento.tipo_anexo (seq_tipo_documento number not null, nom_
 
 create table peticionamento.anexo (seq_anexo number not null, dsc_anexo varchar2(50) not null, seq_tipo_anexo number not null, seq_documento number not null, seq_protocolo number not null, constraint pk_anexo primary key (seq_anexo));
 alter table peticionamento.anexo add constraint fk_peticao_anex foreign key (seq_protocolo) references peticionamento.peticao(seq_protocolo);
+alter table peticionamento.anexo add constraint fk_tipo_anexo_anex foreign key (seq_tipo_anexo) references peticionamento.tipo_anexo(seq_tipo_documento);
 
 create table peticionamento.orgao_peticionador (seq_pessoa number not null, nom_pessoa varchar2(100) not null, constraint pk_orgao_peticionador primary key (seq_pessoa));
 

@@ -22,6 +22,8 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPlugin}")
         classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.6.0")
+        classpath("com.moowork.gradle:gradle-node-plugin:0.12")
+        classpath("com.moowork.gradle:gradle-gulp-plugin:0.12")
     }
 }
 
@@ -36,6 +38,10 @@ apply plugin: 'maven'
 apply plugin: 'java'
 
 apply plugin: "com.palantir.docker"
+
+apply plugin: 'com.moowork.node'
+
+apply plugin: 'com.moowork.gulp'
 
 repositories {
     mavenLocal()
@@ -89,6 +95,10 @@ dependencies {
     
     compile("org.springframework.boot:spring-boot-starter-test")
 }
+
+npmInstall.dependsOn npm_prune
+gulp_build.dependsOn tasks.npmInstall
+processResources.dependsOn gulp_build
 
 docker {
     name jar.baseName

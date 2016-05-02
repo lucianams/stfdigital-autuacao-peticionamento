@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.Validate;
+
 import br.jus.stf.core.framework.domaindrivendesign.ValueObjectSupport;
 import br.jus.stf.core.shared.identidade.PessoaId;
 
@@ -51,6 +53,10 @@ public class Associado extends ValueObjectSupport<Associado> {
 	}
 	
 	public Associado(PessoaId pessoa, String nome, TipoAssociado tipo, String cargoFuncao) {
+		Validate.notNull(pessoa, "Pessoa requerida.");
+		Validate.notBlank(nome, "Nome requerido.");
+		Validate.notNull(tipo, "Tipo requerido.");
+		
 		this.pessoa = pessoa;
 		this.nome = nome;
 		this.tipo = tipo;
@@ -78,8 +84,8 @@ public class Associado extends ValueObjectSupport<Associado> {
 	}
 	
 	public boolean isRepresentante(PessoaId pessoa) {
-		return Optional.ofNullable(pessoa).isPresent() && pessoa.equals(this.pessoa)
-				&& TipoAssociado.REPRESENTANTE.equals(this.tipo);
+		return Optional.ofNullable(pessoa).isPresent() && TipoAssociado.REPRESENTANTE.equals(this.tipo)
+				&& pessoa.equals(this.pessoa);
 	}
 	
 	@Override

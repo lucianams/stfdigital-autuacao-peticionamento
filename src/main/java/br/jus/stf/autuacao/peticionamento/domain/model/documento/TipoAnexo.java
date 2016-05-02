@@ -5,6 +5,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.elasticsearch.common.lang3.Validate;
+
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.documento.TipoDocumentoId;
 
@@ -29,6 +31,9 @@ public class TipoAnexo extends EntitySupport<TipoAnexo, TipoDocumentoId> {
 	}
 	
 	public TipoAnexo(TipoDocumentoId id, String nome) {
+		Validate.notNull(id, "Id requerido.");
+		Validate.notBlank(nome, "Nome requerido.");
+		
 		this.id = id;
 		this.nome = nome;
 	}
