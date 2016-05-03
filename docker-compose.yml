@@ -1,0 +1,39 @@
+version: '2'
+services:
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:management
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+  discovery:
+    container_name: discovery
+    image: discovery
+    ports:
+     - "8761:8761"
+  gateway:
+    container_name: gateway
+    image: gateway
+    ports:
+     - "8765:8765"
+  servicos:
+    container_name: services
+    image: services
+    ports:
+     - "8081:8081"
+     - "8181:8181"
+    environment:
+     - spring.profiles.active=development
+  documents:
+    container_name: documents
+    image: documents
+    ports:
+     - "8094:8094"
+     - "8194:8194"
+    environment:
+     - spring.profiles.active=development	 
+  ui:
+    container_name: ui
+    image: plataforma-ui
+    ports:
+     - "8080:8080"
