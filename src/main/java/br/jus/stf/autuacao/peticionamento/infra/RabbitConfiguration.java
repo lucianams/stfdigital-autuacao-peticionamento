@@ -35,7 +35,7 @@ public class RabbitConfiguration {
 
 	public static final String PARTE_REGISTRADA_QUEUE = "autuacao.peticao.envolvido.registrado";
 
-	@Value("${rabbitmq.host:localhost}")
+	@Value("${rabbitmq.host:rabbit}")
 	private String host;
 	
 	@Value("${rabbitmq.port:5672}")
