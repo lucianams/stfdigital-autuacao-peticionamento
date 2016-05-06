@@ -24,39 +24,35 @@ public class PeticionarCommand {
     @ApiModelProperty(value = "Identificador da classe processual sugerida pelo peticionador", required=true)
     private String classeId;
     
-    @ApiModelProperty(value = "Lista com as preferências da petição.")
-	private List<PreferenciaId> preferencias;
-    
     @ApiModelProperty(value = "Identificador do órgão para o qual o seu representante está peticionando, se for o caso", required=false)
     private PessoaId orgaoId;
     
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com as pessoas envolvidas no polo ativo", required=true)
-	private List<EnvolvidoDto> poloAtivo;
+	//private List<EnvolvidoDto> poloAtivo;
+	private List<String> poloAtivo;
 	
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com as pessoas envolvidas no polo passivo", required=true)
-	private List<EnvolvidoDto> poloPassivo;
+	//private List<EnvolvidoDto> poloPassivo;
+	private List<String> poloPassivo;
 	
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com os anexos da petição", required=true)
 	private List<AnexoDto> anexos;
 	
-	public List<EnvolvidoDto> getPoloAtivo() {
+	
+	public List<String> getPoloAtivo() {
 		return poloAtivo;
 	}
 	
-	public List<EnvolvidoDto> getPoloPassivo() {
+	public List<String> getPoloPassivo() {
 		return poloPassivo;
 	}
 	
     public String getClasseId() {
         return classeId;
     }
-    
-    public List<PreferenciaId> getPreferencias() {
-		return preferencias;
-	}
     
     public PessoaId getOrgaoId() {
         return orgaoId;

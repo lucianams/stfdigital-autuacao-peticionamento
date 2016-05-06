@@ -1,6 +1,8 @@
 package br.jus.stf.autuacao.peticionamento.application;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
+import br.jus.stf.autuacao.peticionamento.domain.DocumentoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
 import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.model.Anexo;
@@ -23,9 +26,11 @@ import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexo;
 import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexoRepository;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
-import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
-import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.PreferenciaRepository;
+import br.jus.stf.autuacao.peticionamento.interfaces.dto.AnexoDto;
 import br.jus.stf.core.shared.classe.ClasseId;
+import br.jus.stf.core.shared.documento.DocumentoId;
+import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
+import br.jus.stf.core.shared.documento.TipoDocumentoId;
 import br.jus.stf.core.shared.identidade.PessoaId;
 import br.jus.stf.core.shared.processo.Polo;
 import br.jus.stf.core.shared.protocolo.Protocolo;
@@ -45,8 +50,8 @@ public class PeticionamentoApplicationService {
     @Autowired
     private ClassePeticionavelRepository classeRepository;
     
-    @Autowired
-    private PreferenciaRepository preferenciaRepository;
+    //@Autowired
+    //private PreferenciaRepository preferenciaRepository;
     
     @Autowired
     private TipoAnexoRepository tipoAnexoRepository;
@@ -59,34 +64,44 @@ public class PeticionamentoApplicationService {
     
     @Autowired
     private PeticaoFactory peticaoFactory;
+    
+    @Autowired
+    private DocumentoAdapter documentoAdapter;
 
     @Transactional
     public void handle(PeticionarCommand command) {
         Protocolo protocolo = protocoloAdapter.novoProtocolo();
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
-		OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()
-				? orgaoRepository.findOne(command.getOrgaoId()) : null;
-        Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> {
-        	TipoAnexo tipo = tipoAnexoRepository.findOne(anexoDto.getTipo());
-        	
-        	return new Anexo(tipo, anexoDto.getDocumento());
-        }).collect(Collectors.toSet());
-        Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
-				? command.getPreferencias().stream().map(pref -> {
-					return preferenciaRepository.findOne(pref);
-				}).collect(Collectors.toSet()) : null;
-        //TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
+		List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<DocumentoTemporarioId>();
+		command.getAnexos().forEach(anexo -> documentosTemporarios.add(new DocumentoTemporarioId(anexo.getDocumentoId())));
+        OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()	? orgaoRepository.findOne(command.getOrgaoId()) : null;
+		Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> criarAnexo(anexoDto)).collect(Collectors.toSet());
+                
+		//TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
 		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()
 				? orgao.associados().iterator().next().pessoa() : new PessoaId(1L));
+		
 		//TODO: Verificar como reutilizar pessoas.
-		Set<Envolvido> envolvidos = new HashSet<>(0);
-        command.getPoloAtivo().forEach(parteDto -> envolvidos.add(new Envolvido(parteDto.getApresentacao(), Polo.ATIVO, parteDto.getPessoa())));
-        command.getPoloPassivo().forEach(parteDto -> envolvidos.add(new Envolvido(parteDto.getApresentacao(), Polo.PASSIVO, parteDto.getPessoa())));
+		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
+        command.getPoloAtivo().forEach(parte -> envolvidos.add(new Envolvido(parte, Polo.ATIVO, new PessoaId(1L))));
+        command.getPoloPassivo().forEach(parte -> envolvidos.add(new Envolvido(parte, Polo.PASSIVO, new PessoaId(1L))));
         
-		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, envolvidos, anexos,
-				peticionador);
+		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, peticionador);
         
         peticaoRepository.save(peticao);
     }
-
+    
+    /**
+     * Cria um objeto anexo.
+     * @param anexoDto Dados do anexo oriundos do front-end.
+     * @return Objeto anexo.
+     */
+    private Anexo criarAnexo(AnexoDto anexoDto) {
+	    List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<DocumentoTemporarioId>();
+	    documentosTemporarios.add(new DocumentoTemporarioId(anexoDto.getDocumentoId()));
+	    TipoAnexo tipo = tipoAnexoRepository.findOne(new TipoDocumentoId(anexoDto.getTipoDocumentoId()));
+	    DocumentoId documentoId = documentoAdapter.salvar(documentosTemporarios).get(0);
+	    
+	    return new Anexo(tipo, documentoId);
+    }
 }

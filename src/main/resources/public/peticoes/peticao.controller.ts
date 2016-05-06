@@ -2,7 +2,7 @@ import IStateService = angular.ui.IStateService;
 import IDialogService = angular.material.IDialogService;
 import ICookiesService = angular.cookies.ICookiesService;
 import IWindowService = angular.IWindowService;
-import {PeticaoService, IPeticao, Peticao, Classe, Peca, TipoPeca, Documento} from "./peticao.service";
+import {PeticaoService, IPeticao, Peticao, Classe, Anexo, TipoAnexo, Documento} from "./peticao.service";
 import peticionamento from "./peticao.module";
 
 export class PeticaoController {
@@ -16,18 +16,19 @@ export class PeticaoController {
     public partePoloPassivo: string;
     public partesPoloAtivo: Array<string> = new Array<string>();
     public partesPoloPassivo: Array<string> = new Array<string>();
-    public pecas: Array<Peca> = new Array<Peca>();
-    public tiposPecas: Array<TipoPeca> = new Array<TipoPeca>();
+    public anexos: Array<Anexo> = new Array<Anexo>();
+    public tiposAnexos: Array<TipoAnexo> = new Array<TipoAnexo>();
     private uploader: any;
     private configurarSelect2: any;
-    
+        
     static $inject = ["$window", "$mdDialog", "$state", "$cookies", "properties", "app.novo-processo.peticionamento.PeticaoService", "FileUploader"];
         
     /** @ngInject **/
     constructor(private $window: IWindowService, private $mdDialog: IDialogService, private $state: IStateService, private $cookies: ICookiesService, 
         private properties, private peticaoService: PeticaoService, FileUploader: any) { 
-        this.pecas = [];//new Array<Peca>();
+        this.anexos = [];
         this.classes = peticaoService.listarClasses();
+        this.tiposAnexos = peticaoService.listarTipoPecas();
         
         this.uploader = new FileUploader({
             url: properties.url + ":" + properties.port + "/documents/api/documentos/upload/assinado",
@@ -51,20 +52,20 @@ export class PeticaoController {
 		    			return false;
 		    		}
 		    		return true;
-		    	}
+                }
 		    }] 
         });
         
         this.uploader.onAfterAddingFile = (arquivo) => {
-            let peca = new Peca(arquivo, null, null, false);
-            arquivo.peca = peca;
-            this.pecas.push(peca);
-			arquivo.upload();
-		};
+            let anexo = new Anexo(arquivo, null, null, false);
+            arquivo.anexo = anexo;
+            this.anexos.push(anexo);
+            arquivo.upload();
+        };
         
         this.uploader.onSuccessItem = function(arquivo, response, status) {
-            arquivo.peca.documentoTemporario = response;
-            arquivo.peca.isExcluirServidor = true;
+            arquivo.anexo.documentoTemporario = response;
+            arquivo.anexo.isExcluirServidor = true;
         };
         
         this.uploader.onErrorItem = (arquivo, response, status) => {
@@ -72,10 +73,14 @@ export class PeticaoController {
             if (status === 0) {
         		this.exibirMensagem('Não foi possível anexar o arquivo "' + arquivo.file.name + '". <br />O tamanho do arquivo excede 10mb.', "Anexar Arquivos");
         	} else {
-                this.exibirMensagem(response.errors[0].message, "Anexar Arquivos")
+                if (status === 500){
+                    this.exibirMensagem("Não foi possível anexar o arquivo " + arquivo.file.name + ".", "Anexar Arquivos");
+                } else {
+                    this.exibirMensagem(response.errors[0].message, "Anexar Arquivos")
+                }
             }
         	
-            this.removerPeca(arquivo, false);
+            this.removerAnexo(arquivo);
         };
         
         this.uploader.filters.push({
@@ -101,32 +106,34 @@ export class PeticaoController {
 			};
 		};
     }
-    
+        
     //remove uma peças da petição.
-    private removerPeca(arquivo: any, isExcluirServidor: boolean): void {
-        if (isExcluirServidor){
-            //DocumentoTemporarioService.excluirArquivosTemporarios(arquivoTemporario);
+    private removerAnexo(anexo: any): void {
+        if (anexo.isExcluirServidor){
+            this.peticaoService.excluirDocumentoTemporarioAssinado([anexo.documentoTemporario]);
         }
         
-        let indice = this.pecas.indexOf(arquivo.peca);
-        this.pecas.splice(indice, 1);
+        let indice = this.anexos.indexOf(anexo);
+        this.anexos.splice(indice, 1);
     }
     
-    private limparPecas() : void {
-        var arquivosTemporarios = [];
+    private limparAnexos() : void {
+        let arquivosTemporarios = [];
+        let numeroArquivos = this.anexos.length;
         
-        for(let i = 0; i < this.pecas.length; i++){
-            arquivosTemporarios.push(this.pecas[i].documentoTemporario);
+        for(let i = 0; i < this.anexos.length; i++){
+            arquivosTemporarios.push(this.anexos[i].documentoTemporario);
         }
         
-        //DocumentoTemporarioService.excluirArquivosTemporarios(arquivosTemporarios);
+        this.peticaoService.excluirDocumentoTemporarioAssinado(arquivosTemporarios);
+        
+        this.anexos.splice(0);
         this.uploader.clearQueue();
         this.uploader.progress = 0;
-        //DocumentoTemporarioService.limpar(pecas);
 	}
 			
-    private visualizarPeca(peca: Peca): void {
-        var file = new Blob([peca.arquivo._file], {type: 'application/pdf'});
+    private visualizarAnexo(anexo: Anexo): void {
+        var file = new Blob([anexo.arquivo._file], {type: 'application/pdf'});
         var fileURL = window.URL.createObjectURL(file);
         this.$window.open(fileURL);
     }
@@ -172,45 +179,34 @@ export class PeticaoController {
         this.partesPoloPassivo.splice(indice);
     }
     
-    private validarForm(): string {
-        let erros = "";
+    private isFormValido(): boolean {
+        return (this.partesPoloAtivo.length > 0 && this.partesPoloPassivo.length >0 && this.anexos.length > 0 && this.classe != "");  
+    }
+    
+    public peticionar(): void {        
+        let erro = "";
         
-        if (this.partesPoloAtivo.length === 0) {
-            erros = 'Você precisa informar <b>pelo menos uma parte</b> para o polo <b>ativo</b>.<br/>';
-        }
-        
-        if (this.partesPoloPassivo.length === 0) {
-            erros += 'Você precisa informar <b>pelo menos uma parte</b> para o polo <b>passivo</b>.<br/>';
-        }
-        
-        if(this.pecas.length === 0){
-            erros += 'Você precisa adicionar <b>pelo menos uma peça</b> na sua petição.<br/>';
-        }
-        
-        for(let i = 0; i < this.pecas.length; i++){
-            if (this.pecas[i].tipo == null){
-                erros += 'Por favor, classifique todas as peças da sua petição.<br/>';
+        for(let i = 0; i < this.anexos.length; i++){            
+            if (this.anexos[i].tipo == null){
+                erro = "Por favor, classifique todas os anexos da sua petição.";
                 break;
             }
         }
         
-        return erros;  
-    }
-    
-    public peticionar(): void {
-        let erros = this.validarForm();
+        if (erro != ""){
+            this.exibirMensagem(erro, "Peticionamento");
+            return;    
+        } 
+                
         let peticao: IPeticao = this.criarPeticao();
-        
-        if (erros == ""){
-            this.peticaoService.enviarPeticao(peticao).then(() => {
-                this.formWizard = {};
-                this.$state.go('app.tarefas.minhas-tarefas', {}, { reload: true });
-            });
-        }
+        this.peticaoService.enviarPeticao(peticao).then(() => {
+            this.formWizard = {};
+            this.$state.go('app.tarefas.minhas-tarefas', {}, { reload: true });
+        });
     }
     
     private criarPeticao(): IPeticao {    
-        return new Peticao(this.classe, this.partesPoloAtivo, this.partesPoloPassivo, this.pecas);
+        return new Peticao(this.classe, this.partesPoloAtivo, this.partesPoloPassivo, this.anexos);
     }
 }
 
