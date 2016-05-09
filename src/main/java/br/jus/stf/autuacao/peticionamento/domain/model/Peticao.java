@@ -101,7 +101,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
         this.anexos = anexos;
         this.peticionador = peticionador;
         
-        registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString()));
+        registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString(), classe.identity().toString()));
         
         envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(), protocolo.toString(), envolvido.apresentacao())));
     }
