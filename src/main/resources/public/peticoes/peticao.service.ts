@@ -1,5 +1,6 @@
 import IHttpService = angular.IHttpService;
 import IPromise = angular.IPromise;
+import IHttpPromiseCallbackArg = angular.IHttpPromiseCallbackArg;
 import peticionamento from "./peticao.module";
 
 /*
@@ -105,6 +106,9 @@ export class PeticaoService {
     //Endereço do serviço de peticionamento.
     private static apiPeticionamento: string = '/peticionamento/api/peticoes';
     
+    //Endereço do serviço de classes peticionáveis.
+    private static servicoClassePeticionavel: string = '/peticionamento/api/classes-peticionaveis';
+    
     //Endereço do serviço de de classes.
     private static url: string = "/peticionamento/api/classes";
     
@@ -145,9 +149,14 @@ export class PeticaoService {
     }
     
     /* Recupera as classes processiais */    
-    public listarClasses() : Array<Classe>{
-        //return this.httpService.get(this.properties.url);
+    public listarClasses() : IPromise<Classe[]>{
+ 
+        return this.$http.get(this.properties.url + ":" + this.properties.port + PeticaoService.servicoClassePeticionavel)
+            .then((response: IHttpPromiseCallbackArg<Classe[]>) => { 
+                return response.data;
+            });
         
+        /*
         let classes: Array<Classe> = new Array<Classe>();
         classes.push(new Classe("ADI", "AÇÃO DIRETA DE INCONSTITUCIONALIDADE"));
         classes.push(new Classe("ACO", "AÇÃO CÍVEL ORIGINÁRIA"));
@@ -177,6 +186,7 @@ export class PeticaoService {
         classes.push(new Classe("RvC", "REVISÃO CRIMINAL"));
         
         return classes;
+        */
     }
 }
 

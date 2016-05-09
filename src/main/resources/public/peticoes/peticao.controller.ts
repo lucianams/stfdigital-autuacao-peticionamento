@@ -27,7 +27,10 @@ export class PeticaoController {
     constructor(private $window: IWindowService, private $mdDialog: IDialogService, private $state: IStateService, private $cookies: ICookiesService, 
         private properties, private peticaoService: PeticaoService, FileUploader: any) { 
         this.anexos = [];
-        this.classes = peticaoService.listarClasses();
+        peticaoService.listarClasses().then((classes: Classe[]) => {
+            this.classes = classes;    
+        });
+        
         this.tiposAnexos = peticaoService.listarTipoPecas();
         
         this.uploader = new FileUploader({
