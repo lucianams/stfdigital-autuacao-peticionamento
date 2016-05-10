@@ -1,5 +1,6 @@
 package br.jus.stf.autuacao.peticionamento;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,8 +17,10 @@ import  br.jus.stf.core.framework.testing.IntegrationTestsSupport;
  * @since 09/05/2016
  *
  */
+@Ignore
 @SpringApplicationConfiguration(ApplicationContextInitializer.class)
 public class ClassePeticionalIntegrationTests extends IntegrationTestsSupport {
+	
 	@Test
 	public void listarClassesPeticionaveis() throws Exception{
 		mockMvc.perform(get("/api/classes-peticionaveis")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(26)));

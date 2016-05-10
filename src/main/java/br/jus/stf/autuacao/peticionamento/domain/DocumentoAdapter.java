@@ -19,7 +19,7 @@ public interface DocumentoAdapter {
 	/**
 	 * Salva os documentos e recupera os ids na ordem de envio
 	 * 
-	 * @param documentosTemporarios Lista de documentos tempor·rios.
+	 * @param documentosTemporarios Lista de documentos tempor√°rios.
 	 * @return a lista de ids dos documentos.
 	 */
 	List<DocumentoId> salvar(List<DocumentoTemporarioId> documentosTemporarios);

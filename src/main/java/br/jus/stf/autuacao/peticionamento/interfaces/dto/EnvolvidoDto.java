@@ -1,7 +1,5 @@
 package br.jus.stf.autuacao.peticionamento.interfaces.dto;
 
-import br.jus.stf.core.shared.identidade.PessoaId;
-
 /**
  * @author Rafael Alencar
  * 
@@ -12,13 +10,13 @@ public class EnvolvidoDto {
 	
 	private String apresentacao;
 	
-	private PessoaId pessoa;
+	private Long pessoa;
 	
 	public EnvolvidoDto() {
 		
 	}
 	
-	public EnvolvidoDto(String apresentacao, PessoaId pessoa) {
+	public EnvolvidoDto(String apresentacao, Long pessoa) {
 		this.apresentacao = apresentacao;
 		this.pessoa = pessoa;
 	}
@@ -31,11 +29,11 @@ public class EnvolvidoDto {
 		this.apresentacao = apresentacao;
 	}
 	
-	public PessoaId getPessoa() {
+	public Long getPessoa() {
 		return pessoa;
 	}
 	
-	public void setPessoa(PessoaId pessoa) {
+	public void setPessoa(Long pessoa) {
 		this.pessoa = pessoa;
 	}
 	
