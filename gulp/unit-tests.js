@@ -34,7 +34,7 @@ function runTests(singleRun, done)
     }
 
     var localConfig = {
-        configFile   : path.join(__dirname, '/../karma.conf.js'),
+        configFile   : path.join(conf.paths.test, '/karma.conf.js'),
         singleRun    : singleRun,
         autoWatch    : !singleRun,
         reporters    : reporters,

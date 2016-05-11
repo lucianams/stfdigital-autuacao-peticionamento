@@ -15,7 +15,8 @@ exports.paths = {
     src : 'src/main/resources',
     dist: 'src/main/resources/public',
     tmp : 'src/main/resources/public/.tmp',
-    e2e : 'src/main/resources/public/e2e'
+    e2e : 'src/test/ui/e2e',
+    test: 'src/test/ui'
 };
 
 /**
