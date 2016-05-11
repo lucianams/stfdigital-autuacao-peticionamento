@@ -28,7 +28,7 @@ public class PeticaoRestResource {
     @RequestMapping(method = RequestMethod.POST)
     public void peticionar(@RequestBody @Valid PeticionarCommand command, BindingResult binding) {
         if (binding.hasErrors()) {
-            throw new IllegalArgumentException("PetiÁ„o inv·lida: " + binding.getAllErrors());
+            throw new IllegalArgumentException("Peti√ß√£o inv√°lida: " + binding.getAllErrors());
         }
 
         peticionarCommandHandler.handle(command);
