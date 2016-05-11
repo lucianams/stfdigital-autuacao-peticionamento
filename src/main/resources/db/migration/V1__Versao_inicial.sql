@@ -6,7 +6,7 @@ create sequence peticionamento.seq_evento increment by 1 start with 1 nomaxvalue
 
 create table peticionamento.peticao (seq_protocolo number not null, sig_classe varchar2(6) not null, seq_orgao number, constraint pk_peticao primary key (seq_protocolo));
 
-create table peticionamento.envolvido (seq_envolvido number not null, nom_envolvido varchar2(50) not null, constraint pk_envolvido primary key (seq_envolvido));
+create table peticionamento.envolvido (seq_envolvido number not null, nom_envolvido varchar2(100) not null, constraint pk_envolvido primary key (seq_envolvido));
 
 create table peticionamento.peticao_envolvido (seq_protocolo number not null, seq_envolvido number not null, constraint pk_peticao_envolvido primary key (seq_protocolo, seq_envolvido));
 alter table peticionamento.peticao_envolvido add constraint fk_peticao_peen foreign key (seq_protocolo) references peticionamento.peticao(seq_protocolo);
