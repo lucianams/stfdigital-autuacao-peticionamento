@@ -36,7 +36,10 @@ alter table peticionamento.associado add constraint fk_orgao_peticionador_asso f
 alter table peticionamento.associado add constraint uk_asso_seq_pessoa unique key (seq_pessoa, seq_pessoa_orgao);
 alter table peticionamento.associado add constraint ck_asso_tip_associado check (tip_associado in ('ASSOCIADO', 'GESTOR', 'REPRESENTANTE'));
 
+alter table peticionamento.peticao add column num_peticao number not null;
+alter table peticionamento.peticao add column num_ano integer not null;
 alter table peticionamento.peticao add column sig_peticionador varchar2(30) not null;
 alter table peticionamento.peticao add column dat_peticionamento date not null;
+alter table peticionamento.peticao add constraint uk_peti_num_peticao unique key (num_peticao, num_ano);
 alter table peticionamento.peticao add constraint fk_classe_peticionavel_peti foreign key (sig_classe) references peticionamento.classe_peticionavel(sig_classe);
 alter table peticionamento.peticao add constraint fk_orgao_peticionador_peti foreign key (seq_orgao) references peticionamento.orgao_peticionador(seq_pessoa);
