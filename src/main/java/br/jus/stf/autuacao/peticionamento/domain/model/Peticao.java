@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
@@ -29,6 +31,7 @@ import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
+import br.jus.stf.core.shared.protocolo.Numero;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 import br.jus.stf.core.shared.protocolo.ProtocoloId;
 
@@ -48,6 +51,13 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     @ManyToOne
     @JoinColumn(name = "SIG_CLASSE", nullable = false)
 	private ClassePeticionavel classe;
+    
+    @Embedded
+    @AttributeOverrides( {
+        @AttributeOverride(name="numero", column = @Column(name="NUM_PETICAO", nullable = false)),
+        @AttributeOverride(name="ano", column = @Column(name="NUM_ANO", nullable = false))
+    } )
+    private Numero numero;
     
     @OneToMany(cascade = ALL)
     @JoinTable(name = "PETICAO_PREFERENCIA", schema = "PETICIONAMENTO", joinColumns = @JoinColumn(name = "SEQ_PROTOCOLO", nullable = false),
@@ -94,6 +104,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 				"Alguma(s) preferência(s) não pertence(m) à classe selecionada.");
 		
     	this.protocoloId = protocolo.identity();
+    	this.numero = protocolo.numero();
     	this.classe = classe;
     	this.preferencias = Optional.ofNullable(preferencias).orElse(new HashSet<>(0));
         this.orgao = orgao;
@@ -109,6 +120,10 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 	private void registrarEvento(DomainEvent<?> evento) {
 		eventos.add(new Evento(evento));
 	}
+	
+	public Numero numero() {
+    	return numero;
+    }
     
 	@Override
 	public ProtocoloId identity() {

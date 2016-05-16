@@ -1,4 +1,4 @@
-create table peticionamento.classe_peticionavel (sig_classe varchar2(6) not null, nom_classe varchar2(100) not null, constraint pk_classe_peticionavel primary key (sig_classe));
+create table peticionamento.classe_peticionavel (sig_classe varchar2(6) not null, nom_classe varchar2(80) not null, constraint pk_classe_peticionavel primary key (sig_classe));
 
 create table peticionamento.preferencia (seq_preferencia number not null, nom_preferencia varchar2(100) not null, constraint pk_preferencia primary key (seq_preferencia));
 
@@ -23,7 +23,7 @@ create sequence peticionamento.seq_anexo increment by 1 start with 1 nomaxvalue 
 
 create table peticionamento.tipo_anexo (seq_tipo_documento number not null, nom_tipo_documento varchar2(100) not null, constraint pk_tipo_anexo primary key (seq_tipo_documento));
 
-create table peticionamento.anexo (seq_anexo number not null, dsc_anexo varchar2(50) not null, seq_tipo_anexo number not null, seq_documento number not null, seq_protocolo number not null, constraint pk_anexo primary key (seq_anexo));
+create table peticionamento.anexo (seq_anexo number not null, seq_protocolo number not null, dsc_anexo varchar2(100) not null, seq_tipo_anexo number not null, seq_documento number not null, constraint pk_anexo primary key (seq_anexo));
 alter table peticionamento.anexo add constraint fk_peticao_anex foreign key (seq_protocolo) references peticionamento.peticao(seq_protocolo);
 alter table peticionamento.anexo add constraint fk_tipo_anexo_anex foreign key (seq_tipo_anexo) references peticionamento.tipo_anexo(seq_tipo_documento);
 
@@ -33,8 +33,13 @@ create sequence peticionamento.seq_associado increment by 1 start with 1 nomaxva
 
 create table peticionamento.associado (seq_associado number not null, seq_pessoa number not null, nom_pessoa varchar2(100) not null, tip_associado varchar2(13) not null, dsc_cargo_funcao varchar2(50), seq_pessoa_orgao number not null, constraint pk_associado primary key (seq_associado));
 alter table peticionamento.associado add constraint fk_orgao_peticionador_asso foreign key (seq_pessoa_orgao) references peticionamento.orgao_peticionador(seq_pessoa);
-alter table peticionamento.associado add constraint uk_orpe_seq_pessoa unique key (seq_pessoa, seq_pessoa_orgao);
-alter table peticionamento.associado add constraint ck_orpe_tip_associado check (tip_associado in ('ASSOCIADO', 'GESTOR', 'REPRESENTANTE'));
+alter table peticionamento.associado add constraint uk_asso_seq_pessoa unique key (seq_pessoa, seq_pessoa_orgao);
+alter table peticionamento.associado add constraint ck_asso_tip_associado check (tip_associado in ('ASSOCIADO', 'GESTOR', 'REPRESENTANTE'));
 
+alter table peticionamento.peticao add column num_peticao number not null;
+alter table peticionamento.peticao add column num_ano integer not null;
 alter table peticionamento.peticao add column sig_peticionador varchar2(30) not null;
 alter table peticionamento.peticao add column dat_peticionamento date not null;
+alter table peticionamento.peticao add constraint uk_peti_num_peticao unique key (num_peticao, num_ano);
+alter table peticionamento.peticao add constraint fk_classe_peticionavel_peti foreign key (sig_classe) references peticionamento.classe_peticionavel(sig_classe);
+alter table peticionamento.peticao add constraint fk_orgao_peticionador_peti foreign key (seq_orgao) references peticionamento.orgao_peticionador(seq_pessoa);
