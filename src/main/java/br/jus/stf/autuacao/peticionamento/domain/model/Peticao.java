@@ -15,6 +15,8 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
@@ -31,6 +33,7 @@ import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
+import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.Numero;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 import br.jus.stf.core.shared.protocolo.ProtocoloId;
@@ -56,7 +59,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     @AttributeOverrides( {
         @AttributeOverride(name="numero", column = @Column(name="NUM_PETICAO", nullable = false)),
         @AttributeOverride(name="ano", column = @Column(name="NUM_ANO", nullable = false))
-    } )
+    })
     private Numero numero;
     
     @OneToMany(cascade = ALL)
@@ -88,15 +91,20 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     @Column(name = "DAT_PETICIONAMENTO", nullable = false)
     private Date dataPeticionamento = new Date();
     
+    @Column(name = "TIP_SIGILO", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Sigilo sigilo;
+    
     public Peticao() {
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
     }
 
-	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias, OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Peticionador peticionador) {
+	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias, OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo, Peticionador peticionador) {
     	Validate.notNull(protocolo, "Protocolo requerido.");
     	Validate.notNull(classe, "Classe requerida.");
     	Validate.notEmpty(envolvidos, "Envolvidos requeridos.");
     	Validate.notEmpty(anexos, "Anexos requeridos.");
+    	Validate.notNull(sigilo, "Sigilo requerido.");
     	Validate.notNull(peticionador, "Peticionador requerido.");
 		Validate.isTrue(!Optional.ofNullable(orgao).isPresent() || orgao.isRepresentadoPor(peticionador.pessoa()),
 				"Peticionador não é representante do Órgão.");
@@ -110,9 +118,10 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
         this.orgao = orgao;
         this.envolvidos = envolvidos;
         this.anexos = anexos;
+        this.sigilo = sigilo;
         this.peticionador = peticionador;
         
-        registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString(), classe.identity().toString()));
+        registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString(), classe.identity().toString(), "ORIGINARIO", sigilo.toString()));
         
         envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(), protocolo.toString(), envolvido.apresentacao())));
     }

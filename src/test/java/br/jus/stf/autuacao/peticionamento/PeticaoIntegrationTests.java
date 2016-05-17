@@ -25,7 +25,7 @@ public class PeticaoIntegrationTests extends IntegrationTestsSupport {
     
 	@Test
     public void registrarUmaPeticao() throws Exception {
-        String peticaoValida = "{\"classeId\":\"ADI\", \"preferencias\":[3,8], \"poloAtivo\": [{\"apresentacao\":\"Maria\",\"pessoa\":1}, {\"apresentacao\":\"João\"}], \"poloPassivo\": [{\"apresentacao\":\"Antônia\",\"pessoa\":3}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
+        String peticaoValida = "{\"classeId\":\"ADI\", \"preferencias\":[3,8], \"poloAtivo\": [{\"apresentacao\":\"Maria\",\"pessoa\":1}, {\"apresentacao\":\"João\"}], \"poloPassivo\": [{\"apresentacao\":\"Antônia\",\"pessoa\":3}], \"anexos\": [{\"documento\":1, \"tipo\":1}], \"sigilo\":\"PUBLICO\"}";
         
         ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoValida));
         
@@ -34,7 +34,7 @@ public class PeticaoIntegrationTests extends IntegrationTestsSupport {
 	
 	@Test
     public void registrarUmaPeticaoComRepresentacao() throws Exception {
-        String peticaoValida = "{\"classeId\":\"ADI\", \"orgaoId\":12452261, \"poloAtivo\": [{\"apresentacao\":\"Maria\"}], \"poloPassivo\": [{\"apresentacao\":\"João\", \"pessoa\":3}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
+        String peticaoValida = "{\"classeId\":\"ADI\", \"orgaoId\":12452261, \"poloAtivo\": [{\"apresentacao\":\"Maria\"}], \"poloPassivo\": [{\"apresentacao\":\"João\", \"pessoa\":3}], \"anexos\": [{\"documento\":1, \"tipo\":1}], \"sigilo\":\"PUBLICO\"}";
         
         ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoValida));
         

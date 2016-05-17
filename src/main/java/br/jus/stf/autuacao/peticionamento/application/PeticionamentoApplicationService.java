@@ -33,6 +33,7 @@ import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
 import br.jus.stf.core.shared.documento.TipoDocumentoId;
 import br.jus.stf.core.shared.identidade.PessoaId;
 import br.jus.stf.core.shared.processo.Polo;
+import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 
 /**
@@ -74,9 +75,9 @@ public class PeticionamentoApplicationService {
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
 		List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<DocumentoTemporarioId>();
 		command.getAnexos().forEach(anexo -> documentosTemporarios.add(new DocumentoTemporarioId(anexo.getDocumentoId())));
-        OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()	? orgaoRepository.findOne(command.getOrgaoId()) : null;
+        OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()	? orgaoRepository.findOne(new PessoaId(command.getOrgaoId())) : null;
 		Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> criarAnexo(anexoDto)).collect(Collectors.toSet());
-                
+		Sigilo sigilo = Sigilo.valueOf(command.getSigilo());
 		//TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
 		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()
 				? orgao.associados().iterator().next().pessoa() : new PessoaId(1L));
@@ -86,7 +87,7 @@ public class PeticionamentoApplicationService {
         command.getPoloAtivo().forEach(parte -> envolvidos.add(new Envolvido(parte, Polo.ATIVO, new PessoaId(1L))));
         command.getPoloPassivo().forEach(parte -> envolvidos.add(new Envolvido(parte, Polo.PASSIVO, new PessoaId(1L))));
         
-		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, peticionador);
+		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, sigilo, peticionador);
         
         peticaoRepository.save(peticao);
     }

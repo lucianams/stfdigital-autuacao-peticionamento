@@ -1,0 +1,2 @@
+alter table peticionamento.peticao add column tip_sigilo varchar2(15) not null;
+alter table peticionamento.peticao add constraint ck_peti_tip_sigilo check (tip_sigilo in ('PUBLICO', 'SEGREDO_JUSTICA'));

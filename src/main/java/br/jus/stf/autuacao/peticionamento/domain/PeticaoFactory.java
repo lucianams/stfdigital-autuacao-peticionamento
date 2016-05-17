@@ -11,6 +11,7 @@ import br.jus.stf.autuacao.peticionamento.domain.model.Peticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
+import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 
 /**
@@ -23,9 +24,9 @@ import br.jus.stf.core.shared.protocolo.Protocolo;
 public class PeticaoFactory {
 
 	public Peticao novaPeticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias,
-			OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Peticionador peticionador) {
+			OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo, Peticionador peticionador) {
     	
-    	return new Peticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, peticionador);
+    	return new Peticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, sigilo, peticionador);
     }
 
 }
