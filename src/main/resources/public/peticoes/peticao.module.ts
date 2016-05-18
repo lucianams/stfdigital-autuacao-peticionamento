@@ -5,15 +5,15 @@ import IModule = angular.IModule;
 /** @ngInject **/
 function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider,
                 $stateProvider: IStateProvider,
-                msNavigationServiceProvider: any) {
+                msNavigationServiceProvider: any, properties) {
 
-    $translatePartialLoaderProvider.addPart('http://docker:8765/peticionamento/peticoes');
+    $translatePartialLoaderProvider.addPart(properties.apiUrl + '/peticionamento/peticoes');
 
     $stateProvider.state('app.novo-processo.peticionamento', {
         url : '/novo-processo/peticao',
         views : {
             'content@app.autenticado' : {
-                templateUrl : 'http://docker:8765/peticionamento/peticoes/peticao.tpl.html',
+                templateUrl : properties.apiUrl + '/peticionamento/peticoes/peticao.tpl.html',
                 controller : 'app.novo-processo.peticionamento.PeticaoController',
                 controllerAs: 'vm'
             }
