@@ -96,7 +96,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-test")
 }
 
-//npmInstall.dependsOn npm_prune
+npmInstall.dependsOn npm_prune
 gulp_build.dependsOn tasks.npmInstall
 processResources.dependsOn gulp_build
 
