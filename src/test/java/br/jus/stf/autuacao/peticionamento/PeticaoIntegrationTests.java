@@ -1,7 +1,10 @@
 package br.jus.stf.autuacao.peticionamento;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Ignore;
@@ -50,4 +53,7 @@ public class PeticaoIntegrationTests extends IntegrationTestsSupport {
         result.andExpect(status().isBadRequest());
     }
     
+    public void consultarPeticao() throws Exception {
+    	mockMvc.perform(get("/api/peticoes/99999/envolvidos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)));
+    }
 }

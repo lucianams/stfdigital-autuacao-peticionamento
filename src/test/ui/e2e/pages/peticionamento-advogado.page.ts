@@ -1,4 +1,4 @@
-import ElementiFinder = protractor.ElementFinder;
+import ElementFinder = protractor.ElementFinder;
 import path = require("path");
 
 export class PeticionamentoAdvogadoPage {

@@ -5,9 +5,9 @@ import IModule = angular.IModule;
 /** @ngInject **/
 function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider,
                 $stateProvider: IStateProvider,
-                msNavigationServiceProvider: any) {
+                msNavigationServiceProvider: any, properties) {
 
-    $translatePartialLoaderProvider.addPart('http://docker:8765/peticionamento/peticoes');
+    $translatePartialLoaderProvider.addPart(properties.apiUrl + '/peticionamento/peticoes');
 
     $stateProvider.state('app.novo-processo.peticionamento', {
         url : '/novo-processo/peticao',
@@ -29,7 +29,7 @@ function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider
     });
 }
 
-let peticionamento: IModule = angular.module('app.novo-processo.peticionamento', ['app.novo-processo', 'classy', 'angularFileUpload', 'ngCookies']);
+let peticionamento: IModule = angular.module('app.novo-processo.peticionamento', ['app.novo-processo', 'app.constants', 'angularFileUpload', 'ngCookies']);
 peticionamento.config(config);
 
 export default peticionamento;
