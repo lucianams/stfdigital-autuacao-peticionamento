@@ -262,5 +262,14 @@ Insert into PETICIONAMENTO.ORGAO_PETICIONADOR (SEQ_PESSOA,NOM_PESSOA) values (12
 Insert into PETICIONAMENTO.ORGAO_PETICIONADOR (SEQ_PESSOA,NOM_PESSOA) values (12464809,'Tribunal Superior Eleitoral');
 Insert into PETICIONAMENTO.ORGAO_PETICIONADOR (SEQ_PESSOA,NOM_PESSOA) values (12596313,'Tribunal de Justiça do Estado do Amapá');
 
--- Carga de usuário representante do órgão para testes
+-- Carga para testes
 Insert into PETICIONAMENTO.ASSOCIADO (SEQ_ASSOCIADO, SEQ_PESSOA, NOM_PESSOA, TIP_ASSOCIADO, DSC_CARGO_FUNCAO, SEQ_PESSOA_ORGAO) values (PETICIONAMENTO.SEQ_ASSOCIADO.nextval, 1, 'USUARIO_FALSO', 'REPRESENTANTE', 'PETICIONADOR', 12452261);
+
+INSERT INTO peticionamento.peticao (seq_protocolo, sig_classe, num_peticao, num_ano, sig_peticionador, dat_peticionamento) VALUES (99999, 'ADI', 99999, 2016, 'USUARIO_FALSO', SYSDATE);
+
+INSERT INTO peticionamento.envolvido (seq_envolvido, nom_apresentacao, tip_polo, seq_protocolo) VALUES (peticionamento.seq_envolvido.nextval, 'Ruy Barbosa', 'ATIVO', 99999);
+INSERT INTO peticionamento.envolvido (seq_envolvido, nom_apresentacao, tip_polo, seq_protocolo) VALUES (peticionamento.seq_envolvido.nextval, 'Cecília Meireles', 'PASSIVO', 99999);
+
+INSERT INTO peticionamento.peticao_preferencia (seq_protocolo, seq_preferencia) VALUES (99999, 8);
+
+INSERT INTO peticionamento.anexo (seq_anexo, seq_protocolo, dsc_anexo, seq_tipo_anexo, seq_documento) VALUES (peticionamento.seq_anexo.nextval, 99999, 'Informação', 100, 1);

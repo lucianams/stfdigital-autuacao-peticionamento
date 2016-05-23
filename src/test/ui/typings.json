@@ -1,0 +1,9 @@
+{
+  "ambientDependencies": {
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
+    "angular-protractor": "github:DefinitelyTyped/DefinitelyTyped/angular-protractor/angular-protractor.d.ts#f9c44651705f574f6d4258fe5e1c335462bdcc19",
+    "selenium-webdriver": "github:DefinitelyTyped/DefinitelyTyped/selenium-webdriver/selenium-webdriver.d.ts#a83677ed13add14c2ab06c7325d182d0ba2784ea",
+    "protractor-helpers": "github:DefinitelyTyped/DefinitelyTyped/protractor-helpers/protractor-helpers.d.ts#14fe4313f4a1cf69add3505a2ab1dbc690dc2116",
+	"node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#6d0e826824da52204c1c93f92cecbc961ac84fa9"
+  }
+}

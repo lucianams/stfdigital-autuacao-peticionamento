@@ -3,6 +3,7 @@ package br.jus.stf.autuacao.peticionamento.domain.model;
 import static java.util.Comparator.comparing;
 import static javax.persistence.CascadeType.ALL;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -133,6 +134,10 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 	public Numero numero() {
     	return numero;
     }
+	
+	public Set<Envolvido> envolvidos(){
+		return Collections.unmodifiableSet(envolvidos);
+	}
     
 	@Override
 	public ProtocoloId identity() {

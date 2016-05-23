@@ -6,15 +6,15 @@ var conf = require('./conf');
 
 var $ = require('gulp-load-plugins')();
 
-gulp.task('scripts', ['compile-ts'], function ()
-{
-    return buildScripts();
-});
-
 function buildScripts()
 {
-    return gulp.src(path.join(conf.paths.src, '/app/**/*.js'))
+    return gulp.src(path.join(conf.paths.src, '/main/resources/public/**/*.js'))
         .pipe($.jshint())
         .pipe($.jshint.reporter('jshint-stylish'))
         .pipe($.size())
 };
+
+gulp.task('scripts', ['compile-ts'], function ()
+{
+    return buildScripts();
+});

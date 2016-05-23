@@ -24,7 +24,7 @@
                     <div layout="column">
                         <md-input-container flex>
                             <label>Classe</label>
-                            <md-select ng-model="vm.classe">
+                            <md-select ng-model="vm.classe" id="idClassePeticionavel">
                                 <md-option ng-repeat="classe in vm.classes" value="{{classe.sigla}}">
                                     {{classe.nome}}
                                 </md-option>
@@ -36,12 +36,12 @@
                         
                         <md-input-container flex="" class="md-icon-float flex md-default-theme md-input-invalid">
                             <label>Informe o nome da parte do polo ativo</label>
-                            <input type="text" name="txtPartePoloAtivo" ng-model="vm.partePoloAtivo" class="ng-pristine" aria-label="" aria-invalid="true" ng-keydown="$event.which === 13 && vm.adicionarPartePoloAtivo()" ng-click= "$event.stopPropagation()">
+                            <input type="text" name="txtPartePoloAtivo" id="txtPartePoloAtivo" ng-model="vm.partePoloAtivo" class="ng-pristine" aria-label="" aria-invalid="true" ng-keydown="$event.which === 13 && vm.adicionarPartePoloAtivo()" ng-click= "$event.stopPropagation()">
                              
                         </md-input-container>
                         <md-input-container flex="" class="md-icon-float flex md-default-theme md-input-invalid">    
                             <label>Informe o nome da parte do polo passivo</label>
-                            <input type="text" name="txtPartePoloPassivo" ng-model="vm.partePoloPassivo" class="ng-pristine ng-empty ng-invalid ng-invalid-required 
+                            <input type="text" name="txtPartePoloPassivo" id="txtPartePoloPassivo" ng-model="vm.partePoloPassivo" class="ng-pristine ng-empty ng-invalid ng-invalid-required 
                             ng-touched" aria-label="" aria-invalid="true"  ng-keydown="$event.which === 13 && vm.adicionarPartePoloPassivo()" ng-click= "$event.stopPropagation()">
                         </md-input-container>
                     </div>
@@ -61,7 +61,7 @@
 											    <td>{{parte}}</td>
 											    <td align="right">
                                                     <span class="hint-text small">
-                                                        <a href="#" ng-click="vm.removerPartePoloAtivo(parte)">Remover</a>
+                                                        <a href="#" id="lnkRemoverEnvolvidoPoloAtivo-{{$index}}" ng-click="vm.removerPartePoloAtivo(parte)">Remover</a>
                                                     </span>
                                                 </td>
 										    </tr>
@@ -85,7 +85,7 @@
 											    <td>{{parte}}</td>
 											    <td align="right">
                                                     <span class="hint-text small">
-                                                        <a href="#" ng-click="vm.removerPartePoloPassivo(parte)">Remover</a>
+                                                        <a href="#" id="lnkRemoverEnvolvidoPoloPassivo-{{$index}}" ng-click="vm.removerPartePoloPassivo(parte)">Remover</a>
                                                     </span>
                                                 </td>
 										    </tr>
@@ -147,12 +147,12 @@
                     </div>
                     <div layout="row" layout-align="end center">
                         <div>
-                            <button type="button" class="md-raised md-warn md-button md-default-theme md-ink-ripple" ng-click="vm.limparAnexos()" ng-show="vm.anexos.length > 0">
+                            <button type="button" id="btnRemoverAnexos" class="md-raised md-warn md-button md-default-theme md-ink-ripple" ng-click="vm.limparAnexos()" ng-show="vm.anexos.length > 0">
                                 <span class="glyphicon glyphicon-trash"></span> Remover Todos os Anexos
                             </button>
                         </div>
                     </div>
-                    <md-button type="submit" ng-disabled="!vm.isFormValido()" class="md-raised md-primary md-button md-default-theme md-ink-ripple" 
+                    <md-button type="submit" id="btnPeticionar" ng-disabled="!vm.isFormValido()" class="md-raised md-primary md-button md-default-theme md-ink-ripple" 
                         aria-label="Peticionar" ng-click="vm.peticionar()">
                         Peticionar
                     </md-button>

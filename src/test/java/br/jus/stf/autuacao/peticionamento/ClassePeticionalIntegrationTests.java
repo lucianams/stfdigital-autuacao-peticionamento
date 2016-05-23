@@ -1,12 +1,13 @@
 package br.jus.stf.autuacao.peticionamento;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.hasSize;
+
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 
 import  br.jus.stf.core.framework.testing.IntegrationTestsSupport;
 
