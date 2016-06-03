@@ -32,7 +32,11 @@
     <logger name="org.apache.tomcat" level="WARN"/>
     <logger name="org.flywaydb.core.internal" level="WARN"/>
     <logger name="com.mangofactory.swagger" level="WARN"/>
-    <logger name="org.springframework.amqp" level="WARN"/>
+    <logger name="org.springframework.integration" level="WARN"/>
+    <logger name="org.springframework.jdbc" level="WARN"/>
+    <logger name="io.undertow" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="com.netflix.discovery" level="WARN"/>    
     
 </configuration>
 
