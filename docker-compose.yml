@@ -36,4 +36,4 @@ services:
     container_name: ui
     image: plataforma-ui
     ports:
-     - "8080:8080"
+     - "8443:8443"
