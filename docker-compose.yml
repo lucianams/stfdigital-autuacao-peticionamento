@@ -24,6 +24,11 @@ services:
      - "8181:8181"
     environment:
      - spring.profiles.active=development
+  mongo:
+    container_name: mongo
+    image: mongo:3
+    ports:
+     - "27017:27017"
   documents:
     container_name: documents
     image: documents
@@ -31,7 +36,7 @@ services:
      - "8094:8094"
      - "8194:8194"
     environment:
-     - spring.profiles.active=development	 
+     - spring.profiles.active=development
   ui:
     container_name: ui
     image: plataforma-ui
