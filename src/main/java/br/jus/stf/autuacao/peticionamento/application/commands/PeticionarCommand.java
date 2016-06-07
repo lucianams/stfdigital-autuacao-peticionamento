@@ -7,8 +7,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import br.jus.stf.autuacao.peticionamento.interfaces.dto.AnexoDto;
-
 /**
  * @author Rodrigo Barreiros
  * 
@@ -26,17 +24,17 @@ public class PeticionarCommand {
     
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com as pessoas envolvidas no polo ativo", required=true)
-	//private List<EnvolvidoDto> poloAtivo;
+	//private List<CadastrarEnvolvidoCommand> poloAtivo;
 	private List<String> poloAtivo;
 	
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com as pessoas envolvidas no polo passivo", required=true)
-	//private List<EnvolvidoDto> poloPassivo;
+	//private List<CadastrarEnvolvidoCommand> poloPassivo;
 	private List<String> poloPassivo;
 	
 	@NotEmpty
 	@ApiModelProperty(value = "Lista com os anexos da petição", required=true)
-	private List<AnexoDto> anexos;
+	private List<CadastrarAnexoCommand> anexos;
 	
 	@NotEmpty
 	@ApiModelProperty(value = "O grau de sigilo da petição", required=true)
@@ -59,7 +57,7 @@ public class PeticionarCommand {
         return orgaoId;
     }
     
-    public List<AnexoDto> getAnexos() {
+    public List<CadastrarAnexoCommand> getAnexos() {
     	return anexos;
     }
     

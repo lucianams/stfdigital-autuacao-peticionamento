@@ -1,4 +1,4 @@
-package br.jus.stf.autuacao.peticionamento.interfaces.dto;
+package br.jus.stf.autuacao.peticionamento.application.commands;
 
 /**
  * @author Rafael Alencar
@@ -6,17 +6,17 @@ package br.jus.stf.autuacao.peticionamento.interfaces.dto;
  * @since 1.0.0
  * @since 07.04.2016
  */
-public class AnexoDto {
+public class CadastrarAnexoCommand {
 	
 	private Long tipoDocumentoId;
 	
 	private String documentoId;
 	
-	public AnexoDto() {
+	public CadastrarAnexoCommand() {
 		
 	}
 	
-	public AnexoDto(Long tipoDocumentoId, String documentoId) {
+	public CadastrarAnexoCommand(Long tipoDocumentoId, String documentoId) {
 		this.tipoDocumentoId = tipoDocumentoId;
 		this.documentoId = documentoId;
 	}
