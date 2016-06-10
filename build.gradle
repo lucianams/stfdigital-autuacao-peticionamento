@@ -102,5 +102,6 @@ processResources.dependsOn gulp_build
 docker {
     name jar.baseName
     dockerfile 'src/main/docker/Dockerfile'
+    files 'truststores/truststore.jks'
     dependsOn tasks.jar, tasks.bootRepackage, tasks.build
 }

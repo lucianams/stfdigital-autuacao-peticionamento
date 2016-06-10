@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.jus.stf.autuacao.peticionamento.application.commands.CadastrarAnexoCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
 import br.jus.stf.autuacao.peticionamento.domain.DocumentoAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.PessoaAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
 import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.model.Anexo;
@@ -68,6 +69,9 @@ public class PeticionamentoApplicationService {
     
     @Autowired
     private DocumentoAdapter documentoAdapter;
+    
+    @Autowired
+    private PessoaAdapter pessoaAdapter;
 
     @Transactional
     public void handle(PeticionarCommand command) {
@@ -84,8 +88,8 @@ public class PeticionamentoApplicationService {
 		
 		//TODO: Verificar como reutilizar pessoas.
 		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
-        command.getPoloAtivo().forEach(parte -> envolvidos.add(new Envolvido(parte, Polo.ATIVO, new PessoaId(1L))));
-        command.getPoloPassivo().forEach(parte -> envolvidos.add(new Envolvido(parte, Polo.PASSIVO, new PessoaId(1L))));
+        envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
+        envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
         
 		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, sigilo, peticionador);
         
@@ -99,10 +103,30 @@ public class PeticionamentoApplicationService {
      */
     private Anexo criarAnexo(CadastrarAnexoCommand anexoCommand) {
 	    List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<DocumentoTemporarioId>();
+	    
 	    documentosTemporarios.add(new DocumentoTemporarioId(anexoCommand.getDocumentoId()));
+	    
 	    TipoAnexo tipo = tipoAnexoRepository.findOne(new TipoDocumentoId(anexoCommand.getTipoDocumentoId()));
 	    DocumentoId documentoId = documentoAdapter.salvar(documentosTemporarios).get(0);
 	    
 	    return new Anexo(tipo, documentoId);
     }
+    
+    /**
+	 * Salva as pessoas, recupera os IDs e retorna uma lista de envolvidos.
+	 * @param partes
+	 * @param polo
+	 * @param tipo
+	 */
+	public Set<Envolvido> criarEnvolvidos(List<String> nomes, Polo polo) {
+		Set<PessoaId> pessoas = pessoaAdapter.cadastrarPessoas(nomes);
+		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
+        int index = 0;
+        
+		for(PessoaId pessoa : pessoas) {
+			envolvidos.add(new Envolvido(nomes.get(index++), polo, pessoa));
+		}
+		
+		return envolvidos;
+	}
 }

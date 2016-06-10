@@ -26,4 +26,9 @@ eureka:
     
 flyway:
   validate-on-migrate: false
-    
+
+http:
+  client:
+    ssl:
+      trust-store: truststores/truststore.jks
+      trust-store-password: changeit
