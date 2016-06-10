@@ -22,7 +22,6 @@ import  br.jus.stf.core.framework.testing.IntegrationTestsSupport;
 @SpringApplicationConfiguration(ApplicationContextInitializer.class)
 public class ClassePeticionalIntegrationTests extends IntegrationTestsSupport {
 	
-	@Ignore
 	@Test
 	public void listarClassesPeticionaveis() throws Exception{
 		mockMvc.perform(get("/api/classes-peticionaveis")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(26)));
