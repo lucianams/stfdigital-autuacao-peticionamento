@@ -69,7 +69,7 @@ public class PeticaoIntegrationTests extends IntegrationTestsSupport {
         
         result.andExpect(status().isOk());
     }
-	
+
 	@Test
     public void naoDeveRegistrarUmaPeticaoInvalida() throws Exception {
         String peticaoInvalida = "{\"classeId\":\"\", \"envolvidos\": [{\"ativo\":[1, 2]}, {\"passivo\":[3, 4]}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
@@ -78,7 +78,7 @@ public class PeticaoIntegrationTests extends IntegrationTestsSupport {
         
         result.andExpect(status().isBadRequest());
     }
-	
+
 	@Test
     public void consultarPeticao() throws Exception {
     	mockMvc.perform(get("/api/peticoes/99999/envolvidos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)));

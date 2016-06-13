@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.jus.stf.autuacao.peticionamento.application.commands.CadastrarAnexoCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
 import br.jus.stf.autuacao.peticionamento.domain.DocumentoAdapter;
-import br.jus.stf.autuacao.peticionamento.domain.PessoaAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.EnvolvidoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
 import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.model.Anexo;
@@ -71,7 +71,7 @@ public class PeticionamentoApplicationService {
     private DocumentoAdapter documentoAdapter;
     
     @Autowired
-    private PessoaAdapter pessoaAdapter;
+    private EnvolvidoAdapter envolvidoAdapter;
 
     @Transactional
     public void handle(PeticionarCommand command) {
@@ -85,10 +85,9 @@ public class PeticionamentoApplicationService {
 		//TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
 		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()
 				? orgao.associados().iterator().next().pessoa() : new PessoaId(1L));
-		
-		//TODO: Verificar como reutilizar pessoas.
-		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
-        envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
+		Set<Envolvido> envolvidos = new HashSet<>(0);
+        
+		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
         envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
         
 		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, sigilo, peticionador);
@@ -112,19 +111,21 @@ public class PeticionamentoApplicationService {
 	    return new Anexo(tipo, documentoId);
     }
     
-    /**
-	 * Salva as pessoas, recupera os IDs e retorna uma lista de envolvidos.
-	 * @param partes
+	/**
+	 * Aloca os IDs das pessoas no devido contexto e retorna
+	 * uma lista de envolvidos para associação com a Petição.
+	 * 
+	 * @param nomes
 	 * @param polo
-	 * @param tipo
+	 * @return lista de envolvidos
 	 */
 	public Set<Envolvido> criarEnvolvidos(List<String> nomes, Polo polo) {
-		Set<PessoaId> pessoas = pessoaAdapter.cadastrarPessoas(nomes);
-		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
+		Set<PessoaId> pessoas = envolvidoAdapter.pessoasEnvolvidas(nomes);
+		Set<Envolvido> envolvidos = new HashSet<>(0);
         int index = 0;
         
 		for(PessoaId pessoa : pessoas) {
-			envolvidos.add(new Envolvido(nomes.get(index++), polo, pessoa));
+        	envolvidos.add(new Envolvido(nomes.get(index++), polo, pessoa));
 		}
 		
 		return envolvidos;

@@ -11,8 +11,8 @@ import br.jus.stf.core.shared.identidade.PessoaId;
  * @since 1.0.0
  * @since 08.06.2016
  */
-public interface PessoaAdapter {
+public interface EnvolvidoAdapter {
 	
-	public Set<PessoaId> cadastrarPessoas(List<String> nome);
+	public Set<PessoaId> pessoasEnvolvidas(List<String> nome);
 	
 }
