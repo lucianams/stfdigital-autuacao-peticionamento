@@ -1,6 +1,7 @@
 package br.jus.stf.autuacao.peticionamento.infra;
 
-import static br.jus.stf.autuacao.peticionamento.infra.RabbitConfiguration.PARTE_REGISTRADA_QUEUE;
+import static br.jus.stf.autuacao.peticionamento.infra.RabbitConfiguration.PARTE_REGISTRADA_EXCHANGE;
+import static br.jus.stf.autuacao.peticionamento.infra.RabbitConfiguration.PARTE_REGISTRADA_ROUTE;
 import static br.jus.stf.autuacao.peticionamento.infra.RabbitConfiguration.PETICAO_REGISTRADA_EXCHANGE;
 import static br.jus.stf.autuacao.peticionamento.infra.RabbitConfiguration.PETICAO_REGISTRADA_ROUTE;
 
@@ -49,7 +50,7 @@ public class IntegrationConfiguration {
 	
 	static {
 		queues.put(PeticaoRegistrada.class.getSimpleName(), new DomainEventMessage(PeticaoRegistrada.class, PETICAO_REGISTRADA_EXCHANGE, PETICAO_REGISTRADA_ROUTE));
-		queues.put(EnvolvidoRegistrado.class.getSimpleName(), new DomainEventMessage(EnvolvidoRegistrado.class, PARTE_REGISTRADA_QUEUE));
+		queues.put(EnvolvidoRegistrado.class.getSimpleName(), new DomainEventMessage(EnvolvidoRegistrado.class, PARTE_REGISTRADA_EXCHANGE, PARTE_REGISTRADA_ROUTE));
 	}
 
 	@Autowired
@@ -117,12 +118,6 @@ public class IntegrationConfiguration {
 			this.eventClass = eventClass;
 			this.exchange = exchange;
 			this.routingKey = routingKey;
-		}
-
-		public DomainEventMessage(Class<?> eventClass, String routingKey) {
-			this.eventClass = eventClass;
-			this.routingKey = routingKey;
-			this.exchange = "";
 		}
 		
 		public Class<?> eventClass() {

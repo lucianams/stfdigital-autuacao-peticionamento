@@ -45,6 +45,9 @@ apply plugin: 'com.moowork.gulp'
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        url 'https://dl.bintray.com/palantir/releases'
+    }
 }
 
 dependencyManagement {
@@ -93,6 +96,8 @@ dependencies {
     testCompile("com.jayway.jsonpath:json-path")
     
     compile("org.springframework.boot:spring-boot-starter-test")
+        
+    compile("com.palantir.docker.compose:docker-compose-rule:0.14.0")
 }
 
 npmInstall.dependsOn npm_prune

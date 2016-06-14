@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.jus.stf.autuacao.peticionamento.application.commands.CadastrarAnexoCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
-import br.jus.stf.autuacao.peticionamento.domain.DocumentoAdapter;
-import br.jus.stf.autuacao.peticionamento.domain.PessoaAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.AnexoAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.EnvolvidoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
 import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.model.Anexo;
@@ -53,9 +53,6 @@ public class PeticionamentoApplicationService {
     @Autowired
     private ClassePeticionavelRepository classeRepository;
     
-    //@Autowired
-    //private PreferenciaRepository preferenciaRepository;
-    
     @Autowired
     private TipoAnexoRepository tipoAnexoRepository;
     
@@ -69,10 +66,10 @@ public class PeticionamentoApplicationService {
     private PeticaoFactory peticaoFactory;
     
     @Autowired
-    private DocumentoAdapter documentoAdapter;
+    private AnexoAdapter anexoAdapter;
     
     @Autowired
-    private PessoaAdapter pessoaAdapter;
+    private EnvolvidoAdapter envolvidoAdapter;
 
     @Transactional
     @Command(description = "Nova petição", startProcess = true, listable = false)
@@ -87,10 +84,9 @@ public class PeticionamentoApplicationService {
 		//TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
 		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()
 				? orgao.associados().iterator().next().pessoa() : new PessoaId(1L));
-		
-		//TODO: Verificar como reutilizar pessoas.
-		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
-        envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
+		Set<Envolvido> envolvidos = new HashSet<>(0);
+        
+		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
         envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
         
 		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, sigilo, peticionador);
@@ -109,26 +105,27 @@ public class PeticionamentoApplicationService {
 	    documentosTemporarios.add(new DocumentoTemporarioId(anexoCommand.getDocumentoId()));
 	    
 	    TipoAnexo tipo = tipoAnexoRepository.findOne(new TipoDocumentoId(anexoCommand.getTipoDocumentoId()));
-	    DocumentoId documentoId = documentoAdapter.salvar(documentosTemporarios).get(0);
+	    DocumentoId documentoId = anexoAdapter.salvar(documentosTemporarios).get(0);
 	    
 	    return new Anexo(tipo, documentoId);
     }
     
-    /**
-	 * Salva as pessoas, recupera os IDs e retorna uma lista de envolvidos.
-	 * @param partes
+	/**
+	 * Aloca os IDs das pessoas no devido contexto e retorna
+	 * uma lista de envolvidos para associação com a Petição.
+	 * 
+	 * @param nomes
 	 * @param polo
-	 * @param tipo
+	 * @return lista de envolvidos
 	 */
 	private Set<Envolvido> criarEnvolvidos(List<String> nomes, Polo polo) {
-		Set<PessoaId> pessoas = pessoaAdapter.cadastrarPessoas(nomes);
-		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
+		Set<PessoaId> pessoas = envolvidoAdapter.pessoasEnvolvidas(nomes);
+		Set<Envolvido> envolvidos = new HashSet<Envolvido>(0);
         int index = 0;
         
 		for(PessoaId pessoa : pessoas) {
-			envolvidos.add(new Envolvido(nomes.get(index++), polo, pessoa));
+        	envolvidos.add(new Envolvido(nomes.get(index++), polo, pessoa));
 		}
-		
 		return envolvidos;
 	}
 }

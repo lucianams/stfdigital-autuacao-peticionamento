@@ -100,7 +100,9 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
     }
 
-	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias, OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo, Peticionador peticionador) {
+	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias,
+			OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo,
+			Peticionador peticionador) {
     	Validate.notNull(protocolo, "Protocolo requerido.");
     	Validate.notNull(classe, "Classe requerida.");
     	Validate.notEmpty(envolvidos, "Envolvidos requeridos.");
@@ -122,9 +124,11 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
         this.sigilo = sigilo;
         this.peticionador = peticionador;
         
-        registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString(), classe.identity().toString(), "ORIGINARIO", sigilo.toString()));
+		registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString(), classe.identity().toString(),
+				"ORIGINARIO", sigilo.toString()));
         
-        envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(), protocolo.toString(), envolvido.apresentacao())));
+		envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(),
+				protocolo.toString(), envolvido.apresentacao(), envolvido.pessoa().toLong())));
     }
 
 	private void registrarEvento(DomainEvent<?> evento) {

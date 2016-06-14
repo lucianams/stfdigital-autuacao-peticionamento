@@ -33,6 +33,10 @@ public class RabbitConfiguration {
 
 	public static final String PETICAO_REGISTRADA_QUEUE = "autuacao.peticao.registrada";
 
+	public static final String PARTE_REGISTRADA_EXCHANGE = "autuacao.peticao.envolvido.registrado";
+	
+	public static final String PARTE_REGISTRADA_ROUTE = "autuacao.peticao.envolvido.registrado";
+
 	public static final String PARTE_REGISTRADA_QUEUE = "autuacao.peticao.envolvido.registrado";
 
 	@Value("${rabbitmq.host:rabbit}")
@@ -93,8 +97,11 @@ public class RabbitConfiguration {
 	 * @return o conectar entre filas
 	 */
 	@Bean
-	TopicExchange exchange() {
-		return new TopicExchange(PETICAO_REGISTRADA_EXCHANGE);
+	public List<TopicExchange> exchanges() {
+		return Arrays.asList(
+				new TopicExchange(PETICAO_REGISTRADA_EXCHANGE),
+				new TopicExchange(PARTE_REGISTRADA_EXCHANGE)
+				);
 	}
 	
     /**

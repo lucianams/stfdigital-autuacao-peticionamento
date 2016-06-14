@@ -1,0 +1,39 @@
+version: '2'
+services:
+  rabbit:
+    container_name: rabbit-it
+    image: rabbitmq:management
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+  discovery:
+    container_name: discovery-it
+    image: discovery
+    ports:
+     - "8761:8761"
+  gateway:
+    container_name: gateway-it
+    image: gateway
+    ports:
+     - "8765:8765"
+  servicos:
+    container_name: services-it
+    image: services
+    ports:
+     - "8081:8081"
+     - "8181:8181"
+    environment:
+     - spring.profiles.active=development
+  mongo:
+    container_name: mongo-it
+    image: mongo:3
+    ports:
+     - "27017:27017"
+  documents:
+    container_name: documents-it
+    image: documents
+    ports:
+     - "8094:8094"
+     - "8194:8194"
+    environment:
+     - spring.profiles.active=development

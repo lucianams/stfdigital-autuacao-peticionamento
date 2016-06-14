@@ -14,7 +14,7 @@ import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
  * @since 05.05.2016
  */
 @Component
-public interface DocumentoAdapter {
+public interface AnexoAdapter {
 
 	/**
 	 * Salva os documentos e recupera os ids na ordem de envio
