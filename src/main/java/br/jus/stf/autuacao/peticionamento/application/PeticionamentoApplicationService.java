@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.jus.stf.autuacao.peticionamento.application.commands.CadastrarAnexoCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
-import br.jus.stf.autuacao.peticionamento.domain.DocumentoAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.AnexoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.EnvolvidoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
 import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
@@ -68,7 +68,7 @@ public class PeticionamentoApplicationService {
     private PeticaoFactory peticaoFactory;
     
     @Autowired
-    private DocumentoAdapter documentoAdapter;
+    private AnexoAdapter anexoAdapter;
     
     @Autowired
     private EnvolvidoAdapter envolvidoAdapter;
@@ -106,7 +106,7 @@ public class PeticionamentoApplicationService {
 	    documentosTemporarios.add(new DocumentoTemporarioId(anexoCommand.getDocumentoId()));
 	    
 	    TipoAnexo tipo = tipoAnexoRepository.findOne(new TipoDocumentoId(anexoCommand.getTipoDocumentoId()));
-	    DocumentoId documentoId = documentoAdapter.salvar(documentosTemporarios).get(0);
+	    DocumentoId documentoId = anexoAdapter.salvar(documentosTemporarios).get(0);
 	    
 	    return new Anexo(tipo, documentoId);
     }

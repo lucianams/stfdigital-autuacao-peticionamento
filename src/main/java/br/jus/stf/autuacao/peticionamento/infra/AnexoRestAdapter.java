@@ -20,7 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.jus.stf.autuacao.peticionamento.domain.DocumentoAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.AnexoAdapter;
 import br.jus.stf.core.shared.documento.DocumentoId;
 import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
 
@@ -31,7 +31,7 @@ import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
  * @since 05.05.2016
  */
 @Component
-public class DocumentoRestAdapter implements DocumentoAdapter {
+public class AnexoRestAdapter implements AnexoAdapter {
 
 	@Autowired
     private DiscoveryClient discoveryClient;
