@@ -28,6 +28,7 @@ import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexo;
 import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexoRepository;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
+import br.jus.stf.core.framework.component.command.Command;
 import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.documento.DocumentoId;
 import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
@@ -74,6 +75,7 @@ public class PeticionamentoApplicationService {
     private PessoaAdapter pessoaAdapter;
 
     @Transactional
+    @Command(description = "Nova petição", startProcess = true, listable = false)
     public void handle(PeticionarCommand command) {
         Protocolo protocolo = protocoloAdapter.novoProtocolo();
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
@@ -118,7 +120,7 @@ public class PeticionamentoApplicationService {
 	 * @param polo
 	 * @param tipo
 	 */
-	public Set<Envolvido> criarEnvolvidos(List<String> nomes, Polo polo) {
+	private Set<Envolvido> criarEnvolvidos(List<String> nomes, Polo polo) {
 		Set<PessoaId> pessoas = pessoaAdapter.cadastrarPessoas(nomes);
 		Set<Envolvido> envolvidos = new HashSet<Envolvido>();
         int index = 0;
