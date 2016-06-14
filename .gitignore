@@ -23,6 +23,7 @@ src/main/resources/public/**/*.js.map
 .settings/
 .classpath
 .project
+.springBeans
 
 # Gradle
 .gradle

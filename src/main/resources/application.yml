@@ -20,9 +20,7 @@ eureka:
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
     healthcheck:
-      enabled: true      
-  instance:
-    preferIpAddress: true
+      enabled: true
     
 flyway:
   validate-on-migrate: false
