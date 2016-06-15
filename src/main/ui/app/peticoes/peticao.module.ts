@@ -13,7 +13,7 @@ function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider
         url : '/novo-processo/peticao',
         views : {
             'content@app.autenticado' : {
-                templateUrl : properties.apiUrl + '/peticionamento/peticoes/peticao.tpl.html',
+                templateUrl : 'peticao.tpl.html',
                 controller : 'app.novo-processo.peticionamento.PeticaoController',
                 controllerAs: 'vm'
             }
