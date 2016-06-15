@@ -21,6 +21,8 @@ eureka:
       defaultZone: http://discovery:8761/eureka/
     healthcheck:
       enabled: true
+  instance:
+    preferIpAddress: true
     
 flyway:
   validate-on-migrate: false

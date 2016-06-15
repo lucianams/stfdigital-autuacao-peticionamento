@@ -96,17 +96,40 @@ dependencies {
     testCompile("com.jayway.jsonpath:json-path")
     
     compile("org.springframework.boot:spring-boot-starter-test")
-        
+
     compile("com.palantir.docker.compose:docker-compose-rule:0.14.0")
+}
+
+node {
+  // Version of node to use.
+  version = '5.9.1'
+
+  // Version of npm to use.
+  npmVersion = '3.7.3'
+
+  // Base URL for fetching node distributions (change if you have a mirror).
+  distBaseUrl = 'https://nodejs.org/dist'
+
+  // If true, it will download node using above parameters.
+  // If false, it will try to use globally installed node.
+  download = true
+
+  // Set the work directory for unpacking node
+  workDir = file("${project.buildDir}/node")
+
+  // Set the work directory where node_modules should be located
+  nodeModulesDir = file("${project.projectDir}")
 }
 
 npmInstall.dependsOn npm_prune
 gulp_build.dependsOn tasks.npmInstall
 processResources.dependsOn gulp_build
 
+ext.dockerImageTag = project.hasProperty('dockerImageTag') ? project.getProperty('dockerImageTag') : ''
+
 docker {
-    name jar.baseName
+    name jar.baseName + (dockerImageTag ? ':' + dockerImageTag : '')
     dockerfile 'src/main/docker/Dockerfile'
-    files 'truststores/truststore.jks'
+    files 'src/main/docker/docker-entrypoint.sh', 'truststores/truststore.jks'
     dependsOn tasks.jar, tasks.bootRepackage, tasks.build
 }

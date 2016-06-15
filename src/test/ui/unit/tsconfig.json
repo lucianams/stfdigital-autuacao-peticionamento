@@ -8,9 +8,6 @@
     },
     "exclude": [
       "typings/browser",
-      "typings/browser.d.ts",
-      "node_modules",
-      "build",
-      "src/test/ui"
+      "typings/browser.d.ts"
     ]
 }

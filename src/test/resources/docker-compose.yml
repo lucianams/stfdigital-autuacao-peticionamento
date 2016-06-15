@@ -4,26 +4,35 @@ services:
     container_name: rabbit-it
     image: rabbitmq:management
     ports:
-     - "5672:5672"
-     - "15672:15672"
+     - "6672:5672"
+     - "25672:15672"
   discovery:
     container_name: discovery-it
     image: discovery
     ports:
-     - "8761:8761"
+     - "9761:9761"
+    environment:
+     - server.port=9761
   gateway:
     container_name: gateway-it
     image: gateway
     ports:
-     - "8765:8765"
+     - "9765:9765"
+    environment:
+     - eureka.client.serviceUrl.defaultZone=http://discovery:9761/eureka/
+     - server.port=9765
   servicos:
     container_name: services-it
     image: services
     ports:
-     - "8081:8081"
-     - "8181:8181"
+     - "9081:9081"
+     - "9181:8181"
     environment:
      - spring.profiles.active=development
+     - eureka.client.serviceUrl.defaultZone=http://discovery:9761/eureka/
+     - server.port=9081
+     - rabbitmq.port=6672
+     - mongo.host=mongo
   mongo:
     container_name: mongo-it
     image: mongo:3
@@ -33,7 +42,9 @@ services:
     container_name: documents-it
     image: documents
     ports:
-     - "8094:8094"
-     - "8194:8194"
+     - "9094:9094"
+     - "9194:8194"
     environment:
      - spring.profiles.active=development
+     - eureka.client.serviceUrl.defaultZone=http://discovery:9761/eureka/
+     - server.port=9094
