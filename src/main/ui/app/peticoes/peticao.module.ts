@@ -10,7 +10,7 @@ function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider
     $translatePartialLoaderProvider.addPart(properties.apiUrl + '/peticionamento/peticoes');
 
     $stateProvider.state('app.novo-processo.peticionamento', {
-        url : '/novo-processo/peticao',
+        url : '/peticionamento',
         views : {
             'content@app.autenticado' : {
                 templateUrl : 'peticao.tpl.html',

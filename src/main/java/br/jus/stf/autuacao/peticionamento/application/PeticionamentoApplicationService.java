@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.jus.stf.autuacao.peticionamento.application.commands.CadastrarAnexoCommand;
@@ -29,6 +28,7 @@ import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexoReposi
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
 import br.jus.stf.core.framework.component.command.Command;
+import br.jus.stf.core.framework.domaindrivendesign.ApplicationService;
 import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.documento.DocumentoId;
 import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
@@ -44,7 +44,7 @@ import br.jus.stf.core.shared.protocolo.Protocolo;
  * @since 1.0.0
  * @since 03.01.2016
  */
-@Component
+@ApplicationService
 public class PeticionamentoApplicationService {
 
     @Autowired

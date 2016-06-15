@@ -3,7 +3,6 @@
         "id": "peticionar",
         "stateName": "app.novo-processo.peticionamento",
         "urlPrefix": "/novo-processo/peticionamento",
-        "src": "peticionamento/peticoes",
-        "startProcess": true
+        "src": "peticionamento/peticoes"
     }
 ]
