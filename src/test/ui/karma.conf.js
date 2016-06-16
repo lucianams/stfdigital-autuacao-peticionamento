@@ -59,7 +59,7 @@ module.exports = function(config) {
 
     frameworks: ['systemjs', 'jasmine'],
 
-    browsers : ['Chrome'],
+    browsers : ['PhantomJS'],
 
     plugins : [
       'karma-systemjs',
