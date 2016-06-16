@@ -3,6 +3,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
+var argv = require('yargs').argv;
 
 var karma = require('karma');
 var runSequence = require('run-sequence');
@@ -15,6 +16,10 @@ function runTests(singleRun, done)
         autoWatch    : !singleRun
     };
 
+    if (argv.browsers) {
+        localConfig.browsers = argv.browsers.split(',');
+    }
+
     var server = new karma.Server(localConfig, function (failCount)
     {
         done(failCount ? new Error("Failed " + failCount + " tests.") : null);
@@ -22,14 +27,18 @@ function runTests(singleRun, done)
     server.start();
 }
 
-gulp.task('test:unit', ['compile-ts:unit', 'scripts'], function (done)
+gulp.task('test:unit', function (done)
 {
-    runTests(true, done);
+    runSequence('bower:install:unit', ['compile-ts:unit', 'scripts'], function() {
+        runTests(true, done)
+    });
 });
 
-gulp.task('tdd', ['clean-and-watch-tests', 'watch'], function (done)
+gulp.task('tdd', function (done)
 {
-    runTests(false, done);
+    runSequence('bower:install:unit', ['clean-and-watch-tests', 'watch'], function() {
+        runTests(false, done);
+    });
 });
 
 gulp.task('clean-and-watch-tests', function(done) {
