@@ -19,7 +19,7 @@ public class PeticionarCommand {
     @ApiModelProperty(value = "Identificador da classe processual sugerida pelo peticionador", required=true)
     private String classeId;
     
-    @ApiModelProperty(value = "Identificador do órgão para o qual o seu representante está peticionando, se for o caso", required=false)
+    @ApiModelProperty(value = "Identificador do órgão para o qual o seu representante está peticionando, se for o caso")
     private Long orgaoId;
     
 	@NotEmpty
@@ -36,7 +36,7 @@ public class PeticionarCommand {
 	@ApiModelProperty(value = "Lista com os anexos da petição", required=true)
 	private List<CadastrarAnexoCommand> anexos;
 	
-	@NotEmpty
+	@NotBlank
 	@ApiModelProperty(value = "O grau de sigilo da petição", required=true)
 	private String sigilo;
 	
