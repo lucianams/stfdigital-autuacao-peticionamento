@@ -8,7 +8,7 @@ services:
      - "15672:15672"
   discovery:
     container_name: discovery
-    image: supremotribunalfederal/stfdigital-plataforma-discovery
+    image: discovery
     ports:
      - "8761:8761"
      - "47961:47961"
@@ -16,7 +16,7 @@ services:
      - JAVA_OPTS=-Xdebug, -Xrunjdwp:server=y,transport=dt_socket,address=47961,suspend=n
   gateway:
     container_name: gateway
-    image: supremotribunalfederal/stfdigital-plataforma-gateway
+    image: gateway
     ports:
      - "8765:8765"
      - "47965:47965"
@@ -26,7 +26,7 @@ services:
      - discovery
   services:
     container_name: services
-    image: supremotribunalfederal/stfdigital-plataforma-services
+    image: services
     ports:
      - "8081:8081"
      - "8181:8181"
@@ -44,7 +44,7 @@ services:
      - "27017:27017"
   documents:
     container_name: documents
-    image: supremotribunalfederal/stfdigital-plataforma-documents
+    image: documents
     command: --onlyoffice.documentserver.host=digital.stf.jus.br --onlyoffice.documentserver.protocol=https
     ports:
      - "8094:8094"
@@ -58,7 +58,7 @@ services:
      - discovery
   ui:
     container_name: ui
-    image: supremotribunalfederal/stfdigital-plataforma-ui
+    image: plataforma-ui
     ports:
      - "8443:8443"
     depends_on:
