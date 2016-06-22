@@ -34,7 +34,6 @@ import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
-import br.jus.stf.core.shared.preferencia.PreferenciaId;
 import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.Numero;
 import br.jus.stf.core.shared.protocolo.Protocolo;
@@ -145,8 +144,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 	}
 	
 	public Boolean isCriminalEleitoral() {
-		// TODO: Verificar uma forma melhor de implementar essa verificação
-		return preferencias.contains(new PreferenciaId(2L)) || preferencias.contains(new PreferenciaId(3L));
+		return preferencias.stream().anyMatch(preferencia -> preferencia.isCriminalEleitoral());
 	}
     
 	@Override

@@ -42,6 +42,11 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 		return nome;
 	}
 	
+	public boolean isCriminalEleitoral() {
+		// TODO: Verificar uma forma melhor de implementar essa verificação
+		return id.equals(new PreferenciaId(2L)) || id.equals(new PreferenciaId(3L));
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("%s - %s", id.toString(), nome);
