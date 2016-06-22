@@ -3,6 +3,7 @@ package br.jus.stf.autuacao.peticionamento.application;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,8 @@ import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexo;
 import br.jus.stf.autuacao.peticionamento.domain.model.documento.TipoAnexoRepository;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
+import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.PreferenciaRepository;
 import br.jus.stf.core.framework.component.command.Command;
 import br.jus.stf.core.framework.domaindrivendesign.ApplicationService;
 import br.jus.stf.core.shared.classe.ClasseId;
@@ -34,6 +37,7 @@ import br.jus.stf.core.shared.documento.DocumentoId;
 import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
 import br.jus.stf.core.shared.documento.TipoDocumentoId;
 import br.jus.stf.core.shared.identidade.PessoaId;
+import br.jus.stf.core.shared.preferencia.PreferenciaId;
 import br.jus.stf.core.shared.processo.Polo;
 import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.Protocolo;
@@ -58,6 +62,9 @@ public class PeticionamentoApplicationService {
     
     @Autowired
     private OrgaoPeticionadorRepository orgaoRepository;
+    
+    @Autowired
+    private PreferenciaRepository preferenciaRepository;
     
     @Autowired
     private ProtocoloAdapter protocoloAdapter; 
@@ -89,7 +96,10 @@ public class PeticionamentoApplicationService {
 		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
         envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
         
-		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, null, envolvidos, anexos, sigilo, peticionador);
+		Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
+				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref)))
+						.collect(Collectors.toSet()) : null;
+        Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, null, envolvidos, anexos, sigilo, peticionador);
         
         peticaoRepository.save(peticao);
     }
@@ -113,7 +123,10 @@ public class PeticionamentoApplicationService {
 		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
         envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
         
-		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, orgao, envolvidos, anexos, sigilo, peticionador);
+        Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
+				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref)))
+						.collect(Collectors.toSet()) : null;
+        Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, sigilo, peticionador);
         
         peticaoRepository.save(peticao);
     }

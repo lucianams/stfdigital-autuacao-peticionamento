@@ -1,6 +1,7 @@
 package br.jus.stf.autuacao.peticionamento.application.commands;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -41,6 +42,9 @@ public class PeticionarOrgaoCommand {
 	@ApiModelProperty(value = "O grau de sigilo da petição", required=true)
 	private String sigilo;
 	
+	@ApiModelProperty(value = "Preferências da petição")
+	private Set<Long> preferencias;
+	
 	
 	public List<String> getPoloAtivo() {
 		return poloAtivo;
@@ -64,6 +68,10 @@ public class PeticionarOrgaoCommand {
     
     public String getSigilo() {
     	return sigilo;
+    }
+    
+    public Set<Long> getPreferencias() {
+    	return preferencias;
     }
     
 }
