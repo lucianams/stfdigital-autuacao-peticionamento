@@ -3,7 +3,6 @@ package br.jus.stf.autuacao.peticionamento.application;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.jus.stf.autuacao.peticionamento.application.commands.CadastrarAnexoCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
+import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarOrgaoCommand;
 import br.jus.stf.autuacao.peticionamento.domain.AnexoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.EnvolvidoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
@@ -76,14 +76,38 @@ public class PeticionamentoApplicationService {
     public void handle(PeticionarCommand command) {
         Protocolo protocolo = protocoloAdapter.novoProtocolo();
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
-		List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<DocumentoTemporarioId>();
+		List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<>(0);
+		
 		command.getAnexos().forEach(anexo -> documentosTemporarios.add(new DocumentoTemporarioId(anexo.getDocumentoId())));
-        OrgaoPeticionador orgao = Optional.ofNullable(command.getOrgaoId()).isPresent()	? orgaoRepository.findOne(new PessoaId(command.getOrgaoId())) : null;
+        
 		Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> criarAnexo(anexoDto)).collect(Collectors.toSet());
 		Sigilo sigilo = Sigilo.valueOf(command.getSigilo());
 		//TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
-		Peticionador peticionador = new Peticionador("USUARIO_FALSO", Optional.ofNullable(orgao).isPresent()
-				? orgao.associados().iterator().next().pessoa() : new PessoaId(1L));
+		Peticionador peticionador = new Peticionador("USUARIO_FALSO", new PessoaId(1L));
+		Set<Envolvido> envolvidos = new HashSet<>(0);
+        
+		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
+        envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
+        
+		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, null, null, envolvidos, anexos, sigilo, peticionador);
+        
+        peticaoRepository.save(peticao);
+    }
+    
+    @Transactional
+    @Command(description = "Nova petição com representação de Órgão", startProcess = true, listable = false)
+    public void handle(PeticionarOrgaoCommand command) {
+        Protocolo protocolo = protocoloAdapter.novoProtocolo();
+        ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
+		List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<>(0);
+		
+		command.getAnexos().forEach(anexo -> documentosTemporarios.add(new DocumentoTemporarioId(anexo.getDocumentoId())));
+        
+		OrgaoPeticionador orgao = orgaoRepository.findOne(new PessoaId(command.getOrgaoId()));
+		Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> criarAnexo(anexoDto)).collect(Collectors.toSet());
+		Sigilo sigilo = Sigilo.valueOf(command.getSigilo());
+		//TODO: Alterar para pegar dados do peticionador pelo usuário/representante da sessão.
+		Peticionador peticionador = new Peticionador("USUARIO_FALSO", orgao.associados().iterator().next().pessoa());
 		Set<Envolvido> envolvidos = new HashSet<>(0);
         
 		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));

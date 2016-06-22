@@ -167,7 +167,7 @@ public class PeticaoIntegrationTests extends IntegrationTestsSupport {
 	@Test
     public void registrarUmaPeticaoComRepresentacao() throws Exception {
         String peticaoValida = "{\"classeId\":\"ADI\", \"orgaoId\":12452261, \"poloAtivo\": [\"Maria\"], \"poloPassivo\": [\"João\"], \"anexos\": [{\"documentoId\":\"@idDocTemp\", \"tipoDocumentoId\":1}], \"sigilo\":\"PUBLICO\"}";
-        ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoValida.replaceAll("@idDocTemp", idDocTemp)));
+        ResultActions result = mockMvc.perform(post("/api/peticoes/representado").contentType(APPLICATION_JSON).content(peticaoValida.replaceAll("@idDocTemp", idDocTemp)));
         
         result.andExpect(status().isOk());
     }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.jus.stf.autuacao.peticionamento.application.PeticionamentoApplicationService;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
+import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarOrgaoCommand;
 import br.jus.stf.autuacao.peticionamento.domain.model.PeticaoRepository;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDtoAssembler;
@@ -41,6 +42,15 @@ public class PeticaoRestResource {
 
     @RequestMapping(method = RequestMethod.POST)
     public void peticionar(@RequestBody @Valid PeticionarCommand command, BindingResult binding) {
+        if (binding.hasErrors()) {
+            throw new IllegalArgumentException("Petição inválida: " + binding.getAllErrors());
+        }
+
+        peticionarCommandHandler.handle(command);
+    }
+    
+    @RequestMapping(value="/representado", method = RequestMethod.POST)
+    public void peticionar(@RequestBody @Valid PeticionarOrgaoCommand command, BindingResult binding) {
         if (binding.hasErrors()) {
             throw new IllegalArgumentException("Petição inválida: " + binding.getAllErrors());
         }
