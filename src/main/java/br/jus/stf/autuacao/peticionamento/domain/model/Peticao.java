@@ -35,6 +35,7 @@ import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
 import br.jus.stf.core.shared.processo.Sigilo;
+import br.jus.stf.core.shared.processo.TipoProcesso;
 import br.jus.stf.core.shared.protocolo.Numero;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 import br.jus.stf.core.shared.protocolo.ProtocoloId;
@@ -96,21 +97,27 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     @Enumerated(EnumType.STRING)
     private Sigilo sigilo;
     
+    @Column(name = "TIP_PROCESSO", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TipoProcesso tipoProcesso;
+    
     public Peticao() {
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
     }
 
 	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias,
 			OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo,
-			Peticionador peticionador) {
+			TipoProcesso tipoProcesso, Peticionador peticionador) {
     	Validate.notNull(protocolo, "Protocolo requerido.");
     	Validate.notNull(classe, "Classe requerida.");
     	Validate.notEmpty(envolvidos, "Envolvidos requeridos.");
     	Validate.notEmpty(anexos, "Anexos requeridos.");
     	Validate.notNull(sigilo, "Sigilo requerido.");
+    	Validate.notNull(tipoProcesso, "Tipo do processo requerido.");
     	Validate.notNull(peticionador, "Peticionador requerido.");
 		Validate.isTrue(!Optional.ofNullable(orgao).isPresent() || orgao.isRepresentadoPor(peticionador.pessoa()),
 				"Peticionador não é representante do Órgão.");
+		Validate.isTrue(tipoProcesso.equals(classe.tipo()), "O tipo da petição e da classe são incompatíveis.");
 		Validate.isTrue(!Optional.ofNullable(preferencias).isPresent() || classe.preferencias().containsAll(preferencias),
 				"Alguma(s) preferência(s) não pertence(m) à classe selecionada.");
 		
@@ -122,10 +129,11 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
         this.envolvidos = envolvidos;
         this.anexos = anexos;
         this.sigilo = sigilo;
+        this.tipoProcesso = tipoProcesso;
         this.peticionador = peticionador;
         
 		registrarEvento(new PeticaoRegistrada(protocoloId.toLong(), protocolo.toString(), classe.identity().toString(),
-				"ORIGINARIO", sigilo.toString(), isCriminalEleitoral()));
+				tipoProcesso.toString(), sigilo.toString(), isCriminalEleitoral()));
         
 		envolvidos.forEach(envolvido -> registrarEvento(new EnvolvidoRegistrado(protocoloId.toLong(),
 				protocolo.toString(), envolvido.apresentacao(), envolvido.pessoa().toLong())));
@@ -145,6 +153,10 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 	
 	public Boolean isCriminalEleitoral() {
 		return preferencias.stream().anyMatch(preferencia -> preferencia.isCriminalEleitoral());
+	}
+	
+	public TipoProcesso tipoProcesso() {
+		return tipoProcesso;
 	}
     
 	@Override

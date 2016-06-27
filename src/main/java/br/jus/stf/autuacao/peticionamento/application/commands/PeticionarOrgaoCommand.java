@@ -45,6 +45,13 @@ public class PeticionarOrgaoCommand {
 	@ApiModelProperty(value = "Preferências da petição")
 	private Set<Long> preferencias;
 	
+	@NotBlank
+	@ApiModelProperty(value = "Tipo do processo da petição", required=true)
+	private String tipoProcesso;
+	
+	public PeticionarOrgaoCommand() {
+		
+	}
 	
 	public List<String> getPoloAtivo() {
 		return poloAtivo;
@@ -72,6 +79,10 @@ public class PeticionarOrgaoCommand {
     
     public Set<Long> getPreferencias() {
     	return preferencias;
+    }
+    
+    public String getTipoProcesso() {
+    	return tipoProcesso;
     }
     
 }
