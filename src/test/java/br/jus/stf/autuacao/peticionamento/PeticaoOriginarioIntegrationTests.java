@@ -83,5 +83,19 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
     public void consultarPeticao() throws Exception {
     	mockMvc.perform(get("/api/peticoes/99999/envolvidos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)));
     }
+	
+	@Test
+	public void listarOrgaosPeticionadoresConformeAssociado() throws Exception {
+		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=false").contentType(APPLICATION_JSON));
+        
+        result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
+	}
+	
+	@Test
+	public void listarOrgaosPeticionadoresVerificandoPerfil() throws Exception {
+		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=true").contentType(APPLICATION_JSON));
+        
+        result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(35)));
+	}
     
 }

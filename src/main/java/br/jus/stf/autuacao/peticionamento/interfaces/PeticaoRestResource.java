@@ -11,14 +11,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.jus.stf.autuacao.peticionamento.application.PeticionamentoApplicationService;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarOrgaoCommand;
 import br.jus.stf.autuacao.peticionamento.domain.model.PeticaoRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDtoAssembler;
+import br.jus.stf.autuacao.peticionamento.interfaces.dto.OrgaoPeticionadorDto;
+import br.jus.stf.autuacao.peticionamento.interfaces.dto.OrgaoPeticionadorDtoAssembler;
 import br.jus.stf.core.shared.protocolo.ProtocoloId;
 
 /**
@@ -39,6 +43,12 @@ public class PeticaoRestResource {
     
     @Autowired
     private EnvolvidoDtoAssembler envolvidoDtoAssembler;
+    
+    @Autowired
+    private OrgaoPeticionadorRepository orgaoRepository;
+    
+    @Autowired
+    private OrgaoPeticionadorDtoAssembler orgaoDtoAssembler;
 
     @RequestMapping(method = RequestMethod.POST)
     public void peticionar(@RequestBody @Valid PeticionarCommand command, BindingResult binding) {
@@ -63,4 +73,11 @@ public class PeticaoRestResource {
     	return peticaoRepository.findOne(new ProtocoloId(id)).envolvidos().stream()
     			.map(envolvido -> envolvidoDtoAssembler.toDto(envolvido)).collect(Collectors.toList());
     }
+    
+    @RequestMapping(value="/orgaos", method = RequestMethod.GET)
+    public List<OrgaoPeticionadorDto> listarRepresentados(@RequestParam("verificarPerfil") boolean verificarPerfil) {
+		return orgaoRepository.findOrgaoRepresentados(verificarPerfil).stream()
+				.map(orgao -> orgaoDtoAssembler.toDto(orgao)).collect(Collectors.toList());
+	}
+    
 }
