@@ -15,5 +15,7 @@ public interface OrgaoPeticionadorRepository {
 	List<OrgaoPeticionador> findAll();
 	
 	OrgaoPeticionador findOne(PessoaId id);
+	
+	List<OrgaoPeticionador> findOrgaoRepresentados(boolean verificarPerfil);
 
 }

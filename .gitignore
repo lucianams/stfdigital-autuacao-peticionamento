@@ -6,6 +6,7 @@
 # Node
 node_modules
 node
+node_cache
 
 # Typings
 src/main/ui/typings

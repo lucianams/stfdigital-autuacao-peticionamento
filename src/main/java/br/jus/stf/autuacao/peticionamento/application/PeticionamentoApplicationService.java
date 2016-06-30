@@ -40,6 +40,7 @@ import br.jus.stf.core.shared.identidade.PessoaId;
 import br.jus.stf.core.shared.preferencia.PreferenciaId;
 import br.jus.stf.core.shared.processo.Polo;
 import br.jus.stf.core.shared.processo.Sigilo;
+import br.jus.stf.core.shared.processo.TipoProcesso;
 import br.jus.stf.core.shared.protocolo.Protocolo;
 
 /**
@@ -99,7 +100,8 @@ public class PeticionamentoApplicationService {
 		Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
 				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref)))
 						.collect(Collectors.toSet()) : null;
-        Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, null, envolvidos, anexos, sigilo, peticionador);
+		TipoProcesso tipoProcesso = TipoProcesso.valueOf(command.getTipoProcesso());
+		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, null, envolvidos, anexos, sigilo, tipoProcesso, peticionador);
         
         peticaoRepository.save(peticao);
     }
@@ -126,7 +128,8 @@ public class PeticionamentoApplicationService {
         Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
 				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref)))
 						.collect(Collectors.toSet()) : null;
-        Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, sigilo, peticionador);
+		TipoProcesso tipoProcesso = TipoProcesso.valueOf(command.getTipoProcesso());
+		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, sigilo, tipoProcesso, peticionador);
         
         peticaoRepository.save(peticao);
     }
