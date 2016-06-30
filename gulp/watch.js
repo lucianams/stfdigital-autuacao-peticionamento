@@ -11,5 +11,5 @@ function isOnlyChange(event)
 
 gulp.task('watch', ['build'], function ()
 {
-    gulp.watch([path.join(conf.paths.app, '**/*.*')], ['scripts']);
+    gulp.watch([path.join(conf.paths.app, '**/*.*')], ['scripts:dev']);
 });

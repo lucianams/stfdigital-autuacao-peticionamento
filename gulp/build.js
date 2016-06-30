@@ -10,5 +10,9 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', function(done) {
+	runSequence('clean', 'scripts:dev', done);
+});
+
+gulp.task('build:dist', function(done) {
 	runSequence('clean', 'scripts', done);
 });

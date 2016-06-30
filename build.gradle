@@ -139,9 +139,17 @@ npmInstall {
     }
 }
 
+task gulpTestUnit(type: GulpTask) {
+    args = ['test:unit']
+}
+
+task gulpBuildDist(type: GulpTask) {
+    args = ['build:dist']
+}
+
 npmInstall.dependsOn npm_prune
-gulp_build.dependsOn tasks.npmInstall
-processResources.dependsOn gulp_build
+gulpBuildDist.dependsOn tasks.npmInstall
+processResources.dependsOn tasks.gulpBuildDist
 
 ext.dockerImageTag = project.hasProperty('dockerImageTag') ? project.getProperty('dockerImageTag') : ''
 

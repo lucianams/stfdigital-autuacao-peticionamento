@@ -8,6 +8,7 @@ var argv = require('yargs').argv;
 var protractorConfig = require(path.join('..', conf.paths.test, 'protractor.conf'));
 
 var $ = require('gulp-load-plugins')();
+var runSequence = require('run-sequence');
 
 // Downloads the selenium webdriver
 gulp.task('webdriver-update', $.protractor.webdriver_update);
@@ -56,5 +57,7 @@ function runProtractor(done)
         });
 }
 
-gulp.task('test:e2e', ['protractor']);
+gulp.task('test:e2e', function(done) {
+	runSequence('clean-typings:e2e', 'protractor', done);
+});
 gulp.task('protractor', ['webdriver-update', 'compile-ts:e2e'], runProtractor);

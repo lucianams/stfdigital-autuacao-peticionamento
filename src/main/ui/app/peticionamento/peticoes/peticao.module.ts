@@ -1,13 +1,11 @@
-import ITranslatePartialLoaderProvider = angular.translate.ITranslatePartialLoaderProvider;
+import ITranslatePartialLoaderService = angular.translate.ITranslatePartialLoaderService;
 import IStateProvider = angular.ui.IStateProvider;
 import IModule = angular.IModule;
+import Properties = app.support.constants.Properties;
 
 /** @ngInject **/
-function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider,
-                $stateProvider: IStateProvider,
-                msNavigationServiceProvider: any, properties) {
-
-    $translatePartialLoaderProvider.addPart(properties.apiUrl + '/peticionamento/peticoes');
+function config($stateProvider: IStateProvider,
+                msNavigationServiceProvider: any) {
 
     $stateProvider.state('app.novo-processo.peticionamento', {
         url : '/peticionamento',
@@ -29,7 +27,12 @@ function config($translatePartialLoaderProvider: ITranslatePartialLoaderProvider
     });
 }
 
+/** @ngInject **/
+function run($translatePartialLoader: ITranslatePartialLoaderService, properties: Properties) {
+    $translatePartialLoader.addPart(properties.apiUrl + '/peticionamento/peticoes');
+}
+
 let peticionamento: IModule = angular.module('app.novo-processo.peticionamento', ['app.novo-processo', 'app.support', 'angularFileUpload', 'ngCookies']);
-peticionamento.config(config);
+peticionamento.config(config).run(run);
 
 export default peticionamento;

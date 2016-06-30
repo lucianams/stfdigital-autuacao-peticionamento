@@ -29,14 +29,14 @@ function runTests(singleRun, done)
 
 gulp.task('test:unit', function (done)
 {
-    runSequence('bower:install:unit', ['compile-ts:unit', 'scripts'], function() {
+    runSequence(['bower:install:unit', 'clean-typings:unit'], ['compile-ts:unit', 'scripts:dev'], function() {
         runTests(true, done)
     });
 });
 
 gulp.task('tdd', function (done)
 {
-    runSequence('bower:install:unit', ['clean-and-watch-tests', 'watch'], function() {
+    runSequence(['bower:install:unit', 'clean-typings:unit'], ['clean-and-watch-tests', 'watch'], function() {
         runTests(false, done);
     });
 });
