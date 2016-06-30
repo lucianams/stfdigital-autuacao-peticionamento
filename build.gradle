@@ -100,6 +100,18 @@ dependencies {
     compile("com.palantir.docker.compose:docker-compose-rule:0.14.0")
 }
 
+import org.gradle.plugins.ide.eclipse.model.SourceFolder 
+eclipse.classpath.file {
+    beforeMerged { classpath -> 
+        classpath.entries.clear()
+    }
+    whenMerged {  cp -> 
+        cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/main/") }*.output = "bin/main" 
+        cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }*.output = "bin/test" 
+        cp.entries.removeAll { it.kind == "output" }
+    }
+}
+
 node {
   // Version of node to use.
   version = '5.9.1'
@@ -116,6 +128,15 @@ node {
 
   // Set the work directory where node_modules should be located
   nodeModulesDir = file("${project.projectDir}")
+}
+
+// --cache local para permitir executar npm install em paralelo
+// Permitindo parametrizar o registro npm com o objetivo de poder usar um proxy local para melhorar o tempo de construção
+npmInstall {
+    args = ['--cache', 'node_cache', '--loglevel', 'info']
+    if (project.hasProperty('npmRegistry')) {
+        args += ['--registry', project.getProperty('npmRegistry')]
+    }
 }
 
 npmInstall.dependsOn npm_prune
