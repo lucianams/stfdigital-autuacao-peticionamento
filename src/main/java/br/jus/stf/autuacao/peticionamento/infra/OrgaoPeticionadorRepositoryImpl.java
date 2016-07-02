@@ -34,7 +34,7 @@ public class OrgaoPeticionadorRepositoryImpl extends SimpleJpaRepository<OrgaoPe
 	
 	@Override
 	public List<OrgaoPeticionador> findOrgaoRepresentados(boolean verificarPerfil) {
-		String gestorCadastro = "gestor-cadastro";
+		//String gestorCadastro = "gestor-cadastro";
 		
 		//TODO: Alterar para pegar informações do usuário da sessão
 //		if (verificarPerfil && SecurityContextUtil.getUser().getUserDetails().getPapeis().contains(gestorCadastro)) {
