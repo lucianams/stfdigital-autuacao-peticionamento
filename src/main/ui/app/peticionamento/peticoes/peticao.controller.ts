@@ -30,12 +30,12 @@ export class PeticaoController {
         peticaoService.listarClasses().then((classes: Classe[]) => {
             this.classes = classes;    
         });
-        
+
         this.tiposAnexos = peticaoService.listarTipoPecas();
         
         this.uploader = new FileUploader({
             url: properties.url + ":" + properties.port + "/documents/api/documentos/upload/assinado",
-            //headers : {"X-XSRF-TOKEN": $cookies.get("XSRF-TOKEN")},
+            headers : {"X-XSRF-TOKEN": $cookies.get('XSRF-TOKEN'), "Authorization":  'Bearer ' + $cookies.get('access_token')},
             formData: [{name: "file"}],
             filters: [{
 		    	name: "arquivos-pdf",
