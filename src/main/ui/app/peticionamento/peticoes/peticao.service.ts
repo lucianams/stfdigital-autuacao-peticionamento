@@ -3,12 +3,6 @@ import IPromise = angular.IPromise;
 import IHttpPromiseCallbackArg = angular.IHttpPromiseCallbackArg;
 import peticionamento from "./peticao.module";
 
-/*
-export interface IAnexo {
-    documento: number,
-    tipo: number
-}
-*/
 export interface IPeticao {
     classeId: string,
     poloAtivo: Array<string>,
@@ -34,7 +28,7 @@ export class Classe {
     }
 }
 
-export class TipoAnexo{
+export class TipoAnexo {
     public id: number;
     public descricao: string;
     
@@ -66,7 +60,7 @@ export class DeleteTemporarioCommand {
 	}	
 }
 
-export class AnexoDto{
+export class AnexoDto {
     public tipoDocumentoId: number;
     public documentoId: string;
     
@@ -92,12 +86,20 @@ export class PeticionarCommand {
 	/* A lista de identificadores dos anexos da petição. */
 	private anexos: Array<AnexoDto>;
     
+	/* O grau de sigilo da petição */
+	private sigilo: string;
+
+    /* Tipo do processo da petição */
+	private tipoProcesso: string;
+
     constructor(classeId: string, orgaoId: number, poloAtivo: Array<string>, poloPassivo: Array<string>, anexos: Array<AnexoDto>) {
         this.classeId = classeId;
         this.orgaoId = orgaoId;
         this.poloAtivo = poloAtivo;
         this.poloPassivo = poloPassivo;
         this.anexos = anexos;
+        this.sigilo = 'PUBLICO';
+        this.tipoProcesso = 'ORIGINARIO';
     }
 }
 
@@ -156,37 +158,6 @@ export class PeticaoService {
                 return response.data;
             });
         
-        /*
-        let classes: Array<Classe> = new Array<Classe>();
-        classes.push(new Classe("ADI", "AÇÃO DIRETA DE INCONSTITUCIONALIDADE"));
-        classes.push(new Classe("ACO", "AÇÃO CÍVEL ORIGINÁRIA"));
-        classes.push(new Classe("HD", "HABEAS DATA"));
-        classes.push(new Classe("MS", "MANDADO DE SEGURANÇA"));
-        classes.push(new Classe("AO", "AÇÃO ORIGINÁRIA"));
-        classes.push(new Classe("IF", "INTERVENÇÃO FEDERAL"));
-        classes.push(new Classe("AR", "AÇÃO RESCISÓRIA"));
-        classes.push(new Classe("SS", "SUSPENSÃO DE SEGURANÇA"));
-        classes.push(new Classe("CC", "CONFLITO DE COMPETÊNCIA"));
-        classes.push(new Classe("ADC", "AÇÃO DECLARATÓRIA DE CONSTITUCIONALIDADE"));
-        classes.push(new Classe("AOE", "AÇÃO ORIGINÁRIA ESPECIAL"));
-        classes.push(new Classe("AS", "ARGUIÇÃO DE SUSPEIÇÃO"));
-        classes.push(new Classe("ADPF", "ARGÜIÇÃO DE DESCUMPRIMENTO DE PRECEITO FUNDAMENTAL"));
-        classes.push(new Classe("SL", "SUSPENSÃO DE LIMINAR"));
-        classes.push(new Classe("Pet", "PETIÇÃO"));
-        classes.push(new Classe("STA", "SUSPENSÃO DE TUTELA ANTECIPADA"));
-        classes.push(new Classe("ADO", "AÇÃO DIRETA DE INCONSTITUCIONALIDADE POR OMISSÃO"));
-        classes.push(new Classe("PSV", "PROPOSTA DE SÚMULA VINCULANTE"));
-        classes.push(new Classe("AImp", "ARGÜIÇÃO DE IMPEDIMENTO"));
-        classes.push(new Classe("EL", "EXCEÇÃO DE LITISPENDÊNCIA"));
-        classes.push(new Classe("EI", "EXCEÇÃO DE INCOMPETÊNCIA"));
-        classes.push(new Classe("HC", "HABEAS CORPUS"));
-        classes.push(new Classe("Rcl", "RECLAMAÇÃO"));
-        classes.push(new Classe("MI", "MANDADO DE INJUNÇÃO"));
-        classes.push(new Classe("AC", "AÇÃO CAUTELAR"));
-        classes.push(new Classe("RvC", "REVISÃO CRIMINAL"));
-        
-        return classes;
-        */
     }
 }
 

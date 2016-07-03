@@ -80,7 +80,7 @@ public class PeticionamentoApplicationService {
     private EnvolvidoAdapter envolvidoAdapter;
 
     @Transactional
-    @Command(description = "Nova petição", startProcess = true, listable = false)
+    @Command(description = "Nova Petição", startProcess = true, listable = false)
     public void handle(PeticionarCommand command) {
         Protocolo protocolo = protocoloAdapter.novoProtocolo();
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
@@ -107,7 +107,7 @@ public class PeticionamentoApplicationService {
     }
     
     @Transactional
-    @Command(description = "Nova petição com representação de Órgão", startProcess = true, listable = false)
+    @Command(description = "Nova Petição com Representação de Órgão", startProcess = true, listable = false)
     public void handle(PeticionarOrgaoCommand command) {
         Protocolo protocolo = protocoloAdapter.novoProtocolo();
         ClassePeticionavel classe = classeRepository.findOne(new ClasseId(command.getClasseId()));
