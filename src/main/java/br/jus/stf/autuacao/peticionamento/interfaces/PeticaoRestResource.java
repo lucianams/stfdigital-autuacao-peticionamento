@@ -1,7 +1,8 @@
 package br.jus.stf.autuacao.peticionamento.interfaces;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import br.jus.stf.autuacao.peticionamento.application.PeticionamentoApplicationService;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarCommand;
 import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarOrgaoCommand;
+import br.jus.stf.autuacao.peticionamento.domain.model.Peticao;
 import br.jus.stf.autuacao.peticionamento.domain.model.PeticaoRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionadorRepository;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDtoAssembler;
@@ -70,14 +73,16 @@ public class PeticaoRestResource {
 
     @RequestMapping(value="/{id}/envolvidos", method = RequestMethod.GET)
     public List<EnvolvidoDto> consultarEnvolvidosPeticao(@PathVariable Long id) {
-    	return peticaoRepository.findOne(new ProtocoloId(id)).envolvidos().stream()
-    			.map(envolvido -> envolvidoDtoAssembler.toDto(envolvido)).collect(Collectors.toList());
+    	Peticao peticao = peticaoRepository.findOne(new ProtocoloId(id));
+    	
+		return peticao.envolvidos().stream().map(envolvidoDtoAssembler::toDto).collect(toList());
     }
     
     @RequestMapping(value="/orgaos", method = RequestMethod.GET)
     public List<OrgaoPeticionadorDto> listarRepresentados(@RequestParam("verificarPerfil") boolean verificarPerfil) {
-		return orgaoRepository.findOrgaoRepresentados(verificarPerfil).stream()
-				.map(orgao -> orgaoDtoAssembler.toDto(orgao)).collect(Collectors.toList());
+		List<OrgaoPeticionador> orgaos = orgaoRepository.findOrgaoRepresentados(verificarPerfil);
+		
+		return orgaos.stream().map(orgaoDtoAssembler::toDto).collect(toList());
 	}
     
 }

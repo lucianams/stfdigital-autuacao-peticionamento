@@ -16,6 +16,7 @@ import br.jus.stf.autuacao.peticionamento.application.commands.PeticionarOrgaoCo
 import br.jus.stf.autuacao.peticionamento.domain.AnexoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.EnvolvidoAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.PeticaoFactory;
+import br.jus.stf.autuacao.peticionamento.domain.PeticionadorAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.autuacao.peticionamento.domain.model.Anexo;
 import br.jus.stf.autuacao.peticionamento.domain.model.Envolvido;
@@ -78,6 +79,9 @@ public class PeticionamentoApplicationService {
     
     @Autowired
     private EnvolvidoAdapter envolvidoAdapter;
+    
+    @Autowired
+    private PeticionadorAdapter peticionadorAdapter;
 
     @Transactional
     @Command(description = "Nova Petição", startProcess = true, listable = false)
@@ -88,24 +92,28 @@ public class PeticionamentoApplicationService {
 		
 		command.getAnexos().forEach(anexo -> documentosTemporarios.add(new DocumentoTemporarioId(anexo.getDocumentoId())));
         
-		Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> criarAnexo(anexoDto)).collect(Collectors.toSet());
+		Set<Anexo> anexos = command.getAnexos().stream().map(this::criarAnexo).collect(Collectors.toSet());
+		
 		Sigilo sigilo = Sigilo.valueOf(command.getSigilo());
-		//TODO: Alterar para pegar dados do peticionador pelo usuário da sessão.
-		Peticionador peticionador = new Peticionador("USUARIO_FALSO", new PessoaId(1L));
+		
 		Set<Envolvido> envolvidos = new HashSet<>(0);
         
 		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
         envolvidos.addAll(criarEnvolvidos(command.getPoloPassivo(), Polo.PASSIVO));
         
 		Set<Preferencia> preferencias = Optional.ofNullable(command.getPreferencias()).isPresent()
-				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref)))
-						.collect(Collectors.toSet()) : null;
+				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref))).collect(Collectors.toSet())
+				: null;
+				
 		TipoProcesso tipoProcesso = TipoProcesso.valueOf(command.getTipoProcesso());
+		
+		Peticionador peticionador = peticionadorAdapter.peticionador();
+		
 		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, null, envolvidos, anexos, sigilo, tipoProcesso, peticionador);
         
         peticaoRepository.save(peticao);
     }
-    
+
     @Transactional
     @Command(description = "Nova Petição com Representação de Órgão", startProcess = true, listable = false)
     public void handle(PeticionarOrgaoCommand command) {
@@ -116,10 +124,9 @@ public class PeticionamentoApplicationService {
 		command.getAnexos().forEach(anexo -> documentosTemporarios.add(new DocumentoTemporarioId(anexo.getDocumentoId())));
         
 		OrgaoPeticionador orgao = orgaoRepository.findOne(new PessoaId(command.getOrgaoId()));
-		Set<Anexo> anexos = command.getAnexos().stream().map(anexoDto -> criarAnexo(anexoDto)).collect(Collectors.toSet());
+		Set<Anexo> anexos = command.getAnexos().stream().map(this::criarAnexo).collect(Collectors.toSet());
 		Sigilo sigilo = Sigilo.valueOf(command.getSigilo());
-		//TODO: Alterar para pegar dados do peticionador pelo usuário/representante da sessão.
-		Peticionador peticionador = new Peticionador("USUARIO_FALSO", orgao.associados().iterator().next().pessoa());
+
 		Set<Envolvido> envolvidos = new HashSet<>(0);
         
 		envolvidos.addAll(criarEnvolvidos(command.getPoloAtivo(), Polo.ATIVO));
@@ -129,6 +136,9 @@ public class PeticionamentoApplicationService {
 				? command.getPreferencias().stream().map(pref -> preferenciaRepository.findOne(new PreferenciaId(pref)))
 						.collect(Collectors.toSet()) : null;
 		TipoProcesso tipoProcesso = TipoProcesso.valueOf(command.getTipoProcesso());
+
+		Peticionador peticionador = peticionadorAdapter.peticionador();
+		
 		Peticao peticao = peticaoFactory.novaPeticao(protocolo, classe, preferencias, orgao, envolvidos, anexos, sigilo, tipoProcesso, peticionador);
         
         peticaoRepository.save(peticao);
@@ -139,8 +149,8 @@ public class PeticionamentoApplicationService {
      * @param anexoCommand Dados do anexo oriundos do front-end.
      * @return Objeto anexo.
      */
-    private Anexo criarAnexo(CadastrarAnexoCommand anexoCommand) {
-	    List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<DocumentoTemporarioId>();
+    protected Anexo criarAnexo(CadastrarAnexoCommand anexoCommand) {
+	    List<DocumentoTemporarioId> documentosTemporarios = new ArrayList<>();
 	    
 	    documentosTemporarios.add(new DocumentoTemporarioId(anexoCommand.getDocumentoId()));
 	    
@@ -160,7 +170,7 @@ public class PeticionamentoApplicationService {
 	 */
 	private Set<Envolvido> criarEnvolvidos(List<String> nomes, Polo polo) {
 		Set<PessoaId> pessoas = envolvidoAdapter.pessoasEnvolvidas(nomes);
-		Set<Envolvido> envolvidos = new HashSet<Envolvido>(0);
+		Set<Envolvido> envolvidos = new HashSet<>(0);
         int index = 0;
         
 		for(PessoaId pessoa : pessoas) {
@@ -168,4 +178,5 @@ public class PeticionamentoApplicationService {
 		}
 		return envolvidos;
 	}
+
 }
