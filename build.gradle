@@ -10,6 +10,7 @@ buildscript {
         swaggerVersion = '1.0.2'
         guavaVersion = '19.0'
         flywayVersion = '4.0'
+        stfdigitalCoreVersion = '0.0.1-SNAPSHOT'
     }
     repositories {
         mavenLocal()
@@ -45,9 +46,7 @@ apply plugin: 'com.moowork.gulp'
 repositories {
     mavenLocal()
     mavenCentral()
-    maven {
-        url 'https://dl.bintray.com/palantir/releases'
-    }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 dependencyManagement {
@@ -94,9 +93,9 @@ dependencies {
         
     compile("org.codehaus.jackson:jackson-mapper-asl:${jacksonMapperVersion}")
         
-    compile("com.mangofactory:swagger-springmvc:$swaggerVersion")
+    compile("com.mangofactory:swagger-springmvc:${swaggerVersion}")
     
-    compile("br.jus.stf.digital:core:0.0.1-SNAPSHOT")
+    compile("br.jus.stf.digital:core:${stfdigitalCoreVersion}")
     
     compile("com.h2database:h2")
     
@@ -105,8 +104,6 @@ dependencies {
     testCompile("com.jayway.jsonpath:json-path")
     
     compile("org.springframework.boot:spring-boot-starter-test")
-
-    compile("com.palantir.docker.compose:docker-compose-rule:0.14.0")
 }
 
 import org.gradle.plugins.ide.eclipse.model.SourceFolder 
@@ -142,7 +139,7 @@ node {
 // --cache local para permitir executar npm install em paralelo
 // Permitindo parametrizar o registro npm com o objetivo de poder usar um proxy local para melhorar o tempo de construção
 npmInstall {
-    args = ['--cache', 'node_cache', '--loglevel', 'info']
+    args = ['--cache', 'node_cache']
     if (project.hasProperty('npmRegistry')) {
         args += ['--registry', project.getProperty('npmRegistry')]
     }
@@ -150,6 +147,13 @@ npmInstall {
 
 task gulpTestUnit(type: GulpTask) {
     args = ['test:unit']
+}
+
+ext.e2eBaseUrl = project.hasProperty('e2eBaseUrl') ? project.getProperty('e2eBaseUrl') : 'https://docker:8443'
+ext.e2eSeleniumAddress = project.hasProperty('e2eSeleniumAddress') ? project.getProperty('e2eSeleniumAddress') : 'http://docker:4444/wd/hub'
+
+task gulpTestE2E(type: GulpTask) {
+    args = ['test:e2e', '--e2eBaseUrl', e2eBaseUrl, '--e2eSeleniumAddress', e2eSeleniumAddress]
 }
 
 task gulpBuildDist(type: GulpTask) {
@@ -162,8 +166,44 @@ processResources.dependsOn tasks.gulpBuildDist
 
 ext.dockerImageTag = project.hasProperty('dockerImageTag') ? project.getProperty('dockerImageTag') : ''
 
+// Diretório do contexto Docker
+ext.dockerDir = "${project.buildDir}" + '/docker'
+// Caminho do arquivo Jar no contexto do Docker
+ext.dockerAppJarFile = dockerDir + '/' + jar.baseName + '.jar'
+// Essas bibliotecas estarão em uma layer adicional do Docker, de modo a otimizar seu mecanismo de cache
+ext.additionalDockerLayerLibs = ['lib/core-' + ext.stfdigitalCoreVersion + '.jar']
+
+// Extendendo a task dockerPrepare para explodir o Jar e permitir criar layers dockers para cada categoria de libs
+dockerPrepare {
+    doLast {
+        // Layer Docker com as libs externas, atualizadas com menos frequência e por isso estarão em uma layer abaixo das outras
+        copy {
+            from(zipTree(file(dockerAppJarFile))) {
+                include 'lib/**'
+                exclude additionalDockerLayerLibs
+            }
+            into dockerDir + '/app-lib-layer'
+        }
+        // Layer Docker adicional para as libs do stfdigital, são atualizadas com maior frequência que as libs externas
+        copy {
+            from(zipTree(file(dockerAppJarFile))) {
+                include additionalDockerLayerLibs
+            }
+            into dockerDir + '/app-additional-layer'
+        }
+        // Layer Docker da aplicação em si, conterá um Jar pequeno, o que permite otimizar o pull da imagem do registro.
+        copy {
+            from(zipTree(file(dockerAppJarFile))) {
+                exclude 'lib/**'
+            }
+            into dockerDir + '/app-layer'
+        }
+        delete dockerAppJarFile
+    }
+}
+
 docker {
-    name jar.baseName + (dockerImageTag ? ':' + dockerImageTag : '')
+    name dockerImageName + (dockerImageTag ? ':' + dockerImageTag : '')
     dockerfile 'src/main/docker/Dockerfile'
     files 'src/main/docker/docker-entrypoint.sh', 'truststores/truststore.jks'
     dependsOn tasks.jar, tasks.bootRepackage, tasks.build

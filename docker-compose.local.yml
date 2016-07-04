@@ -1,0 +1,65 @@
+# Define a configuração dos serviços para rodar localmente.
+version: '2'
+services:
+  rabbit:
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+  discovery:
+    image: discovery
+    ports:
+     - "8761:8761"
+     - "47961:8000"
+    environment:
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+  gateway:
+    image: gateway
+    ports:
+     - "8765:8765"
+     - "47965:${JAVA_DEBUG_PORT}"
+    environment:
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}     
+  services:
+    image: services
+    ports:
+     - "8081:8081"
+     - "8181:8181"
+     - "47981:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+  mongo:
+    ports:
+     - "27017:27017"
+  documents:
+    image: documents
+    ports:
+     - "8094:8094"
+     - "8194:8194"
+     - "47994:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - onlyoffice.documentserver.host=gateway
+     - onlyoffice.server.address=https://docker:443
+    links:
+     - onlyoffice:docker
+  ui:
+    image: plataforma-ui
+    ports:
+     - "8443:8443"
+  userauthentication:
+    image: userauthentication
+    ports:
+     - "8095:8095"
+     - "8195:8195"
+     - "47995:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+  onlyoffice:
+    image: svendowideit/ambassador
+    ports:
+     - "443:443"
+    environment:
+     - ONLYOFFICE_PORT_443_TCP=tcp://10.112.20.123:443

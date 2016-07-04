@@ -1,0 +1,23 @@
+sudo: required
+language: java
+jdk:
+  - oraclejdk8
+services:
+  - docker
+addons:
+  hosts:
+    - docker
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - docker save -o $HOME/docker_cache/docker.tar stfdigital-autuacao-peticionamento $(docker history -q stfdigital-autuacao-peticionamento | tail -n +2 | grep -v \<missing\> | tr '\n' ' ')
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - node_cache
+    - node_modules
+    - $HOME/docker_cache
+before_install:
+  - ./scripts/upgrade-docker.sh
+  - mkdir -p $HOME/docker_cache
+install: docker load -i $HOME/docker_cache/docker.tar || true
+script: gradle docker && gradle gulpTestUnit && ./scripts/test-e2e.sh

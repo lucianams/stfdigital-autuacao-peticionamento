@@ -104,6 +104,7 @@ gulp.task('compile-ts:e2e', ['ts-lint:e2e'], function() {
     return gulp.src([allTypeScriptE2E, libraryTypeScriptE2E])
         .pipe($.typescript(tsProjectE2E))
         .pipe($.ngAnnotate())
+        .pipe($.destClean(tsOutputPathE2E))
         .pipe(gulp.dest(tsOutputPathE2E));
 });
 
@@ -120,5 +121,6 @@ gulp.task('compile-ts:unit', ['ts-lint:unit'], function() {
         .pipe($.typescript(tsProjectUnit))
         .pipe($.ngAnnotate())
         .pipe($.sourcemaps.write('.'))
+        .pipe($.destClean(tsOutputPathUnit))
         .pipe(gulp.dest(tsOutputPathUnit));
 });
