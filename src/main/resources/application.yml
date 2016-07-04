@@ -38,9 +38,9 @@ security:
     client:
       clientId: peticionamento
       clientSecret: peticionamento
-      accessTokenUri: http://localhost:8095/oauth/token
+      accessTokenUri: http://userauthentication:8095/oauth/token
       grant-type: client_credentials
       scope: server
     resource:
-      user-info-uri: http://localhost:8095/user
+      user-info-uri: http://userauthentication:8095/user
       
