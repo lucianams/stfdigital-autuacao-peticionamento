@@ -43,8 +43,13 @@ public class OrgaoPeticionador extends EntitySupport<OrgaoPeticionador, PessoaId
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
+	/**
+	 * @param id
+	 * @param nome
+	 * @param associados
+	 */
 	public OrgaoPeticionador(PessoaId id, String nome, Set<Associado> associados) {
-		Validate.notNull(id, "Id requerido.");
+		Validate.notNull(id, "Identificador requerido.");
 		Validate.notBlank(nome, "Nome requerido.");
 		
 		this.id = id;
@@ -52,14 +57,24 @@ public class OrgaoPeticionador extends EntitySupport<OrgaoPeticionador, PessoaId
 		this.associados = Optional.ofNullable(associados).orElse(new HashSet<>(0));
 	}
 	
+	/**
+	 * @return
+	 */
 	public String nome() {
 		return nome;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Set<Associado> associados() {
 		return Collections.unmodifiableSet(associados);
 	}
 	
+	/**
+	 * @param pessoa
+	 * @return
+	 */
 	public boolean isRepresentadoPor(PessoaId pessoa) {
 		return associados.stream().anyMatch(associado -> associado.isRepresentante(pessoa));
 	}

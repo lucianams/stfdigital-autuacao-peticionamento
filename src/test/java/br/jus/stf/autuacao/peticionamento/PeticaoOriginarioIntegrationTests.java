@@ -86,14 +86,14 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 	
 	@Test
 	public void listarOrgaosPeticionadoresConformeAssociado() throws Exception {
-		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=false").contentType(APPLICATION_JSON));
+		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=false"));
         
         result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
 	}
 	
 	@Test
 	public void listarOrgaosPeticionadoresVerificandoPerfil() throws Exception {
-		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=true").contentType(APPLICATION_JSON));
+		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=true"));
         
         result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(35)));
 	}

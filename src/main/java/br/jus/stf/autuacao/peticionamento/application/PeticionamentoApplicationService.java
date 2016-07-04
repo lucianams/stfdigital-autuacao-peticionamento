@@ -83,6 +83,9 @@ public class PeticionamentoApplicationService {
     @Autowired
     private PeticionadorAdapter peticionadorAdapter;
 
+    /**
+     * @param command
+     */
     @Transactional
     @Command(description = "Nova Petição", startProcess = true, listable = false)
     public void handle(PeticionarCommand command) {
@@ -114,6 +117,9 @@ public class PeticionamentoApplicationService {
         peticaoRepository.save(peticao);
     }
 
+    /**
+     * @param command
+     */
     @Transactional
     @Command(description = "Nova Petição com Representação de Órgão", startProcess = true, listable = false)
     public void handle(PeticionarOrgaoCommand command) {
