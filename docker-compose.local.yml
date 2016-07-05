@@ -6,21 +6,21 @@ services:
      - "5672:5672"
      - "15672:15672"
   discovery:
-    image: discovery
+    image: stfdigital-plataforma-discovery
     ports:
      - "8761:8761"
      - "47961:8000"
     environment:
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
   gateway:
-    image: gateway
+    image: stfdigital-plataforma-gateway
     ports:
      - "8765:8765"
      - "47965:${JAVA_DEBUG_PORT}"
     environment:
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}     
   services:
-    image: services
+    image: stfdigital-plataforma-services
     ports:
      - "8081:8081"
      - "8181:8181"
@@ -32,7 +32,7 @@ services:
     ports:
      - "27017:27017"
   documents:
-    image: documents
+    image: stfdigital-plataforma-documents
     ports:
      - "8094:8094"
      - "8194:8194"
@@ -45,11 +45,11 @@ services:
     links:
      - onlyoffice:docker
   ui:
-    image: plataforma-ui
+    image: stfdigital-plataforma-ui
     ports:
      - "8443:8443"
   userauthentication:
-    image: userauthentication
+    image: stfdigital-plataforma-userauthentication
     ports:
      - "8095:8095"
      - "8195:8195"
