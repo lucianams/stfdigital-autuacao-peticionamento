@@ -25,8 +25,8 @@ install: docker load -i $HOME/docker_cache/docker.tar || true
 script: gradle docker && gradle gulpTestUnit
 after_success:
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-- export REPO=supremotribunalfederal/stfdigital-autuacao-autuacao
-- docker tag stfdigital-autuacao-autuacao $REPO:latest
+- export REPO=supremotribunalfederal/stfdigital-autuacao-peticionamento
+- docker tag stfdigital-autuacao-peticionamento $REPO:latest
 - docker push $REPO:latest
 notifications:
   slack:
