@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # http://graysonkoonce.com/managing-docker-and-docker-compose-versions-on-travis-ci/
 

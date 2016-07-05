@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 MAIN_DOCKER_COMPOSE_FILE="-f docker-compose.yml"
 COMPOSE_FILES_PARAMS="$MAIN_DOCKER_COMPOSE_FILE -f docker-compose.e2e.yml"
