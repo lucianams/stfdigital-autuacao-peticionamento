@@ -7,10 +7,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.Validate;
@@ -30,8 +27,6 @@ public class Associado extends ValueObjectSupport<Associado> {
 	
 	@Id
 	@Column(name = "SEQ_ASSOCIADO")
-	@SequenceGenerator(name = "ASSOCIADO_ID", sequenceName = "PETICIONAMENTO.SEQ_ASSOCIADO", allocationSize = 1)
-	@GeneratedValue(generator = "ASSOCIADO_ID", strategy=GenerationType.SEQUENCE)
 	private Long id;
 	
 	@Embedded
@@ -52,39 +47,67 @@ public class Associado extends ValueObjectSupport<Associado> {
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
-	public Associado(PessoaId pessoa, String nome, TipoAssociado tipo, String cargoFuncao) {
+	/**
+	 * @param id
+	 * @param pessoa
+	 * @param nome
+	 * @param tipo
+	 * @param cargoFuncao
+	 */
+	public Associado(Long id, PessoaId pessoa, String nome, TipoAssociado tipo, String cargoFuncao) {
+		Validate.notNull(id, "Identificador requerido.");
 		Validate.notNull(pessoa, "Pessoa requerida.");
 		Validate.notBlank(nome, "Nome requerido.");
 		Validate.notNull(tipo, "Tipo requerido.");
 		
+		this.id = id;
 		this.pessoa = pessoa;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.cargoFuncao = cargoFuncao;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Long toLong() {
 		return id;
 	}
 	
+	/**
+	 * @return
+	 */
 	public PessoaId pessoa() {
 		return pessoa;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String nome() {
 		return nome;
 	}
 	
+	/**
+	 * @return
+	 */
 	public TipoAssociado tipo() {
 		return tipo;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String cargoFuncao() {
 		return cargoFuncao;
 	}
 	
+	/**
+	 * @param pessoa
+	 * @return
+	 */
 	public boolean isRepresentante(PessoaId pessoa) {
-		return Optional.ofNullable(pessoa).isPresent() && TipoAssociado.REPRESENTANTE.equals(this.tipo)
+		return Optional.ofNullable(pessoa).isPresent() && TipoAssociado.REPRESENTANTE.equals(tipo)
 				&& pessoa.equals(this.pessoa);
 	}
 	

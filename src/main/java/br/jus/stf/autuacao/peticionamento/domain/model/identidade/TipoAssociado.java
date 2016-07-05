@@ -18,6 +18,9 @@ public enum TipoAssociado {
 		this.descricao = descricao;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String descricao() {
 		return descricao;
 	}

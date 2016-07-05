@@ -12,10 +12,21 @@ import br.jus.stf.core.shared.identidade.PessoaId;
  */
 public interface OrgaoPeticionadorRepository {
 
+	/**
+	 * @return
+	 */
 	List<OrgaoPeticionador> findAll();
 	
+	/**
+	 * @param id
+	 * @return
+	 */
 	OrgaoPeticionador findOne(PessoaId id);
 	
+	/**
+	 * @param verificarPerfil
+	 * @return
+	 */
 	List<OrgaoPeticionador> findOrgaoRepresentados(boolean verificarPerfil);
 
 }
