@@ -35,12 +35,9 @@ http:
       
 security:
   oauth2:
-    client:
-      clientId: peticionamento
-      clientSecret: peticionamento
-      accessTokenUri: http://userauthentication:8095/oauth/token
-      grant-type: client_credentials
-      scope: server
     resource:
       user-info-uri: http://userauthentication:8095/user
       
+feign:
+  hystrix:
+    enabled: false      
