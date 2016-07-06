@@ -21,9 +21,10 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPlugin}")
-        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.6.0")
+        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.8.0")
         classpath("com.moowork.gradle:gradle-node-plugin:0.12")
         classpath("com.moowork.gradle:gradle-gulp-plugin:0.12")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1")
     }
 }
 
@@ -42,6 +43,10 @@ apply plugin: "com.palantir.docker"
 apply plugin: 'com.moowork.node'
 
 apply plugin: 'com.moowork.gulp'
+
+apply plugin: 'jacoco'
+
+apply plugin: 'org.sonarqube'
 
 repositories {
     mavenLocal()
@@ -116,6 +121,11 @@ eclipse.classpath.file {
         cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }*.output = "bin/test" 
         cp.entries.removeAll { it.kind == "output" }
     }
+}
+
+// Cobertura de testes
+jacoco {
+    toolVersion = '0.7.7.201606060606'
 }
 
 node {
