@@ -14,6 +14,9 @@ import br.jus.stf.core.shared.protocolo.Protocolo;
 @FunctionalInterface
 public interface ProtocoloAdapter {
 
+	/**
+	 * @return
+	 */
 	public Protocolo novoProtocolo();
 	
 }

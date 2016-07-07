@@ -105,6 +105,17 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
     }
 
+	/**
+	 * @param protocolo
+	 * @param classe
+	 * @param preferencias
+	 * @param orgao
+	 * @param envolvidos
+	 * @param anexos
+	 * @param sigilo
+	 * @param tipoProcesso
+	 * @param peticionador
+	 */
 	public Peticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias,
 			OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo,
 			TipoProcesso tipoProcesso, Peticionador peticionador) {
@@ -143,10 +154,16 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 		eventos.add(new Evento(evento));
 	}
 	
+	/**
+	 * @return
+	 */
 	public Numero numero() {
     	return numero;
     }
 	
+	/**
+	 * @return
+	 */
 	public Set<Envolvido> envolvidos(){
 		return Collections.unmodifiableSet(envolvidos);
 	}
@@ -155,6 +172,9 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 		return preferencias.stream().anyMatch(preferencia -> preferencia.isCriminalEleitoral());
 	}
 	
+	/**
+	 * @return
+	 */
 	public TipoProcesso tipoProcesso() {
 		return tipoProcesso;
 	}

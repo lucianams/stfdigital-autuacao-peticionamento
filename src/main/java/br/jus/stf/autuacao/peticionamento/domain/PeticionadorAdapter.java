@@ -11,6 +11,9 @@ import br.jus.stf.autuacao.peticionamento.domain.model.Peticionador;
 @FunctionalInterface
 public interface PeticionadorAdapter {
 	
+	/**
+	 * @return
+	 */
 	Peticionador peticionador();
 
 }

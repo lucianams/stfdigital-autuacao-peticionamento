@@ -13,10 +13,21 @@ import br.jus.stf.core.shared.processo.TipoProcesso;
  */
 public interface ClassePeticionavelRepository {
 
+	/**
+	 * @return
+	 */
 	List<ClassePeticionavel> findAll();
 	
+	/**
+	 * @param id
+	 * @return
+	 */
 	ClassePeticionavel findOne(ClasseId id);
 	
+	/**
+	 * @param tipo
+	 * @return
+	 */
 	List<ClassePeticionavel> findByTipo(TipoProcesso tipo);
 
 }

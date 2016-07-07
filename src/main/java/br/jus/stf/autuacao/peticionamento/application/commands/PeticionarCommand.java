@@ -44,7 +44,7 @@ public class PeticionarCommand {
 	private String tipoProcesso;
 	
 	public PeticionarCommand() {
-		
+		// Construtor default
 	}
 	
 	public List<String> getPoloAtivo() {

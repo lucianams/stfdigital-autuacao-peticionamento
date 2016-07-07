@@ -19,6 +19,9 @@ import br.jus.stf.core.shared.documento.TipoDocumentoId;
 @Repository
 public class TipoAnexoRepositoryImpl extends SimpleJpaRepository<TipoAnexo, TipoDocumentoId> implements TipoAnexoRepository {
 
+	/**
+	 * @param entityManager
+	 */
 	@Autowired
     public TipoAnexoRepositoryImpl(EntityManager entityManager) {
         super(TipoAnexo.class, entityManager);

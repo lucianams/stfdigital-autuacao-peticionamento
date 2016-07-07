@@ -19,6 +19,9 @@ import br.jus.stf.core.shared.protocolo.ProtocoloId;
 @Repository
 public class PeticaoRepositoryImpl extends SimpleJpaRepository<Peticao, ProtocoloId> implements PeticaoRepository {
 
+	/**
+	 * @param entityManager
+	 */
 	@Autowired
     public PeticaoRepositoryImpl(EntityManager entityManager) {
         super(Peticao.class, entityManager);

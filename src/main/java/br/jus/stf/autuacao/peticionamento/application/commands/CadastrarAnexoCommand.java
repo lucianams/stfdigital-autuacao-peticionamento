@@ -13,9 +13,13 @@ public class CadastrarAnexoCommand {
 	private String documentoId;
 	
 	public CadastrarAnexoCommand() {
-		
+		// Construtor default
 	}
 	
+	/**
+	 * @param tipoDocumentoId
+	 * @param documentoId
+	 */
 	public CadastrarAnexoCommand(Long tipoDocumentoId, String documentoId) {
 		this.tipoDocumentoId = tipoDocumentoId;
 		this.documentoId = documentoId;

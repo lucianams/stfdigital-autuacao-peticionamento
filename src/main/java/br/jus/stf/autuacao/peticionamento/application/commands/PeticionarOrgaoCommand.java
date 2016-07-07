@@ -50,7 +50,7 @@ public class PeticionarOrgaoCommand {
 	private String tipoProcesso;
 	
 	public PeticionarOrgaoCommand() {
-		
+		// Construtor default
 	}
 	
 	public List<String> getPoloAtivo() {

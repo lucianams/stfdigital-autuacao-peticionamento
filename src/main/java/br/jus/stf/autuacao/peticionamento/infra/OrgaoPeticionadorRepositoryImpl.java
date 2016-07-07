@@ -26,6 +26,9 @@ public class OrgaoPeticionadorRepositoryImpl extends SimpleJpaRepository<OrgaoPe
 
 	private EntityManager entityManager;
 	
+	/**
+	 * @param entityManager
+	 */
 	@Autowired
     public OrgaoPeticionadorRepositoryImpl(EntityManager entityManager) {
         super(OrgaoPeticionador.class, entityManager);

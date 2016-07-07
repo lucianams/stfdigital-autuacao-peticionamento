@@ -28,6 +28,10 @@ public class Peticionador extends ValueObjectSupport<Peticionador> {
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
+	/**
+	 * @param login
+	 * @param pessoa
+	 */
 	public Peticionador(String login, PessoaId pessoa) {
 		Validate.notBlank(login, "Login requerido.");
 		Validate.notNull(pessoa, "Pessoa requerida.");
@@ -36,10 +40,16 @@ public class Peticionador extends ValueObjectSupport<Peticionador> {
 		this.pessoa = pessoa;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String login() {
 		return login;
 	}
 	
+	/**
+	 * @return
+	 */
 	public PessoaId pessoa() {
 		return pessoa;
 	}

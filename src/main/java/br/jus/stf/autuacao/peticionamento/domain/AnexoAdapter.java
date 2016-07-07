@@ -14,6 +14,7 @@ import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
  * @since 05.05.2016
  */
 @Component
+@FunctionalInterface
 public interface AnexoAdapter {
 
 	/**

@@ -30,6 +30,10 @@ public class TipoAnexo extends EntitySupport<TipoAnexo, TipoDocumentoId> {
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
+	/**
+	 * @param id
+	 * @param nome
+	 */
 	public TipoAnexo(TipoDocumentoId id, String nome) {
 		Validate.notNull(id, "Id requerido.");
 		Validate.notBlank(nome, "Nome requerido.");
@@ -38,6 +42,9 @@ public class TipoAnexo extends EntitySupport<TipoAnexo, TipoDocumentoId> {
 		this.nome = nome;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String nome() {
 		return nome;
 	}

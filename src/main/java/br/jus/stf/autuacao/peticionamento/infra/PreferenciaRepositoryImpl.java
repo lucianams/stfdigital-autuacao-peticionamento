@@ -19,6 +19,9 @@ import br.jus.stf.core.shared.preferencia.PreferenciaId;
 @Repository
 public class PreferenciaRepositoryImpl extends SimpleJpaRepository<Preferencia, PreferenciaId> implements PreferenciaRepository {
 
+	/**
+	 * @param entityManager
+	 */
 	@Autowired
     public PreferenciaRepositoryImpl(EntityManager entityManager) {
         super(Preferencia.class, entityManager);

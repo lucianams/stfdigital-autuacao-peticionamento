@@ -48,6 +48,10 @@ public class Anexo extends ValueObjectSupport<Anexo> {
     	// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
+	/**
+	 * @param tipo
+	 * @param documento
+	 */
 	public Anexo(TipoAnexo tipo, DocumentoId documento) {
 		Validate.notNull(tipo, "Tipo requerido.");
 		Validate.notNull(documento, "Documento requerido.");
@@ -57,18 +61,30 @@ public class Anexo extends ValueObjectSupport<Anexo> {
 		this.descricao = tipo.nome();
 	}
 	
+	/**
+	 * @return
+	 */
 	public Long toLong() {
 		return id;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String descricao() {
 		return descricao;
 	}
 	
+	/**
+	 * @return
+	 */
 	public TipoAnexo tipo() {
 		return tipo;
 	}
 	
+	/**
+	 * @return
+	 */
 	public DocumentoId documento() {
 		return documento;
 	}

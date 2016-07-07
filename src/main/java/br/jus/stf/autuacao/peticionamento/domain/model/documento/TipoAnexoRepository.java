@@ -12,8 +12,15 @@ import br.jus.stf.core.shared.documento.TipoDocumentoId;
  */
 public interface TipoAnexoRepository {
 
+	/**
+	 * @return
+	 */
 	List<TipoAnexo> findAll();
 	
+	/**
+	 * @param id
+	 * @return
+	 */
 	TipoAnexo findOne(TipoDocumentoId id);
 
 }

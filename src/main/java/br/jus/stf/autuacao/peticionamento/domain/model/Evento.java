@@ -49,6 +49,9 @@ public class Evento extends EntitySupport<Evento, Long> {
     	// Usado apenas pelo Jackson durante a conversação de Json para uma nova instância.
 	}
 	
+	/**
+	 * @param detalhes
+	 */
 	public Evento(Object detalhes) {
 		try {
 			this.detalhes = new ObjectMapper().writeValueAsString(detalhes);
@@ -60,13 +63,16 @@ public class Evento extends EntitySupport<Evento, Long> {
 		criacao = new Date();
 	}
 
+	/**
+	 * @return
+	 */
+	public Date criacao() {
+		return criacao;
+	}
+	
 	@Override
 	public Long identity() {
 		return id;
-	}
-	
-	public Date criacao() {
-		return criacao;
 	}
 	
 }

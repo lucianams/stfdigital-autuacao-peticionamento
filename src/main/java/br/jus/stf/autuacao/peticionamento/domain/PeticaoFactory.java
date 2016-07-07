@@ -24,6 +24,18 @@ import br.jus.stf.core.shared.protocolo.Protocolo;
 @Component
 public class PeticaoFactory {
 
+	/**
+	 * @param protocolo
+	 * @param classe
+	 * @param preferencias
+	 * @param orgao
+	 * @param envolvidos
+	 * @param anexos
+	 * @param sigilo
+	 * @param tipoProcesso
+	 * @param peticionador
+	 * @return
+	 */
 	public Peticao novaPeticao(Protocolo protocolo, ClassePeticionavel classe, Set<Preferencia> preferencias,
 			OrgaoPeticionador orgao, Set<Envolvido> envolvidos, Set<Anexo> anexos, Sigilo sigilo, TipoProcesso tipoProcesso,
 			Peticionador peticionador) {

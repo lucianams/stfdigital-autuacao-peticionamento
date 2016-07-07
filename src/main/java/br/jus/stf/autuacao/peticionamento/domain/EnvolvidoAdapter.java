@@ -14,6 +14,10 @@ import br.jus.stf.core.shared.identidade.PessoaId;
 @FunctionalInterface
 public interface EnvolvidoAdapter {
 	
+	/**
+	 * @param nome
+	 * @return
+	 */
 	public Set<PessoaId> pessoasEnvolvidas(List<String> nome);
 	
 }

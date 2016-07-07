@@ -30,6 +30,10 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 		// Deve ser usado apenas pelo Hibernate, que sempre usa o construtor default antes de popular uma nova instância.
 	}
 	
+	/**
+	 * @param id
+	 * @param nome
+	 */
 	public Preferencia(PreferenciaId id, String nome) {
 		Validate.notNull(id, "Id preferencia.");
 		Validate.notBlank(nome, "Nome requerido.");
@@ -38,6 +42,9 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 		this.nome = nome;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String nome() {
 		return nome;
 	}

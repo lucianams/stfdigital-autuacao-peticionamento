@@ -12,8 +12,15 @@ import br.jus.stf.core.shared.preferencia.PreferenciaId;
  */
 public interface PreferenciaRepository {
 
+	/**
+	 * @return
+	 */
 	List<Preferencia> findAll();
 	
+	/**
+	 * @param id
+	 * @return
+	 */
 	Preferencia findOne(PreferenciaId id);
 
 }

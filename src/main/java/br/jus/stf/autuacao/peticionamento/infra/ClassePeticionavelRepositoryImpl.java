@@ -25,6 +25,9 @@ public class ClassePeticionavelRepositoryImpl extends SimpleJpaRepository<Classe
 
 	private EntityManager entityManager;
 	
+	/**
+	 * @param entityManager
+	 */
 	@Autowired
     public ClassePeticionavelRepositoryImpl(EntityManager entityManager) {
         super(ClassePeticionavel.class, entityManager);
