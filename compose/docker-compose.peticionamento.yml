@@ -1,0 +1,10 @@
+# Define a configuração para rodar o recebimento
+version: '2'
+services:
+  peticionamento:
+    extends:
+      file: compose/shared/common.yml
+      service: peticionamento
+    depends_on:
+     - rabbit
+     - discovery

@@ -1,0 +1,7 @@
+# Define a configuração para rodar o onlyoffice real
+version: '2'
+services:
+  onlyoffice:
+    extends:
+      file: compose/shared/common.yml
+      service: onlyoffice

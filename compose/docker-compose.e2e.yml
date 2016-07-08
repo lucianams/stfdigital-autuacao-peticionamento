@@ -1,0 +1,18 @@
+# Define a configuração para rodar os testes e2e
+version: '2'
+services:
+  selenium:
+    container_name: selenium
+    image: selenium/standalone-chrome:2.53.0
+    ports:
+     - "4444:4444"
+  rabbit: # Necessário criar sem expor as portas para rodar no travis-ci
+    container_name: rabbit
+    image: rabbitmq:management
+  peticionamento:
+    extends:
+      file: compose/shared/common.yml
+      service: peticionamento
+    depends_on:
+     - rabbit
+     - discovery

@@ -1,41 +1,47 @@
-# Define a configuração padrão dos serviços e suas dependências.
+# Define a configuração para rodar com imagens do Docker Hub
 version: '2'
 services:
   rabbit:
-    container_name: rabbit
-    image: rabbitmq:management
+    extends:
+      file: compose/shared/common.yml
+      service: rabbit
   discovery:
-    container_name: discovery
-    image: supremotribunalfederal/stfdigital-plataforma-discovery
+    extends:
+      file: compose/shared/common.yml
+      service: discovery
   gateway:
-    container_name: gateway
-    image: supremotribunalfederal/stfdigital-plataforma-gateway
+    extends:
+      file: compose/shared/common.yml
+      service: gateway
     depends_on:
      - discovery
   services:
-    container_name: services
-    image: supremotribunalfederal/stfdigital-plataforma-services
+    extends:
+      file: compose/shared/common.yml
+      service: services
     depends_on:
      - rabbit
      - discovery
-  mongo:
-    container_name: mongo
-    image: mongo:3
-  documents:
-    container_name: documents
-    image: supremotribunalfederal/stfdigital-plataforma-documents
-    depends_on:
-     - mongo
-     - discovery
   ui:
-    container_name: ui
-    image: supremotribunalfederal/stfdigital-plataforma-ui
+    extends:
+      file: compose/shared/common.yml
+      service: ui
     depends_on:
      - gateway
   userauthentication:
-    container_name: userauthentication
-    image: supremotribunalfederal/stfdigital-plataforma-userauthentication
+    extends:
+      file: compose/shared/common.yml
+      service: userauthentication
     depends_on:
      - discovery
-  onlyoffice:
-    container_name: onlyoffice
+  mongo:
+    extends:
+      file: compose/shared/common.yml
+      service: mongo
+  documents:
+    extends:
+      file: compose/shared/common.yml
+      service: documents
+    depends_on:
+     - mongo
+     - discovery
