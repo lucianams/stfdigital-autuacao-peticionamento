@@ -1,4 +1,4 @@
-# Define a configuração para rodar o recebimento
+# Define a configuração para rodar esse contexto construído localmente
 version: '2'
 services:
   peticionamento:
