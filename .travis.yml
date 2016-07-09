@@ -22,7 +22,7 @@ before_install:
 - "./scripts/upgrade-docker.sh"
 - mkdir -p $HOME/docker_cache
 install: docker load -i $HOME/docker_cache/docker.tar || true
-script: gradle docker && gradle gulpTestUnit
+script: gradle docker && gradle gulpTestUnit && ./scripts/test-e2e.sh
 after_success:
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 - export REPO=supremotribunalfederal/stfdigital-autuacao-peticionamento
