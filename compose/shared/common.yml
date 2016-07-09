@@ -9,8 +9,8 @@ services:
     container_name: rabbit
     image: rabbitmq:management
     ports:
-     - "5672:5672"
-     - "15672:15672"
+     - "${RABBIT_OUT_NODE_PORT}:5672"
+     - "${RABBIT_OUT_DIST_PORT}:15672"
   mongo:
     container_name: mongo
     image: mongo:3
@@ -53,6 +53,7 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
      - onlyoffice.documentserver.host=gateway
      - onlyoffice.server.address=https://docker:443
@@ -64,6 +65,7 @@ services:
      - "47965:${JAVA_DEBUG_PORT}"
     environment:
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
   services:
     container_name: services
@@ -75,6 +77,7 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
   ui:
     container_name: ui
@@ -91,6 +94,7 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
 # Serviços de negócio - Autuação
   autuacao:
@@ -103,6 +107,7 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
   distribuicao:
     container_name: distribuicao
@@ -114,6 +119,7 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
   peticionamento:
     container_name: peticionamento
@@ -125,6 +131,7 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
   recebimento:
     container_name: recebimento
@@ -136,4 +143,5 @@ services:
     environment:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}

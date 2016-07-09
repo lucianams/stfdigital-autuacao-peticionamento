@@ -5,6 +5,7 @@ services:
     extends:
       file: compose/shared/common.yml
       service: peticionamento
+    image: stfdigital-autuacao-peticionamento
     depends_on:
      - rabbit
      - discovery
