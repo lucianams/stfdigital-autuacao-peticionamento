@@ -12,12 +12,12 @@ describe("Peticionamento - Advogado", () => {
        paginaLogin.setCredenciais("fulano", "123"); 
     });
     
-    it("Deveria acessar a pagina de peticionamento.", () => {
+    xit("Deveria acessar a pagina de peticionamento.", () => {
         paginaPrincipal.iniciarProcesso();
         paginaPrincipal.iniciarPeticionamentoAdvogado();
     });
     
-    it("Deveria preencher os dados da petição.", () => {
+    xit("Deveria preencher os dados da petição.", () => {
         paginaPeticionamento.selecionarClassePeticionavel();
         paginaPeticionamento.informarEnvolvidoPoloAtivo("Fulano");
         paginaPeticionamento.informarEnvolvidoPoloPassivo("Beltrano");

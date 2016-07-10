@@ -7,7 +7,6 @@ services:
     environment:
      - UI_PORT_8443_TCP=tcp://ui:8443
      - GATEWAY_PORT_8765_TCP=tcp://gateway:8765
-     - ONLYOFFICE_PORT_443_TCP=tcp://onlyoffice:443
     depends_on:
      - ui
      - gateway

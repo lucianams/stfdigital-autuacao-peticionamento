@@ -19,17 +19,15 @@ cache:
   - node_modules
   - "$HOME/docker_cache"
 before_install:
-- "./scripts/upgrade-docker.sh"
+- ./scripts/shared/upgrade-docker.sh
 - mkdir -p $HOME/docker_cache
 install: docker load -i $HOME/docker_cache/docker.tar || true
-script: gradle docker && gradle gulpTestUnit && ./scripts/test-e2e.sh
+script: gradle docker && gradle gulpTestUnit && ./scripts/shared/test-e2e.sh
 after_success:
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 - export REPO=supremotribunalfederal/stfdigital-autuacao-peticionamento
 - docker tag stfdigital-autuacao-peticionamento $REPO:latest
 - docker push $REPO:latest
-after_failure:
-- docker-compose -f docker-compose.yml -f compose/docker-compose.e2e.yml logs
 notifications:
   slack:
     secure: J+SnEKgkdotNZyd/U57nEylQPHPMo4gaaCfbkTXmI4VESsZybWox267g+BJxzzgF0111g3/qk5GtC+a5/V5Na/YVkTugpxZ8jWH6VIcqR5q9IOzfZoM+WHcJmxdB0x5g9QtLG759xBt91BghrVdsc0TV4VUhxWYndJiKNEdDfH2U9PhkurkOKMD73fDSsPLQTxreeB/mcuGxQhD1YQhiuPIZFKqIEQKu3golavqkvAb8LBaIkELKzQTH84JUuOajFY0p88sBa1OzY2AFkeb7yWKokp9zy342G/YaKxPXHyXI0E64D1a0IZoWhmjYo/harVpCM520fo8CetCkt0eGsQrk5RQ1qaJn5jvehLDfBnvRn22vxFABwxwLiHIBkhhZP0Cm/ZwAbyUv/PVZQi/j6/LmEPnROU7IBcWm1FfWhBkY0iNgAMU0QS169JLB0qvPZBSKjR7bw+SdiyRZwfPFIkEwS3uj4SFNPNjxSXkBR5yI89PeQ4cR+0H01FyU1hh0FQM1e8EYW50JIpIxYof47DSmwZdmrXnr9M/C4FGLUpXttsPe4ogaNmOFmwXlxrHPil+B9AJKF8Q5lHOGUkWqelFLHzx2N9kM9C01VLmYD/WcM/kWSVvNnCVF+pN4w22ehyD/xuChBYM/YhqZp3nnf816nvR1Bc/KQ8RBlBlbenw=

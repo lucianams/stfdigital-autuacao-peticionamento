@@ -42,6 +42,7 @@ services:
      - "8761:8761"
      - "47961:${JAVA_DEBUG_PORT}"
     environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
   documents:
     container_name: documents
