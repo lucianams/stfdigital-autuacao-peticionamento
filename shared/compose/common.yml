@@ -1,0 +1,148 @@
+# Configuração comum de todos os serviços do STF Digital.
+#
+# As variáveis de ambiente serão substituídas pelas variáveis do arquivo .env
+# no mesmo diretório do docker-compose.yml a ser rodado.
+version: '2'
+services:
+# Serviços de suporte
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:management
+    ports:
+     - "${RABBIT_OUT_NODE_PORT}:5672"
+     - "${RABBIT_OUT_DIST_PORT}:15672"
+  mongo:
+    container_name: mongo
+    image: mongo:3
+    ports:
+     - "27017:27017"
+  onlyoffice_ambassador: # Ambassador apontando para um servidor onlyoffice corporativo
+    container_name: onlyoffice
+    image: svendowideit/ambassador
+    ports:
+     - "443:443"
+    environment:
+     - ONLYOFFICE_PORT_443_TCP=tcp://10.112.20.123:443
+  onlyoffice: # Container rodando o onlyoffice de verdade
+    container_name: onlyoffice
+    image: supremotribunalfederal/onlyofficeds
+    stdin_open: true
+    mem_limit: 2000000000
+    ports:
+     - "443:443"
+    environment:
+     - SSL_CERTIFICATE_PATH=/certs/docker/onlyoffice.crt
+     - SSL_KEY_PATH=/certs/docker/onlyoffice.key
+     - SSL_DHPARAM_PATH=/certs/docker/dhparam.pem
+# Serviços da plataforma
+  discovery:
+    container_name: discovery
+    image: supremotribunalfederal/stfdigital-plataforma-discovery
+    ports:
+     - "8761:8761"
+     - "47961:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+  documents:
+    container_name: documents
+    image: supremotribunalfederal/stfdigital-plataforma-documents
+    ports:
+     - "8094:8094"
+     - "8194:8194"
+     - "47994:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+     - onlyoffice.documentserver.host=gateway
+     - onlyoffice.server.address=https://docker:443
+  gateway:
+    container_name: gateway
+    image: supremotribunalfederal/stfdigital-plataforma-gateway
+    ports:
+     - "8765:8765"
+     - "47965:${JAVA_DEBUG_PORT}"
+    environment:
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+  services:
+    container_name: services
+    image: supremotribunalfederal/stfdigital-plataforma-services
+    ports:
+     - "8081:8081"
+     - "8181:8181"
+     - "47981:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+  ui:
+    container_name: ui
+    image: supremotribunalfederal/stfdigital-plataforma-ui
+    ports:
+     - "8443:8443"
+  userauthentication:
+    container_name: userauthentication
+    image: supremotribunalfederal/stfdigital-plataforma-userauthentication
+    ports:
+     - "8095:8095"
+     - "8195:8195"
+     - "47995:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+# Serviços de negócio - Autuação
+  autuacao:
+    container_name: autuacao
+    image: supremotribunalfederal/stfdigital-autuacao-autuacao
+    ports:
+     - "8092:8092"
+     - "8192:8192"
+     - "47992:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+  distribuicao:
+    container_name: distribuicao
+    image: supremotribunalfederal/stfdigital-autuacao-distribuicao
+    ports:
+     - "8093:8093"
+     - "8193:8193"
+     - "47993:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+  peticionamento:
+    container_name: peticionamento
+    image: supremotribunalfederal/stfdigital-autuacao-peticionamento
+    ports:
+     - "8090:8090"
+     - "8190:8190"
+     - "47990:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
+  recebimento:
+    container_name: recebimento
+    image: supremotribunalfederal/stfdigital-autuacao-recebimento
+    ports:
+     - "8091:8091"
+     - "8191:8191"
+     - "47991:${JAVA_DEBUG_PORT}"
+    environment:
+     - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
+     - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
+     - eureka.instance.preferIpAddress=${EUREKA_PREFER_IP_ADDRESS}
+     - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}

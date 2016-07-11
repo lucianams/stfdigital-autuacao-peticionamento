@@ -1,0 +1,22 @@
+# Define a configuração base para rodar os testes e2e
+version: '2'
+services:
+  docker: # Provê a conectividade para o container selenium via host docker
+    container_name: docker-ambassador
+    image: svendowideit/ambassador
+    environment:
+     - UI_PORT_8443_TCP=tcp://ui:8443
+     - GATEWAY_PORT_8765_TCP=tcp://gateway:8765
+    depends_on:
+     - ui
+     - gateway
+  selenium:
+    container_name: selenium
+    image: selenium/standalone-chrome:2.53.0
+    ports:
+     - "4444:4444"
+    depends_on:
+     - docker
+  rabbit: # Necessário criar sem expor as portas para rodar no travis-ci
+    container_name: rabbit
+    image: rabbitmq:management
