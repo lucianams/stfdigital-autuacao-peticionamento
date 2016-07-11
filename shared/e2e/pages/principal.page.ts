@@ -11,6 +11,9 @@ export class PrincipalPage {
 	private linkPreautuacao: ElementFinder = element(by.css('div[ui-sref="app.novo-processo.recebimento-preautuacao"]'));
 	private linkDevolucao: ElementFinder = element(by.css('div[ui-sref="app.novo-processo.recebimento-devolucao"]'));
 
+    private linkUserMenu: ElementFinder = element(by.id('user-menu'));
+	private linkSair: ElementFinder = element(by.css('[ng-click="vm.logout()"]'));
+
     public iniciarProcesso(): void {
     	this.linkIniciarProcesso.click();
     }
@@ -31,6 +34,12 @@ export class PrincipalPage {
     public iniciarDevolucao(): void {
     	this.linkDevolucao.click();
     	browser.sleep(2000);
+    }
+
+    public logout() : void {
+    	this.linkUserMenu.click();
+    	this.linkSair.click();
+    	browser.sleep(1000);
     }
 
     public aguardarMensagemSucesso(timeout: number = 10000): void {
