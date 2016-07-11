@@ -1,10 +1,32 @@
 'use strict';
 
 var path = require('path');
+var fs = require('fs');
 var conf = require('./../../../gulp/conf');
 
 var _ = require('lodash');
 var wiredep = require('wiredep');
+
+// List all subdirectories in a directory in Node.js recursively in a synchronous fashion, excluding a folder
+function subdirs(dir, exclude, dirList) {
+	var files = fs.readdirSync(dir);
+	var dirList = dirList || [];
+	files.forEach(function(file) {
+    if (fs.statSync(dir + '/' + file).isDirectory()) {
+      if (file != exclude) {
+        dirList.unshift(dir + '/' + file);
+      }
+      dirList = subdirs(dir + '/' + file, exclude, dirList);
+    }
+	});
+	return dirList;
+}
+
+function bundleDirPatterns() {
+  return subdirs(conf.paths.app, 'i18n').map(function(dir) {
+	  return path.relative(conf.paths.app, dir).replace(/\\/g,"/") + '/*';
+  });
+}
 
 function listIncludeFiles() {
 	var wiredepOptions = _.extend({}, conf.wiredep, {
@@ -30,7 +52,7 @@ function listFiles() {
   });
   
   files.push({
-    pattern: 'src/main/resources/public/**/*.js',
+    pattern: path.join(conf.paths.dist, '**/*.js'),
     included: false,
     watched: true
   });
@@ -65,18 +87,25 @@ module.exports = function(config) {
       'karma-systemjs',
       'karma-phantomjs-launcher',
       'karma-chrome-launcher',
-      //'karma-coverage',
+      'karma-coverage',
       'karma-jasmine',
-	  'karma-html-reporter',
-	  'karma-mocha-reporter'
+	    'karma-html-reporter',
+	    'karma-mocha-reporter'
     ],
 
     coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
+      reporters: [{
+        type: 'json',
+        subdir: '.',
+        dir: path.join(conf.paths.unit, 'coverage/js'), 
+        file: 'coverage.json'
+      }, {
+        type : 'html',
+        dir : path.join(conf.paths.unit, 'coverage/js')
+      }]
     },
 
-    reporters: ['mocha', 'html'],
+    reporters: ['mocha', 'html', 'coverage'],
 
     htmlReporter : {
 		  outputDir : path.join(conf.paths.unit, 'results/html')
@@ -84,24 +113,20 @@ module.exports = function(config) {
     
     systemjs: {
     	configFile:  path.join(conf.paths.test, 'system.conf.js'),
-    	serveFiles: ['src/main/resources/public/**/*.js', 'src/main/resources/public/maps/**/*.js.map',
+    	serveFiles: [path.join(conf.paths.dist, '**/*.js'), path.join(conf.paths.dist, 'maps/**/*.js.map'),
                   path.join(conf.paths.unit, 'build/**/*.js.map'), 'node_modules/systemjs/**/*.js', 'node_modules/systemjs/**/*.js.map'],
-    	includeFiles: listIncludeFiles()
+    	includeFiles: listIncludeFiles(),
+      config: {
+        bundles: {
+          'public/bundle': bundleDirPatterns()
+        }
+      }
     },
 
     proxies: {
-      '/base/peticionamento/': '/base/src/main/resources/public/'
+      '/base/public/': '/base/src/main/resources/public/'
     }
   };
 
-  // This is the default preprocessors configuration for a usage with Karma cli
-  // The coverage preprocessor is added in gulp/unit-test.js only for single tests
-  // It was not possible to do it there because karma doesn't let us now if we are
-  // running a single test or not
-//  configuration.preprocessors = {};
-//  pathSrcHtml.forEach(function(path) {
-//    configuration.preprocessors[path] = ['ng-html2js'];
-//  });
-//
   config.set(configuration);
 };

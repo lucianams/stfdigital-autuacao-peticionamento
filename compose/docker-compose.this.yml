@@ -1,5 +1,4 @@
-# Extende a configuração para rodar os testes e2e.
-# Deve ser rodado em combinação com shared/compose/docker-compose.e2e.base.yml
+# Define a configuração para rodar esse contexto construído localmente
 version: '2'
 services:
   peticionamento:

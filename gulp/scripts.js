@@ -26,7 +26,7 @@ var processTS = function() {
 
 var scriptsDev = function(js) {
 	return js.pipe($.ngAnnotate())
-			 .pipe($.sourcemaps.write("maps"))
+			 .pipe($.sourcemaps.write("maps", {sourceRoot: conf.paths.app})) // sourceRoot com caminho relativo para funcionar com o remap-istanbul. Caminho corresponde ao caminho do github para o coveralls detectar o fonte na cobertura.
 			 .pipe($.size())
 			 .pipe(gulp.dest(conf.paths.dist));
 };
@@ -34,7 +34,7 @@ var scriptsDev = function(js) {
 var scripts = function(js) {
 	return js.pipe($.ngAnnotate())
 			 .pipe($.uglify())
-			 .pipe($.sourcemaps.write("maps"))
+			 .pipe($.sourcemaps.write("maps", {sourceRoot: conf.paths.app})) // sourceRoot com caminho relativo para funcionar com o remap-istanbul. Caminho corresponde ao caminho do github para o coveralls detectar o fonte na cobertura.
 			 .pipe($.size())
 			 .pipe(gulp.dest(conf.paths.dist));
 };

@@ -156,7 +156,11 @@ npmInstall {
 }
 
 task gulpTestUnit(type: GulpTask) {
-    args = ['test:unit']
+    args = ['test:unit:coverage']
+}
+
+task gulpPublishUnitCoverage(type: GulpTask) {
+    args = ['publish-unit-coverage']
 }
 
 ext.e2eBaseUrl = project.hasProperty('e2eBaseUrl') ? project.getProperty('e2eBaseUrl') : 'https://docker:8443'

@@ -19,11 +19,12 @@ cache:
   - node_modules
   - "$HOME/docker_cache"
 before_install:
-- ./scripts/shared/upgrade-docker.sh
+- ./shared/scripts/upgrade-docker.sh
 - mkdir -p $HOME/docker_cache
 install: docker load -i $HOME/docker_cache/docker.tar || true
-script: gradle docker && gradle gulpTestUnit && ./scripts/shared/test-e2e.sh
+script: gradle docker && gradle gulpTestUnit && ./shared/scripts/test-e2e.sh
 after_success:
+- gradle gulpPublishUnitCoverage
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 - export REPO=supremotribunalfederal/stfdigital-autuacao-peticionamento
 - docker tag stfdigital-autuacao-peticionamento $REPO:latest
@@ -42,3 +43,6 @@ env:
   - secure: ADHlXVyM9qS0LZmJlIcCOZy46whw5E9ClEzajBVH96pAjX+7YroqDP5ndkmfhcwUD1IY/1TzF8e7fh/cfSjdPWAW9O/o5/hXVwnwAF+naiFy57Ydz5NGljgAfvKg0iK1YsfDjYdllj6BY7AOQm0oNnSiOOHvxV+bnX8iA9aZquWDui/9/2mmHuxe+4eqkr58DCd1r0kP59PtKQr0TZWIyCxOpyLUNy5N0DeOjyBn5LFbgKym032aTYKQI5TXj9MIeCUKSjuDULVdiUcnS72bh6jkApBzbw9ytRKUOEp4YhcR33Pp96FCDRnhu/0ezRj5dzurh1pCFFgMxBzaTtYNz2fr9vgoE4lMAqM0ep0qSO+j8U8E4E72RjCwdRaZ4erX8uHxw7/Lvkpc1ZslK0zmtpIy44JKHPQP44Z1i35YvMH/D1Lpp9NotvycJw5TP5fzGrOxjuZDDy652+ugTWsGY1F9cORQe0A832b7Pv8mqiN7QefRdJBMVWt+MT/2j9189VmRrnIwLwt8uPW7jZembX6V+qdEUgyy9CJmWHn3gBoyKwhsq3LcvwIpkGI55K8m2IEIAMeicLdQ/0S2tKrPvjOaWisVJ8T1xTK/ISrjJRE80vmncyxwvq1VFFJgdRAlMHSt4y7B57bHvcp395b+c4bWwFku3m7Va0TGuiaZ+dA=
   # DOCKER_PASS
   - secure: m3RPL9Oa4f/lWwKZ2T2XYj8S+C8XfwAdnF4ftoIlWC2jlM2RV9N7YssIh37/1ZWNEMHCrIqDqSf6dvTaoEctFbJ0g6A/C9pR+cl0SptItSgDpbLinCZhFknIco99glrxgPuyT+//QlKQwVIEZSrr2wFvSGAa0IhYu9MLyP2XMb6PhWTSKVzko8vCQ0NJck54dUWgEdgkRtposgcAmBcXI74xA3zvN/QCETB4GIkE8qLuIL1+OY85tC9MkyEJHC2xwboEB8gO5D6IgC+XDs4hHemAmBgqLUc/iYsCvZlQ6WMuFcx4me1khdCNwKNlRnCMqQvp/2ghrsdz8MtbAOQJB07yMhuYl0YYtN1cDEOD1K0H7nGlDN1kH77JnSuYFtBF/pL9oR2t157SEw/gZO/DdPMRpDBQobzspdSQQjIOmOrl1C7oWnsCixZXrqYBcq6cn5en9VkxlsbCXeV0TbVutJQldflj2SaeU15h5lYShfnMw/VHB4sPKLXixgi6NpJZ1CAomut3TP0+mWsaMvQp6nDTCtDLUwvBcVvHA9Z0/7/E6hBds8OP+XBJXUopSFlY8HUUSPZidhe20LKVeyShFwk7i1AMCxlHaMWrZunFWL2s7+VbE2XELX7wR/8hnF6MqpaDPOXLrO4tEAujhkuVRomBsLuq+44BTKv/FlJiFzo=
+  - COVERALLS_SERVICE_NAME=travis-ci
+  # COVERALLS_REPO_TOKEN
+  - secure: "iO3KGRn8I4FK/MMGsL6xqgi7UO149Nfna8yKBppRvXTckljr48hawqT2NyDIi3PYAyAbXV/5HwnHnc+nbyYTuw4HZrRwHjMxh5mAIioz5drDPOt6c3Jkq1ZmZ9rLqo5K/kmDwzU5iF/QXMYF7fOpUJvoBEcYwhMQpiUOkE8VPkalioQdJSjUEcbbZizRDanhRmjLqhTEVZ1IaX1c4vdyW/Dect7T0d0H2GkYsENfZPAdWES9Y1Xuf9Z4hCdhkuVVJ344kY5r1kcdVhT+2/VUOUS1GgGeT2NqHMvRFjc+okWULaC80Cyo3K0GyKg1p1hrzj8ibVULfuDWNa3xUutj3e0XMkFKCeAo39svyBNxjyJGMg30xVTpnSEOBzFZHrtXTGnq6IiRSDnBlsnv/IEC4KXil142CAjr6gF9Z9K8LsH75apJfH/gR+qr+PlgByWT8/mhHDpNxGnXczX0Mk042jAxlKC2Vw7f2gjOoSuSXHiRdtAaiGE66V+EM64nRKYBRoQqtbS7l11QA/nq6urO5cvGK15pO9OfSqcQl8DrrewFa6L+C0LUOkDMCkvlkOy8UXsM5TA1QpYYhnCAH7Pto/KzDwFjkErOAGJDTLNYXN22FQJjQd1hsRPEzLyy8Ud5CV15rtzUs90bgkUVjOMNNVB9isvVUgDdC+mO9nDO2LA="

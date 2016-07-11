@@ -20,12 +20,14 @@ src/main/resources/public
 src/test/ui/e2e/**/*.js
 src/test/ui/e2e/build
 src/test/ui/e2e/results
+src/test/ui/e2e/app/shared
 
 # JS Test Unit
 src/test/ui/unit/**/*.js
 src/test/ui/unit/build
 src/test/ui/unit/bower_components
 src/test/ui/unit/results
+src/test/ui/unit/coverage
 
 # --------------------------------
 

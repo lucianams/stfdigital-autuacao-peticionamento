@@ -1,5 +1,5 @@
 {
-  "name": "recebimento",
+  "name": "peticionamento",
   "version": "1.0.0",
   "dependencies": {},
   "scripts": {},
@@ -37,6 +37,9 @@
     "karma-angular-filesort": "~1.0.0",
     "karma-ng-html2js-preprocessor": "~0.2.0",
     "karma-systemjs": "^0.13.0",
+    "remap-istanbul": "~0.6.4",
+    "gulp-coveralls": "~0.1.4",
+    "coveralls": "~2.11.8",
     "systemjs": "~0.19.26",
     "protractor": "~3.2.1",
     "protractor-jasmine2-html-reporter": "~0.0.6",

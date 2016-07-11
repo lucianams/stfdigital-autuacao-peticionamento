@@ -41,15 +41,19 @@ exports.config = {
   },
   
   onPrepare: function() {
-	  browser.driver.manage().window().maximize();
-	  return browser.getCapabilities().then(function() {
-		  jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
-		  jasmine.getEnv().addReporter(new Jasmine2HtmlReporter({
-			  savePath : path.join(conf.paths.e2e, 'results/'),
-			  screenshotsFolder: 'screenshots',
-			  takeScreenshots: true,
-			  takeScreenshotsOnlyOnFailures: true
-		  }));
+    browser.driver.manage().window().maximize();
+    
+    var prepare = require('./e2e/build/shared/prepare/main');
+    prepare.default();
+
+    return browser.getCapabilities().then(function() {
+  	  jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
+  	  jasmine.getEnv().addReporter(new Jasmine2HtmlReporter({
+  		  savePath : path.join(conf.paths.e2e, 'results/'),
+  		  screenshotsFolder: 'screenshots',
+  		  takeScreenshots: true,
+  		  takeScreenshotsOnlyOnFailures: true
+      }));
 	  });
   }
 };
