@@ -34,6 +34,7 @@ import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;
 import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
+import br.jus.stf.core.shared.processo.Polo;
 import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.processo.TipoProcesso;
 import br.jus.stf.core.shared.protocolo.Numero;
@@ -122,6 +123,7 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
     	Validate.notNull(protocolo, "Protocolo requerido.");
     	Validate.notNull(classe, "Classe requerida.");
     	Validate.notEmpty(envolvidos, "Envolvidos requeridos.");
+    	Validate.isTrue(isEnvolvidosValidos(envolvidos), "Petição deve ter ao menos um envolvido para o polo ativo.");
     	Validate.notEmpty(anexos, "Anexos requeridos.");
     	Validate.notNull(sigilo, "Sigilo requerido.");
     	Validate.notNull(tipoProcesso, "Tipo do processo requerido.");
@@ -182,6 +184,14 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 	@Override
 	public ProtocoloId identity() {
 		return protocoloId;
+	}
+	
+	private Boolean isEnvolvidosValidos(Set<Envolvido> envolvidos) {
+		if (envolvidos.isEmpty()) {
+			return false;
+		}
+		
+		return envolvidos.stream().anyMatch(envolvido -> Polo.ATIVO.equals(envolvido.polo()));
 	}
 	
 }

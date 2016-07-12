@@ -108,7 +108,7 @@ public class Associado extends ValueObjectSupport<Associado> {
 	 */
 	public boolean isRepresentante(PessoaId pessoa) {
 		return Optional.ofNullable(pessoa).isPresent() && TipoAssociado.REPRESENTANTE.equals(tipo)
-				&& pessoa.equals(this.pessoa);
+				&& pessoa.sameValueAs(this.pessoa);
 	}
 	
 	@Override
