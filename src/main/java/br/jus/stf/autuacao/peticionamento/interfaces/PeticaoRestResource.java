@@ -53,6 +53,10 @@ public class PeticaoRestResource {
     @Autowired
     private OrgaoPeticionadorDtoAssembler orgaoDtoAssembler;
 
+    /**
+     * @param command
+     * @param binding
+     */
     @RequestMapping(method = RequestMethod.POST)
     public void peticionar(@RequestBody @Valid PeticionarCommand command, BindingResult binding) {
         if (binding.hasErrors()) {
@@ -62,6 +66,10 @@ public class PeticaoRestResource {
         peticionarCommandHandler.handle(command);
     }
     
+    /**
+     * @param command
+     * @param binding
+     */
     @RequestMapping(value="/representado", method = RequestMethod.POST)
     public void peticionar(@RequestBody @Valid PeticionarOrgaoCommand command, BindingResult binding) {
         if (binding.hasErrors()) {
@@ -71,6 +79,10 @@ public class PeticaoRestResource {
         peticionarCommandHandler.handle(command);
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @RequestMapping(value="/{id}/envolvidos", method = RequestMethod.GET)
     public List<EnvolvidoDto> consultarEnvolvidosPeticao(@PathVariable Long id) {
     	Peticao peticao = peticaoRepository.findOne(new ProtocoloId(id));
@@ -78,6 +90,10 @@ public class PeticaoRestResource {
 		return peticao.envolvidos().stream().map(envolvidoDtoAssembler::toDto).collect(toList());
     }
     
+    /**
+     * @param verificarPerfil
+     * @return
+     */
     @RequestMapping(value="/orgaos", method = RequestMethod.GET)
     public List<OrgaoPeticionadorDto> listarRepresentados(@RequestParam("verificarPerfil") boolean verificarPerfil) {
 		List<OrgaoPeticionador> orgaos = orgaoRepository.findOrgaoRepresentados(verificarPerfil);

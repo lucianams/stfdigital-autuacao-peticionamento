@@ -29,6 +29,9 @@ public class ClassePeticionavelRestResource {
 	@Autowired
 	private ClassePeticionavelDtoAssembler classePeticionavelDtoAssembler;
 	
+	/**
+	 * @return
+	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<ClassePeticionavelDto> listar() {
 		return classePeticionavelRepository.findAll().stream().map(classe -> classePeticionavelDtoAssembler.toDto(classe)).collect(Collectors.toList());
