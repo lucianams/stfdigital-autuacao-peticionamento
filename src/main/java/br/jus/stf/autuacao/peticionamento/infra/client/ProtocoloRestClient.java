@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import br.jus.stf.autuacao.peticionamento.infra.IdentificacaoDto;
-
 /**
  * @author Rodrigo Barreiros
  * 
@@ -17,7 +15,7 @@ import br.jus.stf.autuacao.peticionamento.infra.IdentificacaoDto;
 public interface ProtocoloRestClient {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/identificadores")
-	IdentificacaoDto identificador(@RequestParam(value = "categoria") String categoria);
+	Long identificador(@RequestParam(value = "categoria") String categoria);
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/identificadores")
 	Long identificador();

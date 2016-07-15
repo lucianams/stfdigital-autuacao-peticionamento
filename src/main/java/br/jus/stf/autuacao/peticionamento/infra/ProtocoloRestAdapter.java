@@ -25,15 +25,18 @@ public class ProtocoloRestAdapter implements ProtocoloAdapter {
     
 	@Override
 	public Protocolo novoProtocolo() {
-		IdentificacaoDto identficador = protocoloRestClient.identificador(String.valueOf(now().getValue()));
-		
-    	Numero numero = new Numero(identficador.getNumero(), Integer.valueOf(identficador.getCategoria()));
-    	
-    	Long identificadorId = protocoloRestClient.identificador();
-    	
-    	ProtocoloId protocoloId = new ProtocoloId(identificadorId);
-    	
-		return new Protocolo(protocoloId, numero);
+		return new Protocolo(novoProtocoloId(), novoNumero());
+	}
+
+	private ProtocoloId novoProtocoloId() {
+		Long identificadorId = protocoloRestClient.identificador();
+    	return new ProtocoloId(identificadorId);
+	}
+
+	private Numero novoNumero() {
+		Integer ano = now().getValue();
+		Long identificador = protocoloRestClient.identificador(ano.toString());
+    	return new Numero(identificador, ano);
 	}
 	
 }
