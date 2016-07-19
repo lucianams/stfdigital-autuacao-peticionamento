@@ -1,0 +1,8 @@
+# Define a configuração para rodar esse contexto construído localmente
+version: '2'
+services:
+  discovery: # Ambassador apontando para o discovery rodando localmente
+    container_name: discovery
+    image: svendowideit/ambassador
+    environment:
+     - DISCOVERY_PORT_8761_TCP=tcp://10.112.20.50:8761
