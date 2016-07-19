@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -31,13 +31,13 @@ import br.jus.stf.core.framework.testing.IntegrationTestsSupport;
  * @since 1.0.0
  * @since 17.02.2016
  */
-@Ignore
 @SpringApplicationConfiguration(ApplicationContextInitializer.class)
+@ActiveProfiles("test")
 public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 	
 	private String idDocTemp;
 	
-	@Before
+	// Criar mock para documento temporário
 	public void geraDocumentoTemporarioId() {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 		HttpHeaders headers = new HttpHeaders();
@@ -54,6 +54,7 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 		idDocTemp = result.getBody();
 	}
 	
+	@Ignore
 	@Test
     public void registrarUmaPeticao() throws Exception {
         String peticaoValida = "{\"classeId\":\"ADI\", \"preferencias\":[3,8], \"poloAtivo\": [\"Maria\", \"João\"], \"poloPassivo\": [\"Antônia\"], \"anexos\": [{\"documentoId\":\"@idDocTemp\", \"tipoDocumentoId\":1}], \"sigilo\":\"PUBLICO\", \"tipoProcesso\":\"ORIGINARIO\"}";
@@ -62,6 +63,7 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
         result.andExpect(status().isOk());
     }
 
+	@Ignore
 	@Test
     public void registrarUmaPeticaoComRepresentacao() throws Exception {
         String peticaoValida = "{\"classeId\":\"ADI\", \"orgaoId\":12452261, \"poloAtivo\": [\"Maria\"], \"poloPassivo\": [\"João\"], \"anexos\": [{\"documentoId\":\"@idDocTemp\", \"tipoDocumentoId\":1}], \"sigilo\":\"PUBLICO\", \"tipoProcesso\":\"ORIGINARIO\"}";
