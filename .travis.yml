@@ -15,6 +15,7 @@ before_cache:
 cache:
   directories:
   - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
   - node_cache
   - node_modules
   - "$HOME/docker_cache"
@@ -22,9 +23,9 @@ before_install:
 - ./shared/scripts/upgrade-docker.sh
 - mkdir -p $HOME/docker_cache
 install: docker load -i $HOME/docker_cache/docker.tar || true
-script: gradle docker && gradle gulpTestUnit && ./shared/scripts/test-e2e.sh
+script: ./gradlew docker --refresh-dependencies && ./gradlew gulpTestUnit && ./shared/scripts/test-e2e.sh
 after_success:
-- gradle gulpPublishUnitCoverage
+- ./gradlew gulpPublishUnitCoverage
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 - export REPO=supremotribunalfederal/stfdigital-autuacao-peticionamento
 - docker tag stfdigital-autuacao-peticionamento $REPO:latest
