@@ -51,7 +51,7 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 	
 	public boolean isCriminalEleitoral() {
 		// TODO: Verificar uma forma melhor de implementar essa verificação
-		return id.equals(new PreferenciaId(2L)) || id.equals(new PreferenciaId(3L));
+		return id.toLong() == 2L || id.toLong() == 3L;
 	}
 	
 	@Override
