@@ -1,30 +1,38 @@
 buildscript {
     ext {
-        springBootVersion = '1.3.5.RELEASE'
-        springPlatformVersion = '2.0.5.RELEASE'
-        dependencyManagementPlugin = '0.5.2.RELEASE'
-        springCloudVersion = '1.1.0.RELEASE'
+        springBootVersion = '1.4.0.RC1'
+        
+        dependencyManagementPluginVersion = '0.6.0.RELEASE'
+        gradleDockerPluginVersion = '0.8.0'
+        gradleNodePluginVersion = '0.12'
+        gradleGulpPluginVersion = '0.12'
+        sonarqubeGradlePluginVersion = '2.0.1'
+        
+        springCloudReleaseTrainVersion = 'Brixton.SR3'
         apacheCommonsVersion = '3.3.2'
         jacksonVersion = '2.7.2'
         jacksonMapperVersion = '1.9.13'
         swaggerVersion = '1.0.2'
         guavaVersion = '19.0'
-        flywayVersion = '4.0'
+        flywayVersion = '4.0.3'
+        jnaVersion = '4.1.0'
         stfdigitalCoreVersion = '0.0.1-SNAPSHOT'
+        stfdigitalTestVersion = '0.0.1-SNAPSHOT'
     }
     repositories {
         mavenLocal()
         mavenCentral()
         maven { url "http://repo.spring.io/release" }
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://repo.spring.io/libs-milestone" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPlugin}")
-        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.8.0")
-        classpath("com.moowork.gradle:gradle-node-plugin:0.12")
-        classpath("com.moowork.gradle:gradle-gulp-plugin:0.12")
-        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1")
+        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
+        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:${gradleDockerPluginVersion}")
+        classpath("com.moowork.gradle:gradle-node-plugin:${gradleNodePluginVersion}")
+        classpath("com.moowork.gradle:gradle-gulp-plugin:${gradleGulpPluginVersion}")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarqubeGradlePluginVersion}")
     }
 }
 
@@ -52,14 +60,13 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://repo.spring.io/libs-milestone" }
 }
 
 dependencyManagement {
     imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudReleaseTrainVersion}")
         mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
-        mavenBom("org.springframework.cloud:spring-cloud-netflix:${springCloudVersion}")
-        mavenBom("org.springframework.cloud:spring-cloud-starter-parent:Brixton.RELEASE")
-        mavenBom("io.spring.platform:platform-bom:${springPlatformVersion}")
     }
 }
 
@@ -78,8 +85,6 @@ dependencies {
     
     compile("org.springframework.boot:spring-boot-starter-security")
     
-    compile("org.springframework.security.oauth:spring-security-oauth2")
-    
     compile("org.springframework.cloud:spring-cloud-starter-feign")
     
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -87,6 +92,11 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-amqp")
                 
     compile("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+    
+    // Remover essa dependência quando o elasticsearch tiver com essa dependência como não opcional.
+    // Monitorar issue https://github.com/elastic/elasticsearch/issues/13245
+    // Parece que na próxima versão já vai estar como não opcional.
+    compile("net.java.dev.jna:jna:${jnaVersion}")
     
     compile("org.springframework.cloud:spring-cloud-starter-eureka")
         
@@ -108,7 +118,11 @@ dependencies {
     
     testCompile("com.jayway.jsonpath:json-path")
     
-    compile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    
+    testCompile("org.springframework.security:spring-security-test")
+    
+    testCompile("br.jus.stf.digital:test:${stfdigitalTestVersion}")
 }
 
 import org.gradle.plugins.ide.eclipse.model.SourceFolder 
@@ -126,6 +140,12 @@ eclipse.classpath.file {
 // Cobertura de testes
 jacoco {
     toolVersion = '0.7.7.201606060606'
+}
+
+test {
+	testLogging {
+		showStandardStreams = true
+	}
 }
 
 node {
@@ -185,7 +205,7 @@ ext.dockerDir = "${project.buildDir}" + '/docker'
 // Caminho do arquivo Jar no contexto do Docker
 ext.dockerAppJarFile = dockerDir + '/' + jar.baseName + '.jar'
 // Essas bibliotecas estarão em uma layer adicional do Docker, de modo a otimizar seu mecanismo de cache
-ext.additionalDockerLayerLibs = ['lib/core-' + ext.stfdigitalCoreVersion + '.jar']
+ext.additionalDockerLayerLibs = ['BOOT-INF/lib/core-' + ext.stfdigitalCoreVersion + '.jar']
 
 // Extendendo a task dockerPrepare para explodir o Jar e permitir criar layers dockers para cada categoria de libs
 dockerPrepare {
@@ -193,7 +213,8 @@ dockerPrepare {
         // Layer Docker com as libs externas, atualizadas com menos frequência e por isso estarão em uma layer abaixo das outras
         copy {
             from(zipTree(file(dockerAppJarFile))) {
-                include 'lib/**'
+                include 'BOOT-INF/lib/**'
+                include 'org/**'
                 exclude additionalDockerLayerLibs
             }
             into dockerDir + '/app-lib-layer'
@@ -208,7 +229,8 @@ dockerPrepare {
         // Layer Docker da aplicação em si, conterá um Jar pequeno, o que permite otimizar o pull da imagem do registro.
         copy {
             from(zipTree(file(dockerAppJarFile))) {
-                exclude 'lib/**'
+                exclude 'BOOT-INF/lib/**'
+                exclude 'org/**'
             }
             into dockerDir + '/app-layer'
         }
