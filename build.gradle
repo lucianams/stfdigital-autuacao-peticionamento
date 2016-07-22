@@ -16,6 +16,7 @@ buildscript {
         guavaVersion = '19.0'
         flywayVersion = '4.0.3'
         jnaVersion = '4.1.0'
+        jsonjVersion = '2.29'
         stfdigitalCoreVersion = '0.0.1-SNAPSHOT'
         stfdigitalTestVersion = '0.0.1-SNAPSHOT'
     }
@@ -117,6 +118,8 @@ dependencies {
     compile("org.flywaydb:flyway-core:$flywayVersion")
     
     testCompile("com.jayway.jsonpath:json-path")
+    
+    testCompile("com.jillesvangurp:jsonj:${jsonjVersion}")
     
     testCompile("org.springframework.boot:spring-boot-starter-test")
     
