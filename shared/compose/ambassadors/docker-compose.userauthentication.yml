@@ -1,0 +1,8 @@
+# Define a configuração para rodar esse contexto construído localmente
+version: '2'
+services:
+  userauthentication: # Ambassador apontando para o userauthentication rodando localmente
+    container_name: userauthentication
+    image: svendowideit/ambassador
+    environment:
+     - USERAUTHENTICATION_PORT_8095_TCP=tcp://${AMBASSADOR_HOST}:8095

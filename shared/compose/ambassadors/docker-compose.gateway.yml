@@ -1,0 +1,8 @@
+# Define a configuração para rodar esse contexto construído localmente
+version: '2'
+services:
+  gateway: # Ambassador apontando para o gateway rodando localmente
+    container_name: gateway
+    image: svendowideit/ambassador
+    environment:
+     - GATEWAY_PORT_8765_TCP=tcp://${AMBASSADOR_HOST}:8765

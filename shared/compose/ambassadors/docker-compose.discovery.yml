@@ -5,4 +5,4 @@ services:
     container_name: discovery
     image: svendowideit/ambassador
     environment:
-     - DISCOVERY_PORT_8761_TCP=tcp://10.112.20.50:8761
+     - DISCOVERY_PORT_8761_TCP=tcp://${AMBASSADOR_HOST}:8761
