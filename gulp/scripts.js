@@ -42,7 +42,7 @@ var scripts = function(js) {
 gulp.task('json', function() {
     
     return gulp.src(path.join(conf.paths.app, custom.project, '**/*.json'))
-        .pipe($.destClean(conf.paths.dist))
+        .pipe($.destClean(conf.paths.dist, '**/!(*.json)'))
         .pipe(gulp.dest(conf.paths.dist));
 });
 
