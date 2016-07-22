@@ -28,6 +28,7 @@ src/test/ui/unit/build
 src/test/ui/unit/bower_components
 src/test/ui/unit/results
 src/test/ui/unit/coverage
+src/test/ui/unit/app/shared
 
 # --------------------------------
 
