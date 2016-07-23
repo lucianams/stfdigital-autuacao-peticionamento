@@ -21,6 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import br.jus.stf.core.framework.testing.IntegrationTestsSupport;
+import br.jus.stf.core.framework.testing.oauth2.WithMockOauth2User;
 
 /**
  * Valida a API de envio de petições.
@@ -31,6 +32,7 @@ import br.jus.stf.core.framework.testing.IntegrationTestsSupport;
  * @since 17.02.2016
  */
 @SpringBootTest(value = {"server.port:0", "eureka.client.enabled:false"}, classes = ApplicationContextInitializer.class)
+@WithMockOauth2User("peticionador")
 public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 	
 	private String idDocTemp;
