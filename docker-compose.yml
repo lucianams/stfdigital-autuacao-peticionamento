@@ -33,6 +33,7 @@ services:
       file: shared/compose/common.yml
       service: userauthentication
     depends_on:
+     - rabbit
      - discovery
   mongo:
     extends:
@@ -44,4 +45,5 @@ services:
       service: documents
     depends_on:
      - mongo
+     - rabbit
      - discovery
