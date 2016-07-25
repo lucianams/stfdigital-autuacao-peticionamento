@@ -1,6 +1,13 @@
 # Define a configuração para rodar o onlyoffice real
 version: '2'
 services:
+  docker:
+    container_name: docker-ambassador
+    image: svendowideit/ambassador
+    environment:
+     - ONLYOFFICE_PORT_443_TCP=tcp://onlyoffice:443
+    depends_on:
+     - onlyoffice
   onlyoffice:
     extends:
       file: shared/compose/common.yml

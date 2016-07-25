@@ -1,4 +1,7 @@
 import ElementFinder = protractor.ElementFinder;
+import ElementArrayFinder = protractor.ElementArrayFinder;
+
+import Promise = webdriver.promise.Promise;
 
 import waitHelpers from '../helpers/wait';
 
@@ -6,13 +9,12 @@ import helpers = require('protractor-helpers');
 
 export class PrincipalPage {
     
-    private linkIniciarProcesso: ElementFinder = element.all(by.css('a[ui-sref="app.novo-processo"]')).get(0);
-	private linkNovaPeticaoFisica: ElementFinder = element(by.css('div[ui-sref="app.novo-processo.recebimento-peticao-fisica"]'));
-	private linkPreautuacao: ElementFinder = element(by.css('div[ui-sref="app.novo-processo.recebimento-preautuacao"]'));
-	private linkDevolucao: ElementFinder = element(by.css('div[ui-sref="app.novo-processo.recebimento-devolucao"]'));
-
     private linkUserMenu: ElementFinder = element(by.id('user-menu'));
 	private linkSair: ElementFinder = element(by.css('[ng-click="vm.logout()"]'));
+    private linkIniciarProcesso: ElementFinder = element.all(by.css('a[ui-sref="app.novo-processo"]')).first();
+    private linkMinhasTarefas: ElementFinder = element(by.css('a[ui-sref="app.tarefas.minhas-tarefas"]'));
+    
+    private listaTarefas: ElementArrayFinder = element(by.css('.todo-list-pane')).all(by.css('.todo-item'));
 
     public iniciarProcesso(): void {
     	this.linkIniciarProcesso.click();
@@ -25,15 +27,51 @@ export class PrincipalPage {
     public aguardarUrl(url: string): void {
     	waitHelpers.waitForUrl(url);
     }
-    
-    public iniciarPreautuacao() : void {
-    	this.linkPreautuacao.click();
-    	browser.sleep(2000);
+
+    public acessarTarefa(descricao: string, informationId: number) {
+        this.linkMinhasTarefas.click();
+        this.localizarTarefas(descricao, informationId).first().click();
     }
-    
-    public iniciarDevolucao(): void {
-    	this.linkDevolucao.click();
-    	browser.sleep(2000);
+
+    private localizarTarefas(descricao: string, informationId: number): ElementArrayFinder {
+        return this.listaTarefas.filter((el) => {
+            let descriptionElement = el.element(by.css('.title')).element(by.css('.task-description'));
+            return descriptionElement.getAttribute('data-task-title').then((text) => {
+                return descriptionElement.getAttribute('data-task-information-id').then((actualInformationId) => {
+                    return text === descricao && parseInt(actualInformationId) === informationId;
+                });
+            });
+        });
+    }
+
+    public tarefaPresente(descricao: string, informationId: number): Promise<boolean> {
+        return this.localizarTarefas(descricao, informationId).count().then((count) => {
+            return count > 0;
+        });
+    }
+
+    public detectarProximoProtocolo(filterFn: (number) => boolean): Promise<number> {
+        this.atualizarTarefas();
+        let idsPromisesPromise = element(by.css('.todo-list-pane')).all(by.css('.todo-item')).map((el) => {
+            return el.element(by.css('.task-description')).getAttribute('data-task-information-id').then((informationId) => {
+                return parseInt(informationId);
+            });
+        });
+        return idsPromisesPromise.then((idsPromises) => {
+            return protractor.promise.all(idsPromises).then((ids) => {
+                let filteredIds = ids.filter(filterFn);
+                if (filteredIds.length > 0) {
+                    return Math.max.apply(Math, filteredIds) + 1;
+                } else {
+                    return 1;
+                }
+            });
+        });
+    }
+
+    public atualizarTarefas() {
+        this.linkIniciarProcesso.click();
+        this.linkMinhasTarefas.click();
     }
 
     public logout() : void {
@@ -49,5 +87,25 @@ export class PrincipalPage {
         } else {
             helpers.waitForElement(mensagemElement);
         }
+    }
+
+    public aguardarMensagem(timeout: number = 10000): void {
+        helpers.waitForElement(this.mensagemFinder(), timeout);
+    }
+
+    public mensagemFinder(): ElementFinder {
+        return element(by.css('md-toast')).element(by.css('.md-toast-text'));
+    }
+
+    public mensagem(): Promise<string> {
+        return this.mensagemFinder().getText();
+    }
+
+    public exibiuMensagemSucesso(): Promise<boolean> {
+        return element(by.css('md-toast[md-theme="success-toast"]')).isPresent();
+    }
+
+    public exibiuMensagemErro(): Promise<boolean> {
+        return element(by.css('md-toast[md-theme="error-toast"]')).isPresent();
     }
 }
