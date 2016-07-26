@@ -1,27 +1,34 @@
 package br.jus.stf.autuacao.peticionamento;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyString;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Ignore;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
+import br.jus.stf.autuacao.peticionamento.domain.AnexoAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.EnvolvidoAdapter;
+import br.jus.stf.autuacao.peticionamento.domain.ProtocoloAdapter;
 import br.jus.stf.core.framework.testing.IntegrationTestsSupport;
 import br.jus.stf.core.framework.testing.oauth2.WithMockOauth2User;
+import br.jus.stf.core.shared.documento.DocumentoId;
+import br.jus.stf.core.shared.documento.DocumentoTemporarioId;
+import br.jus.stf.core.shared.identidade.PessoaId;
+import br.jus.stf.core.shared.protocolo.Numero;
+import br.jus.stf.core.shared.protocolo.Protocolo;
+import br.jus.stf.core.shared.protocolo.ProtocoloId;
 
 /**
  * Valida a API de envio de petições.
@@ -35,26 +42,24 @@ import br.jus.stf.core.framework.testing.oauth2.WithMockOauth2User;
 @WithMockOauth2User("peticionador")
 public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 	
-	private String idDocTemp;
+	@MockBean
+    private ProtocoloAdapter protocoloAdapter;
 	
-	// Criar mock para documento temporário
-	public void geraDocumentoTemporarioId() {
-		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		HttpHeaders headers = new HttpHeaders();
-
-		map.add("file", new ClassPathResource("certification/pdf-de-teste-assinado-02.pdf"));
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(
-				map, headers);
-		ResponseEntity<String> result = new RestTemplate().exchange(
-				"https://docker:8765/documents/api/documentos/upload/assinado", HttpMethod.POST, requestEntity,
-				String.class);
-
-		idDocTemp = result.getBody();
+	@MockBean
+	private AnexoAdapter anexoAdapter;
+	
+	@MockBean
+    private EnvolvidoAdapter envolvidoAdapter;
+	
+	private String idDocTemp = "_DocTemp_";
+	
+	@Before
+	public void configuracao() {
+		given(protocoloAdapter.novoProtocolo()).willReturn(new Protocolo(new ProtocoloId(1L), new Numero(1L, 2016)));
+		given(anexoAdapter.salvar(Arrays.asList(new DocumentoTemporarioId(idDocTemp)))).willReturn(Arrays.asList(new DocumentoId(1L)));
+		given(envolvidoAdapter.pessoasEnvolvidas(Arrays.asList(anyString()))).willReturn(new HashSet<PessoaId>(Arrays.asList(new PessoaId(1L))));
 	}
-	
-	@Ignore
+
 	@Test
     public void registrarUmaPeticao() throws Exception {
         String peticaoValida = "{\"classeId\":\"ADI\", \"preferencias\":[3,8], \"poloAtivo\": [\"Maria\", \"João\"], \"poloPassivo\": [\"Antônia\"], \"anexos\": [{\"documentoId\":\"@idDocTemp\", \"tipoDocumentoId\":1}], \"sigilo\":\"PUBLICO\", \"tipoProcesso\":\"ORIGINARIO\"}";
@@ -62,16 +67,17 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
         
         result.andExpect(status().isOk());
     }
-
-	@Ignore
+	
 	@Test
     public void registrarUmaPeticaoComRepresentacao() throws Exception {
+		loadDataTests("cadastrarAssociado-limpar.sql", "cadastrarAssociado.sql");
+		
         String peticaoValida = "{\"classeId\":\"ADI\", \"orgaoId\":12452261, \"poloAtivo\": [\"Maria\"], \"poloPassivo\": [\"João\"], \"anexos\": [{\"documentoId\":\"@idDocTemp\", \"tipoDocumentoId\":1}], \"sigilo\":\"PUBLICO\", \"tipoProcesso\":\"ORIGINARIO\"}";
         ResultActions result = mockMvc.perform(post("/api/peticoes/representado").contentType(APPLICATION_JSON).content(peticaoValida.replaceAll("@idDocTemp", idDocTemp)));
         
         result.andExpect(status().isOk());
     }
-
+	
 	@Test
     public void naoDeveRegistrarUmaPeticaoInvalida() throws Exception {
         String peticaoInvalida = "{\"classeId\":\"\", \"envolvidos\": [{\"ativo\":[1, 2]}, {\"passivo\":[3, 4]}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
@@ -80,14 +86,18 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
         
         result.andExpect(status().isBadRequest());
     }
-
+	
 	@Test
-    public void consultarPeticao() throws Exception {
-    	mockMvc.perform(get("/api/peticoes/99999/envolvidos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)));
+    public void consultarPeticaoOriginaria() throws Exception {
+		loadDataTests("peticaoOriginario-limpar.sql", "peticaoOriginario.sql");
+		
+    	mockMvc.perform(get("/api/peticoes/9002/envolvidos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
     }
 	
 	@Test
 	public void listarOrgaosPeticionadoresConformeAssociado() throws Exception {
+		loadDataTests("cadastrarAssociado-limpar.sql", "cadastrarAssociado.sql");
+		
 		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=false"));
         
         result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));

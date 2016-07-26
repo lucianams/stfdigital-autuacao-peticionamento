@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
-import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavelRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial.ClassePeticionavel;
+import br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial.ClassePeticionavelRepository;
 import br.jus.stf.core.shared.classe.ClasseId;
 import br.jus.stf.core.shared.processo.TipoProcesso;
 

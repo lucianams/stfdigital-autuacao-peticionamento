@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavelRepository;
+import br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial.ClassePeticionavelRepository;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.ClassePeticionavelDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.ClassePeticionavelDtoAssembler;
 

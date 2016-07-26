@@ -3,7 +3,7 @@ package br.jus.stf.autuacao.peticionamento.interfaces.dto;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
+import br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial.ClassePeticionavel;
 
 /**
  * Classe usada para transformar uma entidade ClassePeticionavel em um objeto ClassePeticionavelDto.

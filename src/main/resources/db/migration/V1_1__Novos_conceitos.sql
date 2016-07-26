@@ -29,8 +29,6 @@ alter table peticionamento.anexo add constraint fk_tipo_anexo_anex foreign key (
 
 create table peticionamento.orgao_peticionador (seq_pessoa number not null, nom_pessoa varchar2(100) not null, constraint pk_orgao_peticionador primary key (seq_pessoa));
 
-create sequence peticionamento.seq_associado increment by 1 start with 1 nomaxvalue minvalue 1 nocycle nocache;
-
 create table peticionamento.associado (seq_associado number not null, seq_pessoa number not null, nom_pessoa varchar2(100) not null, tip_associado varchar2(13) not null, dsc_cargo_funcao varchar2(50), seq_pessoa_orgao number not null, constraint pk_associado primary key (seq_associado));
 alter table peticionamento.associado add constraint fk_orgao_peticionador_asso foreign key (seq_pessoa_orgao) references peticionamento.orgao_peticionador(seq_pessoa);
 alter table peticionamento.associado add constraint uk_asso_seq_pessoa unique key (seq_pessoa, seq_pessoa_orgao);

@@ -1,4 +1,4 @@
-package br.jus.stf.autuacao.peticionamento.domain.model.classe;
+package br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial;
 
 import java.util.List;
 

@@ -26,9 +26,9 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.Validate;
 
-import br.jus.stf.autuacao.peticionamento.domain.model.classe.ClassePeticionavel;
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
-import br.jus.stf.autuacao.peticionamento.domain.model.preferencia.Preferencia;
+import br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial.ClassePeticionavel;
+import br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial.Preferencia;
 import br.jus.stf.core.framework.domaindrivendesign.AggregateRoot;
 import br.jus.stf.core.framework.domaindrivendesign.DomainEvent;
 import br.jus.stf.core.framework.domaindrivendesign.EntitySupport;

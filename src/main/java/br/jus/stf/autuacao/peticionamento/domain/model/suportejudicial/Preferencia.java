@@ -1,4 +1,4 @@
-package br.jus.stf.autuacao.peticionamento.domain.model.preferencia;
+package br.jus.stf.autuacao.peticionamento.domain.model.suportejudicial;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -19,6 +19,10 @@ import br.jus.stf.core.shared.preferencia.PreferenciaId;
 @Entity
 @Table(name = "PREFERENCIA", schema = "PETICIONAMENTO")
 public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
+	
+	public static final PreferenciaId PREFERENCIA_CRIMINAL = new PreferenciaId(2L);
+	
+	public static final PreferenciaId PREFERENCIA_ELEITORAL = new PreferenciaId(3L);
 	
 	@EmbeddedId
 	private PreferenciaId id;
@@ -51,7 +55,7 @@ public class Preferencia extends EntitySupport<Preferencia, PreferenciaId> {
 	
 	public boolean isCriminalEleitoral() {
 		// TODO: Verificar uma forma melhor de implementar essa verificação
-		return id.toLong() == 2L || id.toLong() == 3L;
+		return PREFERENCIA_CRIMINAL.sameValueAs(id) || PREFERENCIA_ELEITORAL.sameValueAs(id);
 	}
 	
 	@Override
