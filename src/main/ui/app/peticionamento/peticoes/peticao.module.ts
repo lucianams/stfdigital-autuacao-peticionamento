@@ -18,13 +18,6 @@ function config($stateProvider: IStateProvider,
         }
     });
     
-    msNavigationServiceProvider.saveItem('novo-processo.peticionamento', {
-        title : 'Peticionamento',
-        icon : 'icon-magnify',
-        state : 'app.novo-processo.peticionamento',
-        translation : 'PETICOES.NOVA',
-        weight : 1
-    });
 }
 
 /** @ngInject **/

@@ -99,47 +99,55 @@
                         <input  id="idSelectFilePecas" type="file" name="file" nv-file-select="" uploader="vm.uploader" multiple  ng-class="vm.uploader.isHTML5 ? 'invisible' : ''"/><br/>
                     </div>
                     <div layout="column">
-                        <md-input-container class="simple-table-container md-whiteframe-4dp" ng-show="vm.anexos.length > 0">
+                        <div class="simple-table-container md-whiteframe-4dp" ng-show="vm.anexos.length > 0">
 		                    <div class="table-title">Anexos</div>
                             <div class="ms-responsive-table-wrapper">
                                 <table class="simple" ms-responsive-table>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col style="width: 310px;">
+                                    <col>
                                     <thead>
                                         <tr>
-                                            <th style="text-align:center;">Título</th>
-                                            <th style="text-align:right;" ng-show="vm.uploader.isHTML5">Tamanho</th>
-                                            <th style="text-align:center;" ng-show="vm.uploader.isHTML5">Progresso</th>
-                                            <th style="text-align:left;">Tipo de Peça</th>
-                                            <th style="text-align:center;">Ações</th>
+                                            <th>Título</th>
+                                            <th ng-show="vm.uploader.isHTML5">Tamanho</th>
+                                            <th ng-show="vm.uploader.isHTML5">Progresso</th>
+                                            <th>Tipo de Peça</th>
+                                            <th>Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="anexo in vm.anexos">
-                                            <td style="text-align:left;" data-ng-click="vm.visualizar(anexo)" class="force-pointer"><strong>{{ anexo.arquivo.file.name }}</strong></td>
-                                            <td style="text-align:right;" ng-show="vm.uploader.isHTML5" nowrap>{{ anexo.arquivo.file.size/1024/1024|number:2 }} MB</td>
-                                            <td class="text-center"class="progress-row" ng-show="vm.uploader.isHTML5" ng-class="{'upload-finished': anexo.isUploadConcluido}">
-                                                <div class="progress" style="margin-bottom: 0;">
-                                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': anexo.arquivo.progress + '%' }"></div>
-                                                </div>
+                                            <td data-ng-click="vm.visualizar(anexo)" class="force-pointer"><strong>{{ anexo.arquivo.file.name }}</strong></td>
+                                            <td ng-show="vm.uploader.isHTML5">{{ anexo.arquivo.file.size/1024/1024|number:2 }} MB</td>
+                                            <td ng-show="vm.uploader.isHTML5" ng-class="{'upload-finished': anexo.isUploadConcluido}">
+                                                <md-progress-linear ng-show="anexo.arquivo.progress" md-mode="determinate" value="{{anexo.arquivo.progress}}"></md-progress-linear>
                                             </td>
                                             <td>
-                                                <select required id="tipoAnexoId-{{$index}}" ng-model="anexo.tipo.id" ui-select2="vm.configurarSelect2({{$index}})">
-                                                    <option value="">Selecione</option>
-                                                    <option data-ng-repeat="tipoAnexo in vm.tiposAnexos" value="{{tipoAnexo.id}}">{{tipoAnexo.descricao}}</option>
-                                                </select>
+                                                <div layout="row" flex="grow">
+							                        <md-input-container flex="grow">
+							                            <md-select ng-model="anexo.tipo.id" id="tipoAnexoId-{{$index}}">
+							                                <md-option ng-repeat="tipoAnexo in vm.tiposAnexos" value="{{tipoAnexo.id}}">
+							                                    {{tipoAnexo.descricao}}
+							                                </md-option>
+							                            </md-select>
+							                        </md-input-container>
+						                        </div>
                                             </td>
-                                            <td nowrap  class="text-center">
+                                            <td>
                                                 <a title="Remover Anexo" ng-click="vm.removerAnexo(anexo)" data-placement="top" style="cursor:pointer;">
-                                                    <i class="icon icon-close s40"></i>
+                                                    <i class="icon icon-close s30"></i>
                                                 </a>
                                                 <a title="Visualizar Anexo" ng-click="vm.visualizarAnexo(anexo)" data-placement="top" style="cursor:pointer;">
-                                                    <i class="icon icon-file-find s40"></i>
+                                                    <i class="icon icon-file-find s30"></i>
                                                 </a>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </md-input-container>
+                        </div>
                     </div>
                     <div layout="row" layout-align="end center">
                         <div>

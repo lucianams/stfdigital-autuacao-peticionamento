@@ -20,6 +20,8 @@ export class PeticaoController {
     public tiposAnexos: Array<TipoAnexo> = new Array<TipoAnexo>();
     private uploader: any;
     private configurarSelect2: any;
+    
+    public path = {id: 'novo-processo.peticionamento', translation:'Peticionamento', uisref: 'app.novo-processo.peticionamento', parent: 'novo-processo'};
         
     static $inject = ["$window", "$mdDialog", "$state", "$cookies", "properties", "app.novo-processo.peticionamento.PeticaoService", "FileUploader"];
         
@@ -35,7 +37,7 @@ export class PeticaoController {
         
         this.uploader = new FileUploader({
             url: properties.url + ":" + properties.port + "/documents/api/documentos/upload/assinado",
-            headers : {"X-XSRF-TOKEN": $cookies.get('XSRF-TOKEN'), "Authorization":  'Bearer ' + $cookies.get('access_token')},
+            headers : {"X-XSRF-TOKEN": $cookies.get('access_token'), "Authorization":  'Bearer ' + $cookies.get('access_token')},
             formData: [{name: "file"}],
             filters: [{
 		    	name: "arquivos-pdf",
