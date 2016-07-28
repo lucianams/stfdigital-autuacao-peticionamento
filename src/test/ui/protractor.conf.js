@@ -44,7 +44,7 @@ exports.config = {
     browser.driver.manage().window().maximize();
     
     var prepare = require('./e2e/build/shared/prepare/main');
-    prepare.default();
+    prepare();
 
     return browser.getCapabilities().then(function() {
   	  jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
