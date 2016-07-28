@@ -1,6 +1,6 @@
 <div id="forms" class="page-layout simple fullwidth doc-page" layout="column">
 
-	<stf-header fab-icon="icon-magnify" fab-text="Nova Petição"> </stf-header>
+	<stf-header path="vm.path"></stf-header>
 
     <!-- CONTENT -->
     <div class="content" layout="column">
@@ -13,16 +13,24 @@
             <!-- BASIC FORM -->
             <div class="form-wrapper md-whiteframe-1dp" flex="100">
 
-                <form name="basicForm" class="md-inline-form" novalidate>
+                <form class="md-inline-form" novalidate>
 
                     <div class="form-title">Classificação do Processo</div>
 
-                    <div layout="column">
+                    <div layout="row">
                         <md-input-container flex>
                             <label>Classe</label>
-                            <md-select ng-model="vm.classe" id="idClassePeticionavel">
-                                <md-option ng-repeat="classe in vm.classes" value="{{classe.sigla}}">
+                            <md-select ng-model="vm.classe" id="idClassePeticionavel" ng-change="vm.classeSelecionada()">
+                                <md-option ng-repeat="classe in vm.classes" ng-value="classe">
                                     {{classe.nome}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+						<md-input-container flex>
+                            <label>Preferências</label>
+                            <md-select multiple ng-model="vm.cmd.preferencias" id="preferencias">
+                                <md-option ng-repeat="preferencia in vm.preferencias" value="{{preferencia.id}}">
+                                    {{preferencia.nome}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
@@ -42,7 +50,7 @@
                         </md-input-container>
                     </div>
                     <div layout="row">
-                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.partesPoloAtivo.length > 0">
+                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.cmd.poloAtivo.length > 0">
                             <div class="simple-table-container md-whiteframe-4dp">
                                 <div class="ms-responsive-table-wrapper">
                                     <table class="simple" ms-responsive-table>
@@ -53,7 +61,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="parte in vm.partesPoloAtivo">
+                                            <tr ng-repeat="parte in vm.cmd.poloAtivo">
 											    <td>{{parte}}</td>
 											    <td align="right">
                                                     <span class="hint-text small">
@@ -66,7 +74,7 @@
                                 </div>
                             </div>
                         </md-input-container>
-                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.partesPoloPassivo.length > 0">
+                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.cmd.poloPassivo.length > 0">
                             <div class="simple-table-container md-whiteframe-4dp">
                                 <div class="ms-responsive-table-wrapper">
                                     <table class="simple" ms-responsive-table>
@@ -77,7 +85,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="parte in vm.partesPoloPassivo">
+                                            <tr ng-repeat="parte in vm.cmd.poloPassivo">
 											    <td>{{parte}}</td>
 											    <td align="right">
                                                     <span class="hint-text small">
@@ -89,6 +97,16 @@
                                     </table>
                                 </div>
                             </div>
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                    	<md-input-container flex="50">
+                            <label>Sigilo *</label>
+                            <md-select ng-model="vm.cmd.sigilo" id="sigilo"">
+                                <md-option ng-repeat="sigilo in vm.sigilos" ng-value="sigilo.nome">
+                                    {{sigilo.descricao}}
+                                </md-option>
+                            </md-select>
                         </md-input-container>
                     </div>
                     <div layout="column">
@@ -113,7 +131,7 @@
                                             <th>Título</th>
                                             <th ng-show="vm.uploader.isHTML5">Tamanho</th>
                                             <th ng-show="vm.uploader.isHTML5">Progresso</th>
-                                            <th>Tipo de Peça</th>
+                                            <th>Tipo de Anexo</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
@@ -127,11 +145,16 @@
                                             <td>
                                                 <div layout="row" flex="grow">
 							                        <md-input-container flex="grow">
-							                            <md-select ng-model="anexo.tipo.id" id="tipoAnexoId-{{$index}}">
-							                                <md-option ng-repeat="tipoAnexo in vm.tiposAnexos" value="{{tipoAnexo.id}}">
-							                                    {{tipoAnexo.descricao}}
-							                                </md-option>
-							                            </md-select>
+							                        	<md-autocomplete md-items="tipoAnexo in vm.tiposAnexo | filter:buscaTipoAnexo"
+							                        		md-item-text="tipoAnexo.nome"
+							                        		md-selected-item="anexo.tipo"
+							                        		md-search-text="buscaTipoAnexo"
+							                        		md-selected-item-change="vm.anexosMudaram()"
+							                        		md-min-length="0">
+							                        		<md-item-template>
+													        	{{tipoAnexo.nome}}
+													        </md-item-template>
+							                        	</md-autocomplete>
 							                        </md-input-container>
 						                        </div>
                                             </td>
@@ -156,7 +179,7 @@
                             </button>
                         </div>
                     </div>
-                    <md-button type="submit" id="btnPeticionar" ng-disabled="!vm.isFormValido()" class="md-raised md-primary md-button md-default-theme md-ink-ripple" 
+                    <md-button type="button" id="peticionar" command="vm.cmd" class="md-raised md-accent"
                         aria-label="Peticionar" ng-click="vm.peticionar()">
                         Peticionar
                     </md-button>

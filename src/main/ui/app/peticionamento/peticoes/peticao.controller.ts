@@ -2,38 +2,31 @@ import IStateService = angular.ui.IStateService;
 import IDialogService = angular.material.IDialogService;
 import ICookiesService = angular.cookies.ICookiesService;
 import IWindowService = angular.IWindowService;
-import {PeticaoService, IPeticao, Peticao, Classe, Anexo, TipoAnexo, Documento} from "./peticao.service";
+import {PeticaoService, PeticionarCommand, Classe, Anexo, AnexoDto, TipoAnexo, Preferencia, Sigilo} from "./peticao.service";
 import peticionamento from "./peticao.module";
 
 export class PeticaoController {
     
-    public basicForm: Object = {};
-    public formWizard: Object = {};
-    public states: Object[] = null;
-    public classes: Array<Classe>;
-    public classe: string;
+	public cmd: PeticionarCommand = new PeticionarCommand();
+	
+    public preferencias: Array<Preferencia> = new Array<Preferencia>();
+    
+    public classe: Classe;
     public partePoloAtivo: string;
     public partePoloPassivo: string;
-    public partesPoloAtivo: Array<string> = new Array<string>();
-    public partesPoloPassivo: Array<string> = new Array<string>();
+    
     public anexos: Array<Anexo> = new Array<Anexo>();
-    public tiposAnexos: Array<TipoAnexo> = new Array<TipoAnexo>();
+    
     private uploader: any;
     private configurarSelect2: any;
     
     public path = {id: 'novo-processo.peticionamento', translation:'Peticionamento', uisref: 'app.novo-processo.peticionamento', parent: 'novo-processo'};
         
-    static $inject = ["$window", "$mdDialog", "$state", "$cookies", "properties", "app.novo-processo.peticionamento.PeticaoService", "FileUploader"];
+    static $inject = ["classes", "tiposAnexo", "sigilos", "$window", "$state", "$cookies", "properties", "app.peticionamento.peticoes.PeticaoService", "FileUploader", "messagesService"];
         
     /** @ngInject **/
-    constructor(private $window: IWindowService, private $mdDialog: IDialogService, private $state: IStateService, private $cookies: ICookiesService, 
-        private properties, private peticaoService: PeticaoService, FileUploader: any) { 
-        this.anexos = [];
-        peticaoService.listarClasses().then((classes: Classe[]) => {
-            this.classes = classes;    
-        });
-
-        this.tiposAnexos = peticaoService.listarTipoPecas();
+    constructor(public classes: Array<Classe>, public tiposAnexo: Array<TipoAnexo>, public sigilos: Array<Sigilo>, private $window: IWindowService, private $state: IStateService, private $cookies: ICookiesService, 
+        private properties, private peticaoService: PeticaoService, FileUploader: any, private messagesService: app.support.messaging.MessagesService) { 
         
         this.uploader = new FileUploader({
             url: properties.url + ":" + properties.port + "/documents/api/documentos/upload/assinado",
@@ -45,7 +38,7 @@ export class PeticaoController {
 		    		if (file.type === "application/pdf") {
 			    		return true;
 		    		} else {
-		    			this.exibirMensagem("Não foi possível anexar o arquivo " + file.name + ". <br />Apenas documentos *.pdf são aceitos.", "Anexar Documento");
+		    			this.exibirMensagem("Não foi possível anexar o arquivo " + file.name + ". <br />Apenas documentos *.pdf são aceitos.");
 		    			return false;
 		    		}
 		    	}
@@ -53,7 +46,7 @@ export class PeticaoController {
 		    	name: "tamanho-maximo",
 		    	fn: (file) => {
 		    		if (file.size / 1024 / 1024 > 10) {
-		    			this.exibirMensagem("Não foi possível anexar o arquivo " + file.name + ". <br />O tamanho do arquivo excede 10mb.", "Anexar Documento");
+		    			this.exibirMensagem("Não foi possível anexar o arquivo " + file.name + ". <br />O tamanho do arquivo excede 10mb.");
 		    			return false;
 		    		}
 		    		return true;
@@ -68,20 +61,21 @@ export class PeticaoController {
             arquivo.upload();
         };
         
-        this.uploader.onSuccessItem = function(arquivo, response, status) {
+        this.uploader.onSuccessItem = (arquivo, response, status) => {
             arquivo.anexo.documentoTemporario = response;
             arquivo.anexo.isExcluirServidor = true;
+            this.anexosMudaram();
         };
         
         this.uploader.onErrorItem = (arquivo, response, status) => {
         	/* O status 0 provavelmente foi porque a conexão foi resetada por ultrapassar o tamanho máximo de 10 MB no backend. */
             if (status === 0) {
-        		this.exibirMensagem('Não foi possível anexar o arquivo "' + arquivo.file.name + '". <br />O tamanho do arquivo excede 10mb.', "Anexar Arquivos");
+        		this.exibirMensagem('Não foi possível anexar o arquivo "' + arquivo.file.name + '". O tamanho do arquivo excede 10mb.');
         	} else {
                 if (status === 500){
-                    this.exibirMensagem("Não foi possível anexar o arquivo " + arquivo.file.name + ".", "Anexar Arquivos");
+                    this.exibirMensagem("Não foi possível anexar o arquivo " + arquivo.file.name + ".");
                 } else {
-                    this.exibirMensagem(response.errors[0].message, "Anexar Arquivos")
+                    this.exibirMensagem(response.errors[0].message);
                 }
             }
         	
@@ -111,7 +105,12 @@ export class PeticaoController {
 			};
 		};
     }
-        
+
+    public classeSelecionada(): void {
+    	this.cmd.classeId = this.classe.sigla;
+        this.preferencias = this.classe.preferencias;
+   }
+    
     //remove uma peças da petição.
     private removerAnexo(anexo: any): void {
         if (anexo.isExcluirServidor){
@@ -120,6 +119,7 @@ export class PeticaoController {
         
         let indice = this.anexos.indexOf(anexo);
         this.anexos.splice(indice, 1);
+        this.anexosMudaram();
     }
     
     private limparAnexos() : void {
@@ -143,52 +143,55 @@ export class PeticaoController {
         this.$window.open(fileURL);
     }
     
-    private exibirMensagem(mensagem: string, titulo: string){
-        let alert = this.$mdDialog.alert().title(titulo).textContent(mensagem).ok("Fechar");
-        this.$mdDialog.show(alert).finally(function() {
-            alert = undefined;
-        });
+    private exibirMensagem(mensagem: string) {
+    	this.messagesService.error(mensagem);
     }
     
     public adicionarPartePoloAtivo(): void {
-        for (let i = 0; i < this.partesPoloAtivo.length; i++){
-            if (this.partesPoloAtivo[i] == this.partePoloAtivo.toUpperCase()){
+        for (let i = 0; i < this.cmd.poloAtivo.length; i++){
+            if (this.cmd.poloAtivo[i] == this.partePoloAtivo.toUpperCase()){
                 this.partePoloAtivo = "";
-                this.exibirMensagem("A parte informada já foi adicionada ao polo ativo.", "Adicionar Parte");
+                this.exibirMensagem("A parte informada já foi adicionada ao polo ativo.");
                 return;
             }
         }
         
-        this.partesPoloAtivo.push(this.partePoloAtivo.toUpperCase());
+        this.cmd.poloAtivo.push(this.partePoloAtivo.toUpperCase());
         this.partePoloAtivo = "";
     }
     
     public removerPartePoloAtivo(indice: number): void {
-        this.partesPoloAtivo.splice(indice);
+        this.cmd.poloAtivo.splice(indice);
     }
     
     public adicionarPartePoloPassivo(): void {
-        for (let i = 0; i < this.partesPoloPassivo.length; i++){
-            if (this.partesPoloPassivo[i] == this.partePoloPassivo.toUpperCase()){
+        for (let i = 0; i < this.cmd.poloPassivo.length; i++){
+            if (this.cmd.poloPassivo[i] == this.partePoloPassivo.toUpperCase()){
                 this.partePoloPassivo = "";        
-                this.exibirMensagem("A parte informada já foi adicionada ao polo passivo.", "Adicionar Parte");
+                this.exibirMensagem("A parte informada já foi adicionada ao polo passivo.");
                 return;
             }
         }
         
-        this.partesPoloPassivo.push(this.partePoloPassivo.toUpperCase());
+        this.cmd.poloPassivo.push(this.partePoloPassivo.toUpperCase());
         this.partePoloPassivo = "";
     }
     
     public removerPartePoloPassivo(indice: number): void {
-        this.partesPoloPassivo.splice(indice);
+        this.cmd.poloPassivo.splice(indice);
     }
     
-    private isFormValido(): boolean {
-        return (this.partesPoloAtivo.length > 0 && this.partesPoloPassivo.length >0 && this.anexos.length > 0 && this.classe != "");  
+    private anexosMudaram(): void {
+        let anexos: Array<AnexoDto> = new Array<AnexoDto>();
+        
+        anexos = this.anexos.map<AnexoDto>((anexo) => {
+        	return new AnexoDto(anexo.tipo ? anexo.tipo.id : null, anexo.documentoTemporario);
+        });
+        
+        this.cmd.anexos = anexos;
     }
     
-    public peticionar(): void {        
+    public peticionar(): ng.IPromise<any> {        
         let erro = "";
         
         for(let i = 0; i < this.anexos.length; i++){            
@@ -199,22 +202,21 @@ export class PeticaoController {
         }
         
         if (erro != ""){
-            this.exibirMensagem(erro, "Peticionamento");
+            this.exibirMensagem(erro);
             return;    
         } 
                 
-        let peticao: IPeticao = this.criarPeticao();
-        this.peticaoService.enviarPeticao(peticao).then(() => {
-            this.formWizard = {};
-            this.$state.go('app.tarefas.minhas-tarefas', {}, { reload: true });
+//        let peticao: IPeticao = this.criarPeticao();
+        return this.peticaoService.enviarPeticao(this.cmd).then(() => {
+            this.$state.go('app.tarefas.minhas-tarefas');
         });
     }
     
-    private criarPeticao(): IPeticao {    
-        return new Peticao(this.classe, this.partesPoloAtivo, this.partesPoloPassivo, this.anexos);
-    }
+//    private criarPeticao(): IPeticao {
+//        return new Peticao(this.classe.sigla, this.partesPoloAtivo, this.partesPoloPassivo, this.anexos, this.preferenciasSelecionadas.map((p) => p.id));
+//    }
 }
 
-peticionamento.controller('app.novo-processo.peticionamento.PeticaoController', PeticaoController);
+peticionamento.controller('app.peticionamento.peticoes.PeticaoController', PeticaoController);
 
 export default peticionamento;

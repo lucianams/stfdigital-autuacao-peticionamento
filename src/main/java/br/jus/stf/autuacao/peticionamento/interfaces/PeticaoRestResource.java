@@ -2,7 +2,9 @@ package br.jus.stf.autuacao.peticionamento.interfaces;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -26,6 +28,8 @@ import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDtoAssembler;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.OrgaoPeticionadorDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.OrgaoPeticionadorDtoAssembler;
+import br.jus.stf.autuacao.peticionamento.interfaces.dto.SigiloDto;
+import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.ProtocoloId;
 
 /**
@@ -100,5 +104,10 @@ public class PeticaoRestResource {
 		
 		return orgaos.stream().map(orgaoDtoAssembler::toDto).collect(toList());
 	}
+ 
+	@RequestMapping(value="/sigilos", method = RequestMethod.GET)
+    public List<SigiloDto> consultarSigilos(){
+    	return Arrays.asList(Sigilo.values()).stream().map(sigilo -> new SigiloDto(sigilo.toString(), sigilo.descricao())).collect(Collectors.toList());
+    }
     
 }

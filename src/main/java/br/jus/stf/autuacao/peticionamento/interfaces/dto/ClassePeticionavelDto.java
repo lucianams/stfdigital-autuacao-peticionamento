@@ -1,5 +1,7 @@
 package br.jus.stf.autuacao.peticionamento.interfaces.dto;
 
+import java.util.List;
+
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
@@ -18,9 +20,13 @@ public class ClassePeticionavelDto {
 	@ApiModelProperty(value = "O nome da classe. Por exemplo: 'Ação Penal'.")
 	private String nome;
 	
-	public ClassePeticionavelDto(String sigla, String nome) {
+	@ApiModelProperty(value = "As preferências possíveis para a classe.")
+	private List<PreferenciaDto> preferencias;
+	
+	public ClassePeticionavelDto(String sigla, String nome, List<PreferenciaDto> preferencias) {
 		this.sigla = sigla;
 		this.nome = nome;
+		this.preferencias = preferencias;
 	}
 	
 	public String getSigla() {
@@ -29,5 +35,9 @@ public class ClassePeticionavelDto {
 	
 	public String getNome() {
 		return nome;
+	}
+
+	public List<PreferenciaDto> getPreferencias() {
+		return preferencias;
 	}
 }
