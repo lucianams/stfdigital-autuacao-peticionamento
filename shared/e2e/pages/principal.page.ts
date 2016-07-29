@@ -23,7 +23,25 @@ export class PrincipalPage {
     public escolherProcesso(state: string) : void {
     	element(by.css('div[ui-sref="' + state + '"]')).click();
     }
+
+    public escolherProcessoPorNome(nome: string) : void {
+        element.all(by.css('.processo-list-item')).filter((elem) => {
+            return elem.element(by.css('.processo-name')).getText().then((text) => {
+                return text === nome;
+            });
+        }).first().click();
+    }
+
+    public iniciarProcessoPorNome(nome: string): void {
+        this.iniciarProcesso();
+        this.escolherProcessoPorNome(nome);
+        this.aguardarSairTelaNovoProcesso();
+    }
     
+    private aguardarSairTelaNovoProcesso() {
+        browser.wait(element(by.id('novo-processo')).isPresent().then((present) => !present));
+    }
+
     public aguardarUrl(url: string): void {
     	waitHelpers.waitForUrl(url);
     }

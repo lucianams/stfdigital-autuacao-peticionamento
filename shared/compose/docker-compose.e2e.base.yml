@@ -15,6 +15,8 @@ services:
     image: selenium/standalone-chrome:2.53.0
     ports:
      - "4444:4444"
+    volumes:
+     - ./src/test/ui/e2e/files:/e2e/files
     depends_on:
      - docker
   rabbit: # Necessário criar sem expor as portas para rodar no travis-ci
