@@ -1,3 +1,34 @@
+namespace app.core {
+	'use strict';
+
+    angular
+        .module('app.core',
+            [
+//                'ngAnimate',
+//                'ngAria',
+                'ngCookies',
+//                'ngMessages',
+//                'ngResource',
+//                'ngSanitize',
+//                'ngMaterial',
+//                'angular-chartist',
+//                'chart.js',
+//                'datatables',
+//                'gridshore.c3js.chart',
+//                'nvd3',
+                'pascalprecht.translate',
+//                'timer',
+                'ui.router',
+//                'ct.ui.router.extras',
+//                'oc.lazyLoad',
+//                'ui.sortable',
+//                'ng-sortable',
+//                'xeditable',
+//                'classy',
+//                'ui.select'
+            ]);
+}
+
 /**
  * Mocks dos módulos e alguns componentes para os testes unitários.
  * 
@@ -69,3 +100,7 @@ namespace app.support {
     	.module('app.support', ['app.support.command', 'app.support.messaging', 'app.support.constants'])
     	.config(config);
 }
+
+angular.module('angularFileUpload', []);
+
+angular.module('ngCookies', []);
