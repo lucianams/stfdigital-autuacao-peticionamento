@@ -191,7 +191,7 @@ ext.e2eSeleniumAddress = project.hasProperty('e2eSeleniumAddress') ? project.get
 ext.e2eFilesDirPath = project.hasProperty('e2eFilesDirPath') ? project.getProperty('e2eFilesDirPath') : '/e2e/files'
 
 task gulpTestE2E(type: GulpTask) {
-    args = ['test:e2e', '--e2eBaseUrl', e2eBaseUrl, '--e2eSeleniumAddress', e2eSeleniumAddress, 'e2eFilesDirPath', e2eFilesDirPath]
+    args = ['test:e2e', '--e2eBaseUrl', e2eBaseUrl, '--e2eSeleniumAddress', e2eSeleniumAddress, '--e2eFilesDirPath', e2eFilesDirPath]
 }
 
 task gulpBuildDist(type: GulpTask) {

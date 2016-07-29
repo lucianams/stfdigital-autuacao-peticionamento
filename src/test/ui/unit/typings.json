@@ -4,6 +4,14 @@
     "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#56295f5058cac7ae458540423c50ac2dcf9fc711",
     "angularjs": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#1c94cfb32eab35dde9fda7fb738d324e9a0e66d4",
-    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#5b7257019ae959533341a715b339d2562bbf9b85"
+    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#5b7257019ae959533341a715b339d2562bbf9b85",
+    "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
+    "angular-translate": "github:DefinitelyTyped/DefinitelyTyped/angular-translate/angular-translate.d.ts#275c2052a4d955b33d9fa72186f81a8328377974",
+    "angular-material": "github:DefinitelyTyped/DefinitelyTyped/angular-material/angular-material.d.ts#f4af4e83a45f72d8fba6e72d482f8e61dad87b36",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#68187beb94cf85c2763e258849ea63ddcbf9ad03",
+
+    "constants.module": "github:supremotribunalfederal/stfdigital-plataforma-ui/definitions/support/constants/constants.module.d.ts",
+    "command.service": "github:supremotribunalfederal/stfdigital-plataforma-ui/definitions/support/command/command.service.d.ts",
+    "messages.service": "github:supremotribunalfederal/stfdigital-plataforma-ui/definitions/support/messaging/messages.service.d.ts"
   }
 }

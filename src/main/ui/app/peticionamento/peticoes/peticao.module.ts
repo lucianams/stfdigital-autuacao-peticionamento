@@ -5,8 +5,7 @@ import Properties = app.support.constants.Properties;
 import {PeticaoService} from "./peticao.service";
 
 /** @ngInject **/
-function config($stateProvider: IStateProvider,
-                msNavigationServiceProvider: any) {
+function config($stateProvider: IStateProvider) {
 
     $stateProvider.state('app.novo-processo.peticionamento-peticoes', {
         url : '/peticionamento',
