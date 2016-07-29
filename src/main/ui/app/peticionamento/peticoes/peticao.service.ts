@@ -71,6 +71,11 @@ export class AnexoDto {
     }
 }
 
+export interface OrgaoPeticionador {
+    id: number;
+    nome: string;
+}
+
 export class PeticionarCommand implements cmd.Command {
     /* Identificador da classe processual sugerida pelo peticionador */
     public classeId: string;
@@ -78,10 +83,10 @@ export class PeticionarCommand implements cmd.Command {
 	/* Identificador do Órgão para o qual o seu representante está peticionando, se for o caso */
     public orgaoId: number;
 	
-	/* Lista com as partes do polo ativo */
+	/* Lista com os envolvidos do polo ativo */
     public poloAtivo: Array<string> = [];
 	
-	/* Lista com as partes do polo passivo*/
+	/* Lista com os envolvidos do polo passivo*/
     public poloPassivo: Array<string> = [];
 
 	/* A lista de identificadores dos anexos da petição. */
@@ -100,10 +105,18 @@ export class PeticionarCommand implements cmd.Command {
     }
 }
 
+export class PeticionarOrgaoCommand extends PeticionarCommand {
+
+}
+
 export class PeticaoService {
 
     //Endereço do serviço de peticionamento.
     private static apiPeticionamento: string = '/peticionamento/api/peticoes';
+
+    private static apiPeticionamentoOrgao: string = '/peticionamento/api/peticoes/representado';
+
+    private static apiOrgaosPeticionadores: string = '/peticionamento/api/peticoes/orgaos';
     
     //Endereço do serviço de classes peticionáveis.
     private static servicoClassePeticionavel: string = '/peticionamento/api/classes-peticionaveis';
@@ -118,25 +131,18 @@ export class PeticaoService {
 
     /** @ngInject **/
     constructor(private $http: IHttpService, private properties: app.support.constants.Properties, private commandService: cmd.CommandService) {
-    	commandService.setValidator("peticionar", new ValidadorPeticionamento());
+    	commandService.setValidator("peticionar", new ValidadorPeticionamentoAdvogado());
+        commandService.setValidator("peticionar-orgao", new ValidadorPeticionamentoOrgao());
     }
 
-    public enviarPeticao(peticionarCommand: PeticionarCommand): IPromise<any> {
+    public enviarPeticaoAdvogado(peticionarCommand: PeticionarCommand): IPromise<any> {
         return this.$http.post(this.properties.apiUrl + PeticaoService.apiPeticionamento, peticionarCommand);
     }
-    /*
-    private criarCommandPeticionamento(peticao: IPeticao): PeticionarCommand {
-        let anexos = new Array<AnexoDto>();
-        
-        for (let i = 0; i < peticao.anexos.length; i++){
-            anexos.push(new AnexoDto(peticao.anexos[i].tipo.id, peticao.anexos[i].documentoTemporario));
-        }
-        
-        let cmd = new PeticionarCommand(peticao.classeId, null, peticao.poloAtivo, peticao.poloAtivo, anexos, peticao.sigilo, peticao.preferencias);
-        
-        return cmd;
-    }*/
-    
+
+    public enviarPeticaoOrgao(peticionarOrgaoCommand: PeticionarOrgaoCommand): IPromise<any> {
+        return this.$http.post(this.properties.apiUrl + PeticaoService.apiPeticionamentoOrgao, peticionarOrgaoCommand);
+    }
+
     public excluirDocumentoTemporarioAssinado(arquivosTemporarios: Array<string>): void {
         let cmd: DeleteTemporarioCommand = new DeleteTemporarioCommand(arquivosTemporarios);
         this.$http.post(this.properties.apiUrl + PeticaoService.urlExcluiDocTemporario, cmd);
@@ -165,9 +171,17 @@ export class PeticaoService {
                         return response.data; 
                     });
     }
+
+    public listarOrgaos() : IPromise<OrgaoPeticionador[]> {
+        return this.$http.get(this.properties.apiUrl 
+                + PeticaoService.apiOrgaosPeticionadores, {params: {verificarPerfil: false}})
+                    .then((response: IHttpPromiseCallbackArg<OrgaoPeticionador[]>) => { 
+                        return response.data; 
+                    });
+    }
 }
 
-class ValidadorPeticionamento implements cmd.CommandValidator {
+class ValidadorPeticionamentoAdvogado implements cmd.CommandValidator {
     
     constructor() {}
     
@@ -177,6 +191,24 @@ class ValidadorPeticionamento implements cmd.CommandValidator {
         	command.anexos.length > 0 &&
         	command.classeId &&
         	command.sigilo) {
+            return true;
+        }
+        return false;
+    }
+    
+}
+
+class ValidadorPeticionamentoOrgao implements cmd.CommandValidator {
+    
+    constructor() {}
+    
+    public isValid(command: PeticionarOrgaoCommand): boolean {
+        if (command.poloAtivo.length > 0 &&
+        	command.poloPassivo.length > 0 &&
+        	command.anexos.length > 0 &&
+        	command.classeId &&
+        	command.sigilo &&
+            command.orgaoId) {
             return true;
         }
         return false;

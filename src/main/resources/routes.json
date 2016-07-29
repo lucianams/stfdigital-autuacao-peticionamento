@@ -1,8 +1,14 @@
 [    
     {
         "id": "peticionar",
-        "stateName": "app.novo-processo.peticionamento",
-        "urlPrefix": "/novo-processo/peticionamento",
+        "stateName": "app.novo-processo.peticionamento-peticoes-advogado",
+        "urlPrefix": "/novo-processo/peticionamento/advogado",
+        "src": "peticionamento/peticoes"
+    },
+    {
+        "id": "peticionar-orgao",
+        "stateName": "app.novo-processo.peticionamento-peticoes-orgao",
+        "urlPrefix": "/novo-processo/peticionamento/orgao",
         "src": "peticionamento/peticoes"
     }
 ]

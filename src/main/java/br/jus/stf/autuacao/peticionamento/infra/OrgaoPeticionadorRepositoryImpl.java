@@ -2,12 +2,15 @@ package br.jus.stf.autuacao.peticionamento.infra;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Repository;
 
 import br.jus.stf.autuacao.peticionamento.domain.model.identidade.OrgaoPeticionador;
@@ -44,9 +47,9 @@ public class OrgaoPeticionadorRepositoryImpl extends SimpleJpaRepository<OrgaoPe
 		if (verificarPerfil) {
 			return findAll();
 		} else {
-			//TODO: Alterar para pegar informações do usuário da sessão
-//			PessoaId id = SecurityContextUtil.getUser().getUserDetails().getPessoaId();
-			PessoaId id = new PessoaId(1L);
+			OAuth2Authentication authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
+			Map<String, Object> principal = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
+			PessoaId id = new PessoaId(Long.valueOf(principal.get("pessoaId").toString()));
 			TipoAssociado[] tipos = new TipoAssociado[] { TipoAssociado.GESTOR, TipoAssociado.REPRESENTANTE };
 			
 			return findOrgaoByTipoAssociacao(id, tipos);

@@ -8,8 +8,9 @@ import {PeticaoService} from "./peticao.service";
 function config($stateProvider: IStateProvider,
                 msNavigationServiceProvider: any) {
 
-    $stateProvider.state('app.novo-processo.peticionamento', {
+    $stateProvider.state('app.novo-processo.peticionamento-peticoes', {
         url : '/peticionamento',
+        abstract: true,
         views : {
             'content@app.autenticado' : {
                 templateUrl : 'peticao.tpl.html',
@@ -26,6 +27,30 @@ function config($stateProvider: IStateProvider,
         	}],
         	sigilos: ['app.peticionamento.peticoes.PeticaoService', (peticaoService: PeticaoService) => {
                 return peticaoService.listarSigilos();
+            }]
+        }
+    }).state('app.novo-processo.peticionamento-peticoes-advogado', {
+        parent: 'app.novo-processo.peticionamento-peticoes',
+        url: '/advogado',
+        views: {
+            '@app.novo-processo.peticionamento-peticoes': {
+                templateUrl: 'advogado/peticao-advogado.tpl.html',
+                controller: 'app.peticionamento.peticoes.PeticaoAdvogadoController'
+            }
+        }
+    }).state('app.novo-processo.peticionamento-peticoes-orgao', {
+        parent: 'app.novo-processo.peticionamento-peticoes',
+        url: '/orgao',
+        views: {
+            '@app.novo-processo.peticionamento-peticoes': {
+                templateUrl: 'orgao/peticao-orgao.tpl.html',
+                controller: 'app.peticionamento.peticoes.PeticaoOrgaoController',
+                controllerAs: 'vm'
+            }
+        },
+        resolve: {
+            orgaos: ['app.peticionamento.peticoes.PeticaoService', (peticaoService: PeticaoService) => {
+                return peticaoService.listarOrgaos();
             }]
         }
     });

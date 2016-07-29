@@ -1,0 +1,11 @@
+<div class="form-title">Órgão Peticionador</div>
+<div layout="row">
+    <md-input-container flex="50">
+        <label>Órgão</label>
+        <md-select ng-model="vm.cmd().orgaoId" id="orgao">
+            <md-option ng-repeat="orgao in vm.orgaos" ng-value="orgao.id">
+                {{orgao.nome}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>

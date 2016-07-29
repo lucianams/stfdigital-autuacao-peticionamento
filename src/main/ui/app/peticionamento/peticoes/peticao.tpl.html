@@ -15,6 +15,8 @@
 
                 <form class="md-inline-form" novalidate>
 
+                    <div ui-view></div>
+
                     <div class="form-title">Classificação do Processo</div>
 
                     <div layout="row">
@@ -28,30 +30,40 @@
                         </md-input-container>
 						<md-input-container flex>
                             <label>Preferências</label>
-                            <md-select multiple ng-model="vm.cmd.preferencias" id="preferencias">
+                            <md-select multiple ng-model="vm.cmd().preferencias" id="preferencias">
                                 <md-option ng-repeat="preferencia in vm.preferencias" value="{{preferencia.id}}">
                                     {{preferencia.nome}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
-                    <div class="form-title">Partes</div>
+                    <div layout="row">
+                    	<md-input-container flex="50">
+                            <label>Sigilo *</label>
+                            <md-select ng-model="vm.cmd().sigilo" id="sigilo"">
+                                <md-option ng-repeat="sigilo in vm.sigilos" ng-value="sigilo.nome">
+                                    {{sigilo.descricao}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div class="form-title">Envolvidos</div>
                     <div layout="column" layout-gt-sm="row" class="layout-gt-sm-row layout-column">
                         
                         <md-input-container flex="" class="md-icon-float flex md-default-theme md-input-invalid">
-                            <label>Informe o nome da parte do polo ativo</label>
-                            <input type="text" name="txtPartePoloAtivo" id="txtPartePoloAtivo" ng-model="vm.partePoloAtivo" class="ng-pristine" aria-label="" aria-invalid="true" ng-keydown="$event.which === 13 && vm.adicionarPartePoloAtivo()" ng-click= "$event.stopPropagation()">
+                            <label>Informe o nome do envolvido do polo ativo</label>
+                            <input type="text" name="txtEnvolvidoPoloAtivo" id="txtEnvolvidoPoloAtivo" ng-model="vm.envolvidoPoloAtivo" class="ng-pristine" aria-label="" aria-invalid="true" ng-keydown="$event.which === 13 && vm.adicionarEnvolvidoPoloAtivo()" ng-click= "$event.stopPropagation()">
                              
                         </md-input-container>
                         <md-input-container flex="" class="md-icon-float flex md-default-theme md-input-invalid">    
-                            <label>Informe o nome da parte do polo passivo</label>
-                            <input type="text" name="txtPartePoloPassivo" id="txtPartePoloPassivo" ng-model="vm.partePoloPassivo" class="ng-pristine ng-empty ng-invalid ng-invalid-required 
-                            ng-touched" aria-label="" aria-invalid="true"  ng-keydown="$event.which === 13 && vm.adicionarPartePoloPassivo()" ng-click= "$event.stopPropagation()">
+                            <label>Informe o nome do envolvido do polo passivo</label>
+                            <input type="text" name="txtEnvolvidoPoloPassivo" id="txtEnvolvidoPoloPassivo" ng-model="vm.envolvidoPoloPassivo" class="ng-pristine ng-empty ng-invalid ng-invalid-required 
+                            ng-touched" aria-label="" aria-invalid="true"  ng-keydown="$event.which === 13 && vm.adicionarEnvolvidoPoloPassivo()" ng-click= "$event.stopPropagation()">
                         </md-input-container>
                     </div>
-                    <div layout="row">
-                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.cmd.poloAtivo.length > 0">
-                            <div class="simple-table-container md-whiteframe-4dp">
+                    <div layout="row" ng-show="vm.cmd().poloAtivo.length > 0 || vm.cmd().poloPassivo.length > 0">
+                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid">
+                            <div class="simple-table-container md-whiteframe-4dp" ng-show="vm.cmd().poloAtivo.length > 0">
                                 <div class="ms-responsive-table-wrapper">
                                     <table class="simple" ms-responsive-table>
                                         <thead>
@@ -61,11 +73,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="parte in vm.cmd.poloAtivo">
-											    <td>{{parte}}</td>
+                                            <tr ng-repeat="envolvido in vm.cmd().poloAtivo">
+											    <td>{{envolvido}}</td>
 											    <td align="right">
                                                     <span class="hint-text small">
-                                                        <a href="#" id="lnkRemoverEnvolvidoPoloAtivo-{{$index}}" ng-click="vm.removerPartePoloAtivo(parte)">Remover</a>
+                                                        <a href="#" id="lnkRemoverEnvolvidoPoloAtivo-{{$index}}" ng-click="vm.removerEnvolvidoPoloAtivo(envolvido)">Remover</a>
                                                     </span>
                                                 </td>
 										    </tr>
@@ -74,8 +86,8 @@
                                 </div>
                             </div>
                         </md-input-container>
-                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid" ng-show="vm.cmd.poloPassivo.length > 0">
-                            <div class="simple-table-container md-whiteframe-4dp">
+                        <md-input-container flex="50" class="md-icon-float flex md-default-theme md-input-invalid">
+                            <div class="simple-table-container md-whiteframe-4dp" ng-show="vm.cmd().poloPassivo.length > 0">
                                 <div class="ms-responsive-table-wrapper">
                                     <table class="simple" ms-responsive-table>
                                         <thead>
@@ -85,11 +97,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="parte in vm.cmd.poloPassivo">
-											    <td>{{parte}}</td>
+                                            <tr ng-repeat="envolvido in vm.cmd().poloPassivo">
+											    <td>{{envolvido}}</td>
 											    <td align="right">
                                                     <span class="hint-text small">
-                                                        <a href="#" id="lnkRemoverEnvolvidoPoloPassivo-{{$index}}" ng-click="vm.removerPartePoloPassivo(parte)">Remover</a>
+                                                        <a href="#" id="lnkRemoverEnvolvidoPoloPassivo-{{$index}}" ng-click="vm.removerEnvolvidoPoloPassivo(envolvido)">Remover</a>
                                                     </span>
                                                 </td>
 										    </tr>
@@ -97,16 +109,6 @@
                                     </table>
                                 </div>
                             </div>
-                        </md-input-container>
-                    </div>
-                    <div layout="row">
-                    	<md-input-container flex="50">
-                            <label>Sigilo *</label>
-                            <md-select ng-model="vm.cmd.sigilo" id="sigilo"">
-                                <md-option ng-repeat="sigilo in vm.sigilos" ng-value="sigilo.nome">
-                                    {{sigilo.descricao}}
-                                </md-option>
-                            </md-select>
                         </md-input-container>
                     </div>
                     <div layout="column">
@@ -117,7 +119,7 @@
                         <input  id="idSelectFilePecas" type="file" name="file" nv-file-select="" uploader="vm.uploader" multiple  ng-class="vm.uploader.isHTML5 ? 'invisible' : ''"/><br/>
                     </div>
                     <div layout="column">
-                        <div class="simple-table-container md-whiteframe-4dp" ng-show="vm.anexos.length > 0">
+                        <div class="simple-table-container md-whiteframe-4dp tabela-anexos" ng-show="vm.anexos.length > 0">
 		                    <div class="table-title">Anexos</div>
                             <div class="ms-responsive-table-wrapper">
                                 <table class="simple" ms-responsive-table>
@@ -136,13 +138,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="anexo in vm.anexos">
+                                        <tr class="linha-anexo" ng-repeat="anexo in vm.anexos">
                                             <td data-ng-click="vm.visualizar(anexo)" class="force-pointer"><strong>{{ anexo.arquivo.file.name }}</strong></td>
                                             <td ng-show="vm.uploader.isHTML5">{{ anexo.arquivo.file.size/1024/1024|number:2 }} MB</td>
-                                            <td ng-show="vm.uploader.isHTML5" ng-class="{'upload-finished': anexo.isUploadConcluido}">
+                                            <td ng-show="vm.uploader.isHTML5" class="coluna-progresso" ng-class="{'upload-finished': anexo.isUploadConcluido}">
                                                 <md-progress-linear ng-show="anexo.arquivo.progress" md-mode="determinate" value="{{anexo.arquivo.progress}}"></md-progress-linear>
                                             </td>
-                                            <td>
+                                            <td class="coluna-tipo-anexo-{{$index}}">
                                                 <div layout="row" flex="grow">
 							                        <md-input-container flex="grow">
 							                        	<md-autocomplete md-items="tipoAnexo in vm.tiposAnexo | filter:buscaTipoAnexo"
@@ -179,8 +181,8 @@
                             </button>
                         </div>
                     </div>
-                    <md-button type="button" id="peticionar" command="vm.cmd" class="md-raised md-accent"
-                        aria-label="Peticionar" ng-click="vm.peticionar()">
+                    <md-button ng-if="vm.idAcao()" type="button" id="{{vm.idAcao()}}" command="vm.cmd()" class="md-raised md-accent"
+                        aria-label="Peticionar" ng-click="vm.peticionar()" stf-processing>
                         Peticionar
                     </md-button>
                 </form>

@@ -2,18 +2,27 @@ import IStateService = angular.ui.IStateService;
 import IDialogService = angular.material.IDialogService;
 import ICookiesService = angular.cookies.ICookiesService;
 import IWindowService = angular.IWindowService;
-import {PeticaoService, PeticionarCommand, Classe, Anexo, AnexoDto, TipoAnexo, Preferencia, Sigilo} from "./peticao.service";
 import peticionamento from "./peticao.module";
+import {PeticaoService, PeticionarCommand, Classe, Anexo, AnexoDto, TipoAnexo, Preferencia, Sigilo} from "./peticao.service";
+
+export interface ChildScope extends ng.IScope {
+    cmd: PeticionarCommand;
+    idAcao: string;
+    enviarPeticao(command: PeticionarCommand): ng.IPromise<{}>;
+    $parent: PeticaoControllerScope;
+}
+
+export interface PeticaoControllerScope extends ng.IScope {
+    child: ChildScope;
+}
 
 export class PeticaoController {
-    
-	public cmd: PeticionarCommand = new PeticionarCommand();
 	
     public preferencias: Array<Preferencia> = new Array<Preferencia>();
     
     public classe: Classe;
-    public partePoloAtivo: string;
-    public partePoloPassivo: string;
+    public envolvidoPoloAtivo: string;
+    public envolvidoPoloPassivo: string;
     
     public anexos: Array<Anexo> = new Array<Anexo>();
     
@@ -22,12 +31,11 @@ export class PeticaoController {
     
     public path = {id: 'novo-processo.peticionamento', translation:'Peticionamento', uisref: 'app.novo-processo.peticionamento', parent: 'novo-processo'};
         
-    static $inject = ["classes", "tiposAnexo", "sigilos", "$window", "$state", "$cookies", "properties", "app.peticionamento.peticoes.PeticaoService", "FileUploader", "messagesService"];
-        
-    /** @ngInject **/
-    constructor(public classes: Array<Classe>, public tiposAnexo: Array<TipoAnexo>, public sigilos: Array<Sigilo>, private $window: IWindowService, private $state: IStateService, private $cookies: ICookiesService, 
-        private properties, private peticaoService: PeticaoService, FileUploader: any, private messagesService: app.support.messaging.MessagesService) { 
-        
+    static $inject = ["$scope", "classes", "tiposAnexo", "sigilos", "$window", "$state", "$cookies", "properties", "app.peticionamento.peticoes.PeticaoService", "FileUploader", "messagesService"];
+    
+    constructor(private $scope: PeticaoControllerScope, public classes: Array<Classe>, public tiposAnexo: Array<TipoAnexo>, public sigilos: Array<Sigilo>, private $window: IWindowService, private $state: IStateService, private $cookies: ICookiesService, 
+        private properties, protected peticaoService: PeticaoService, FileUploader: any, private messagesService: app.support.messaging.MessagesService) {
+
         this.uploader = new FileUploader({
             url: properties.url + ":" + properties.port + "/documents/api/documentos/upload/assinado",
             headers : {"X-XSRF-TOKEN": $cookies.get('access_token'), "Authorization":  'Bearer ' + $cookies.get('access_token')},
@@ -64,6 +72,7 @@ export class PeticaoController {
         this.uploader.onSuccessItem = (arquivo, response, status) => {
             arquivo.anexo.documentoTemporario = response;
             arquivo.anexo.isExcluirServidor = true;
+            arquivo.anexo.isUploadConcluido = true;
             this.anexosMudaram();
         };
         
@@ -106,10 +115,18 @@ export class PeticaoController {
 		};
     }
 
+    public cmd(): PeticionarCommand {
+        return this.$scope.child.cmd;
+    }
+
+    public idAcao(): string {
+        return this.$scope.child.idAcao;
+    }
+
     public classeSelecionada(): void {
-    	this.cmd.classeId = this.classe.sigla;
+    	this.cmd().classeId = this.classe.sigla;
         this.preferencias = this.classe.preferencias;
-   }
+    }
     
     //remove uma peças da petição.
     private removerAnexo(anexo: any): void {
@@ -147,38 +164,45 @@ export class PeticaoController {
     	this.messagesService.error(mensagem);
     }
     
-    public adicionarPartePoloAtivo(): void {
-        for (let i = 0; i < this.cmd.poloAtivo.length; i++){
-            if (this.cmd.poloAtivo[i] == this.partePoloAtivo.toUpperCase()){
-                this.partePoloAtivo = "";
-                this.exibirMensagem("A parte informada já foi adicionada ao polo ativo.");
-                return;
+    public adicionarEnvolvidoPoloAtivo(): void {
+        if (this.envolvidoPoloAtivo) {
+            for (let i = 0; i < this.cmd().poloAtivo.length; i++){
+                if (this.cmd().poloAtivo[i] == this.envolvidoPoloAtivo.toUpperCase()){
+                    this.envolvidoPoloAtivo = "";
+                    this.exibirMensagem("O envolvido informado já foi adicionado ao polo ativo.");
+                    return;
+                }
             }
+            this.cmd().poloAtivo.push(this.envolvidoPoloAtivo.toUpperCase());
+            this.envolvidoPoloAtivo = "";
+        } else {
+            this.messagesService.error('Não foi informado o nome do envolvido do polo ativo.');
         }
-        
-        this.cmd.poloAtivo.push(this.partePoloAtivo.toUpperCase());
-        this.partePoloAtivo = "";
     }
     
-    public removerPartePoloAtivo(indice: number): void {
-        this.cmd.poloAtivo.splice(indice);
+    public removerEnvolvidoPoloAtivo(indice: number): void {
+        this.cmd().poloAtivo.splice(indice);
     }
     
-    public adicionarPartePoloPassivo(): void {
-        for (let i = 0; i < this.cmd.poloPassivo.length; i++){
-            if (this.cmd.poloPassivo[i] == this.partePoloPassivo.toUpperCase()){
-                this.partePoloPassivo = "";        
-                this.exibirMensagem("A parte informada já foi adicionada ao polo passivo.");
-                return;
+    public adicionarEnvolvidoPoloPassivo(): void {
+        if (this.envolvidoPoloPassivo) {
+            for (let i = 0; i < this.cmd().poloPassivo.length; i++){
+                if (this.cmd().poloPassivo[i] == this.envolvidoPoloPassivo.toUpperCase()){
+                    this.envolvidoPoloPassivo = "";        
+                    this.exibirMensagem("O envolvido informado já foi adicionado ao polo passivo.");
+                    return;
+                }
             }
+            
+            this.cmd().poloPassivo.push(this.envolvidoPoloPassivo.toUpperCase());
+            this.envolvidoPoloPassivo = "";
+        } else {
+            this.messagesService.error('Não foi informado o nome do envolvido do polo passivo.');
         }
-        
-        this.cmd.poloPassivo.push(this.partePoloPassivo.toUpperCase());
-        this.partePoloPassivo = "";
     }
     
-    public removerPartePoloPassivo(indice: number): void {
-        this.cmd.poloPassivo.splice(indice);
+    public removerEnvolvidoPoloPassivo(indice: number): void {
+        this.cmd().poloPassivo.splice(indice);
     }
     
     private anexosMudaram(): void {
@@ -188,7 +212,7 @@ export class PeticaoController {
         	return new AnexoDto(anexo.tipo ? anexo.tipo.id : null, anexo.documentoTemporario);
         });
         
-        this.cmd.anexos = anexos;
+        this.cmd().anexos = anexos;
     }
     
     public peticionar(): ng.IPromise<any> {        
@@ -201,20 +225,21 @@ export class PeticaoController {
             }
         }
         
-        if (erro != ""){
+        if (erro != "") {
             this.exibirMensagem(erro);
             return;    
         } 
-                
-//        let peticao: IPeticao = this.criarPeticao();
-        return this.peticaoService.enviarPeticao(this.cmd).then(() => {
-            this.$state.go('app.tarefas.minhas-tarefas');
+
+        return this.enviarPeticao(this.cmd()).then(() => {
+            this.messagesService.success('Petição enviada com sucesso.');
+            return this.$state.go('app.tarefas.minhas-tarefas');
         });
     }
-    
-//    private criarPeticao(): IPeticao {
-//        return new Peticao(this.classe.sigla, this.partesPoloAtivo, this.partesPoloPassivo, this.anexos, this.preferenciasSelecionadas.map((p) => p.id));
-//    }
+
+    private enviarPeticao(command: PeticionarCommand): ng.IPromise<any> {
+        return this.$scope.child.enviarPeticao(command);
+    }
+
 }
 
 peticionamento.controller('app.peticionamento.peticoes.PeticaoController', PeticaoController);

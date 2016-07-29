@@ -4,7 +4,7 @@ import {PeticionamentoPage} from "./pages/peticionamento.page";
 
 import support = require('./shared/helpers/support');
 
-describe("Peticionamento - Advogado", () => {
+describe("Peticionamento - Órgão", () => {
 
     let loginPage: LoginPage = new LoginPage();
     let principalPage: PrincipalPage = new PrincipalPage();
@@ -12,28 +12,32 @@ describe("Peticionamento - Advogado", () => {
     
     it ('Deveria logar no sistema', () => {
         loginPage.open();
-        loginPage.login('peticionador', '123');
+        loginPage.login('representante', '123');
     });
     
-    it ('Deveria acessar o novo processo de peticionamento', () => {
-        principalPage.iniciarProcessoPorNome('Nova Petição');
+    it ('Deveria acessar o novo processo de peticionamento com Representação de Órgão', () => {
+        principalPage.iniciarProcessoPorNome('Nova Petição com Representação de Órgão');
     });
-    
+
+    it("Deveria escolher o órgão de representação", () => {
+        peticionamentoPage.selecionarOrgaoPeticionador("Tribunal Superior do Trabalho");
+    });
+
     it("Deveria preencher as informações básicas da petição", () => {
-        peticionamentoPage.selecionarClassePeticionavel("HABEAS CORPUS");
-        peticionamentoPage.selecionarPreferencias("Medida Liminar", "Réu Preso");
+        peticionamentoPage.selecionarClassePeticionavel("MANDADO DE SEGURANÇA");
+        peticionamentoPage.selecionarPreferencias("Réu Preso", "Medida Liminar");
         peticionamentoPage.selecionarSigilo("Público");
     });
 
     it('Deveria preencher as informações das partes', () => {
-        peticionamentoPage.informarEnvolvidoPoloAtivo("Fulano");
-        peticionamentoPage.informarEnvolvidoPoloPassivo("Beltrano");
+        peticionamentoPage.informarEnvolvidoPoloAtivo("Maria");
+        peticionamentoPage.informarEnvolvidoPoloPassivo("João");
 
         peticionamentoPage.excluirEnvolvidoPoloAtivo(0);
         peticionamentoPage.excluirEnvolvidoPoloPassivo(0);
 
-        peticionamentoPage.informarEnvolvidoPoloAtivo("Fulano");
-        peticionamentoPage.informarEnvolvidoPoloPassivo("Beltrano");
+        peticionamentoPage.informarEnvolvidoPoloAtivo("Mariana");
+        peticionamentoPage.informarEnvolvidoPoloPassivo("Joana");
     });
 
     it('Deveria fazer o upload dos anexos', () => {
@@ -44,7 +48,7 @@ describe("Peticionamento - Advogado", () => {
         peticionamentoPage.aguardarUploadConcluido(1);
 
         peticionamentoPage.selecionarTipoAnexo(0, "Petição inicial");
-        peticionamentoPage.selecionarTipoAnexo(1, "Ato coator");
+        peticionamentoPage.selecionarTipoAnexo(1, "Informação");
 
         peticionamentoPage.excluirAnexos();
 
@@ -55,7 +59,7 @@ describe("Peticionamento - Advogado", () => {
     });
 
     it('Deveria peticionar', () => {
-        peticionamentoPage.peticionarAdvogado();
+        peticionamentoPage.peticionarOrgao();
 
         expect(principalPage.exibiuMensagemSucesso()).toBeTruthy();
     });
