@@ -7,6 +7,8 @@ services:
       file: shared/compose/common.yml
       service: peticionamento
     image: stfdigital-autuacao-peticionamento
+    environment:
+     - spring.profiles.active=development,e2e
     depends_on:
      - rabbit
      - discovery
