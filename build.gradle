@@ -145,12 +145,6 @@ jacoco {
     toolVersion = '0.7.7.201606060606'
 }
 
-test {
-	testLogging {
-		showStandardStreams = true
-	}
-}
-
 node {
   // Version of node to use.
   version = '5.9.1'
