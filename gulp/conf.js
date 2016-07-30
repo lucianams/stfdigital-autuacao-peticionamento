@@ -20,7 +20,9 @@ exports.paths = {
     dist: './src/main/resources/public',
     test: './src/test/ui',
     e2e : './src/test/ui/e2e',
-    unit: './src/test/ui/unit'
+    unit: './src/test/ui/unit',
+    bin: './bin/public',
+    tmp: './.tmp'
 };
 
 /**
