@@ -86,8 +86,19 @@ namespace app.support {
 		.module('app.support.command')
 		.service('commandService', CommandServiceMock);
     
+    class MessagesService {
+    	public error(message: string): void {
+    		
+    	}
+    	
+    	public success(message: string): void {
+    		
+    	}
+    }
+    
 	angular
 	    .module('app.support.messaging', [])
+	    .service('messagesService', MessagesService)
 	    .config(config);
 
 	angular
