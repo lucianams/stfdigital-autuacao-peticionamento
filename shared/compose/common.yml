@@ -25,7 +25,7 @@ services:
      - ONLYOFFICE_PORT_443_TCP=tcp://10.112.20.123:443
   onlyoffice: # Container rodando o onlyoffice de verdade
     container_name: onlyoffice
-    image: supremotribunalfederal/onlyofficeds
+    image: supremotribunalfederal/onlyoffice:4.x
     stdin_open: true
     mem_limit: 2000000000
     ports:
