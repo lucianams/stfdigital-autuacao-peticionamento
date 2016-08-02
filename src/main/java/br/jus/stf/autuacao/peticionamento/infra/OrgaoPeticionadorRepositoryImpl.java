@@ -38,6 +38,7 @@ public class OrgaoPeticionadorRepositoryImpl extends SimpleJpaRepository<OrgaoPe
         this.entityManager = entityManager;
     }
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<OrgaoPeticionador> findOrgaoRepresentados(boolean verificarPerfil) {
 		//String gestorCadastro = "gestor-cadastro";
