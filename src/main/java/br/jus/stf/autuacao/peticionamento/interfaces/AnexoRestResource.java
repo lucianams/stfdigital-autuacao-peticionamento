@@ -31,11 +31,14 @@ public class AnexoRestResource {
 	@Autowired
 	private TipoAnexoDtoAssembler tipoAnexoDtoAssembler;
 	
+	/**
+	 * @return
+	 */
 	@ApiOperation("Retorna os tipos de anexo possíveis para um anexo.")
 	@RequestMapping(value = "/tipos", method = RequestMethod.GET)
 	public List<TipoAnexoDto> tipos() {
 		return tipoAnexoRepository.findAll().stream()
-				.map((ta) -> tipoAnexoDtoAssembler.toDto(ta)).collect(Collectors.toList());
+				.map(tipoAnexoDtoAssembler::toDto).collect(Collectors.toList());
 	}
 	
 }

@@ -98,16 +98,23 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 	public void listarOrgaosPeticionadoresConformeAssociado() throws Exception {
 		loadDataTests("cadastrarAssociado-limpar.sql", "cadastrarAssociado.sql");
 		
-		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=false"));
+		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos").param("verificarPerfil", "false"));
         
         result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
 	}
 	
 	@Test
 	public void listarOrgaosPeticionadoresVerificandoPerfil() throws Exception {
-		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos/?verificarPerfil=true"));
+		ResultActions result = mockMvc.perform(get("/api/peticoes/orgaos").param("verificarPerfil", "true"));
         
         result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(35)));
+	}
+	
+	@Test
+	public void consultarSigilos() throws Exception {
+		ResultActions result = mockMvc.perform(get("/api/peticoes/sigilos"));
+        
+        result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)));
 	}
     
 }

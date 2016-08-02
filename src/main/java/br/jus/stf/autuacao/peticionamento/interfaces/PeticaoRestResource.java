@@ -105,6 +105,9 @@ public class PeticaoRestResource {
 		return orgaos.stream().map(orgaoDtoAssembler::toDto).collect(toList());
 	}
  
+	/**
+	 * @return
+	 */
 	@RequestMapping(value="/sigilos", method = RequestMethod.GET)
     public List<SigiloDto> consultarSigilos(){
     	return Arrays.asList(Sigilo.values()).stream().map(sigilo -> new SigiloDto(sigilo.toString(), sigilo.descricao())).collect(Collectors.toList());
