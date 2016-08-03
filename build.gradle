@@ -128,18 +128,6 @@ dependencies {
     testCompile("br.jus.stf.digital:test:${stfdigitalTestVersion}")
 }
 
-import org.gradle.plugins.ide.eclipse.model.SourceFolder 
-eclipse.classpath.file {
-    beforeMerged { classpath -> 
-        classpath.entries.clear()
-    }
-    whenMerged {  cp -> 
-        cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/main/") }*.output = "bin/main" 
-        cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }*.output = "bin/test" 
-        cp.entries.removeAll { it.kind == "output" }
-    }
-}
-
 // Cobertura de testes
 jacoco {
     toolVersion = '0.7.7.201606060606'
