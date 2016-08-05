@@ -20,6 +20,7 @@
     <logger name="org.springframework.remoting" level="WARN"/>
     <logger name="org.springframework.scheduling" level="WARN"/>
     <logger name="org.springframework.messaging" level="WARN"/>
+    <logger name="org.springframework.cloud.config" level="WARN"/>
     <logger name="org.activiti.engine" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.hibernate.SQL" level="WARN"/>

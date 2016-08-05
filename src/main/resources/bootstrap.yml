@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: peticionamento
+  cloud:
+    config:
+      uri: http://discovery:8761
