@@ -8,7 +8,7 @@ services:
       service: peticionamento
     image: stfdigital-autuacao-peticionamento
     environment:
-     - spring.profiles.active=development,e2e
+     - spring.profiles.active=development,docker,e2e
     depends_on:
      - rabbit
      - discovery
