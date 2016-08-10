@@ -34,10 +34,26 @@ services:
      - SSL_CERTIFICATE_PATH=/certs/docker/onlyoffice.crt
      - SSL_KEY_PATH=/certs/docker/onlyoffice.key
      - SSL_DHPARAM_PATH=/certs/docker/dhparam.pem
+# Stack ELK para log
+  elk:
+    container_name: elk
+    image: supremotribunalfederal/stfdigital-plataforma-logging-elk
+    ports:
+     - "5601:5601"
+     - "9200:9200"
+     - "5044:5044"
+     - "5000:5000"
+  filebeat:
+    container_name: filebeat
+    image: supremotribunalfederal/stfdigital-plataforma-logging-filebeat
+    volumes:
+     - logs:/logs
 # Serviços da plataforma
   discovery:
     container_name: discovery
     image: supremotribunalfederal/stfdigital-plataforma-discovery
+    volumes:
+     - logs:/logs
     ports:
      - "8761:8761"
      - "47961:${JAVA_DEBUG_PORT}"
@@ -47,6 +63,8 @@ services:
   documents:
     container_name: documents
     image: supremotribunalfederal/stfdigital-plataforma-documents
+    volumes:
+     - logs:/logs
     ports:
      - "8094:8094"
      - "8194:8194"
@@ -60,6 +78,8 @@ services:
   gateway:
     container_name: gateway
     image: supremotribunalfederal/stfdigital-plataforma-gateway
+    volumes:
+     - logs:/logs
     ports:
      - "8765:8765"
      - "47965:${JAVA_DEBUG_PORT}"
@@ -69,6 +89,8 @@ services:
   services:
     container_name: services
     image: supremotribunalfederal/stfdigital-plataforma-services
+    volumes:
+     - logs:/logs
     ports:
      - "8081:8081"
      - "8181:8181"
@@ -87,6 +109,8 @@ services:
   userauthentication:
     container_name: userauthentication
     image: supremotribunalfederal/stfdigital-plataforma-userauthentication
+    volumes:
+     - logs:/logs
     ports:
      - "8095:8095"
      - "8195:8195"
@@ -99,6 +123,8 @@ services:
   autuacao:
     container_name: autuacao
     image: supremotribunalfederal/stfdigital-autuacao-autuacao
+    volumes:
+     - logs:/logs
     ports:
      - "8092:8092"
      - "8192:8192"
@@ -110,6 +136,8 @@ services:
   distribuicao:
     container_name: distribuicao
     image: supremotribunalfederal/stfdigital-autuacao-distribuicao
+    volumes:
+     - logs:/logs
     ports:
      - "8093:8093"
      - "8193:8193"
@@ -121,6 +149,8 @@ services:
   peticionamento:
     container_name: peticionamento
     image: supremotribunalfederal/stfdigital-autuacao-peticionamento
+    volumes:
+     - logs:/logs
     ports:
      - "8090:8090"
      - "8190:8190"
@@ -132,6 +162,8 @@ services:
   recebimento:
     container_name: recebimento
     image: supremotribunalfederal/stfdigital-autuacao-recebimento
+    volumes:
+     - logs:/logs
     ports:
      - "8091:8091"
      - "8191:8191"

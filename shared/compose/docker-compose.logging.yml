@@ -1,0 +1,13 @@
+# Define a configuração para ativar o mecanismo de logging
+version: '2'
+services:
+  elk:
+    extends:
+      file: shared/compose/common.yml
+      service: elk
+  filebeat:
+    extends:
+      file: shared/compose/common.yml
+      service: filebeat
+    depends_on:
+     - elk
