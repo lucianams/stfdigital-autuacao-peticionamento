@@ -61,6 +61,7 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
 	}
 
 	@Test
+	@WithMockOauth2User(value = "peticionador", components = "peticionar")
     public void registrarUmaPeticao() throws Exception {
         String peticaoValida = "{\"classeId\":\"ADI\", \"preferencias\":[3,8], \"poloAtivo\": [\"Maria\", \"João\"], \"poloPassivo\": [\"Antônia\"], \"anexos\": [{\"documentoId\":\"@idDocTemp\", \"tipoDocumentoId\":1}], \"sigilo\":\"PUBLICO\", \"tipoProcesso\":\"ORIGINARIO\"}";
         ResultActions result = mockMvc.perform(post("/api/peticoes").contentType(APPLICATION_JSON).content(peticaoValida.replaceAll("@idDocTemp", idDocTemp)));
@@ -69,6 +70,7 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
     }
 	
 	@Test
+	@WithMockOauth2User(value = "peticionador", components = "peticionar-orgao")
     public void registrarUmaPeticaoComRepresentacao() throws Exception {
 		loadDataTests("cadastrarAssociado-limpar.sql", "cadastrarAssociado.sql");
 		
@@ -79,6 +81,7 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
     }
 	
 	@Test
+	@WithMockOauth2User(value = "peticionador", components = "peticionar")
     public void naoDeveRegistrarUmaPeticaoInvalida() throws Exception {
         String peticaoInvalida = "{\"classeId\":\"\", \"envolvidos\": [{\"ativo\":[1, 2]}, {\"passivo\":[3, 4]}], \"anexos\": [{\"documento\":1, \"tipo\":1}]}";
         
