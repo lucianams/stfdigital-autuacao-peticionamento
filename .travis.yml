@@ -22,7 +22,6 @@ cache:
 before_install:
 - ./shared/scripts/upgrade-docker.sh
 - mkdir -p $HOME/docker_cache
-- sudo killall mongod
 install: docker load -i $HOME/docker_cache/docker.tar || true
 script: gradle docker --refresh-dependencies && gradle gulpTestUnit && ./shared/scripts/test-e2e.sh
 after_success:
