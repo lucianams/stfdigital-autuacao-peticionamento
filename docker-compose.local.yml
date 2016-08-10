@@ -1,5 +1,8 @@
 # Define a configuração para rodar com imagens locais
 version: '2'
+volumes:
+  logs:
+    driver: local
 services:
   rabbit:
     extends:
