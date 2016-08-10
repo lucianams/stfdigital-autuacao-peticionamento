@@ -47,3 +47,5 @@ src/test/ui/unit/app/shared
 build
 bin
 data
+
+logs

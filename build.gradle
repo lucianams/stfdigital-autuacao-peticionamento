@@ -13,6 +13,7 @@ buildscript {
         jacksonVersion = '2.8.1'
         jacksonMapperVersion = '1.9.13'
         swaggerVersion = '1.0.2'
+        logstashLogbackEncoderVersion = '4.7'
         guavaVersion = '19.0'
         flywayVersion = '4.0.3'
         jnaVersion = '4.1.0'
@@ -112,6 +113,8 @@ dependencies {
     compile("org.codehaus.jackson:jackson-mapper-asl:${jacksonMapperVersion}")
         
     compile("com.mangofactory:swagger-springmvc:${swaggerVersion}")
+    
+    compile("net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}")
     
     compile("br.jus.stf.digital:core:${stfdigitalCoreVersion}")
     

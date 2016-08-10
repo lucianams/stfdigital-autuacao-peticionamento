@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+	<springProperty name="appName" source="spring.application.name"/>
+	
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-            <pattern>%date{HH:mm:ss.SSS} %-5level [%logger] %message%n</pattern>
+			<pattern>%date{HH:mm:ss.SSS} %-5level [%logger] %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/${appName}/application.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/${appName}/application.log.%d{yyyy-MM-dd}</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+			<customFields>{"app_name":"${appName}"}}</customFields>
 		</encoder>
 	</appender>
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="JSON" />
 	</root>
 	
     <logger name="org.springframework.security" level="WARN"/>
