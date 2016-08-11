@@ -3,4 +3,4 @@ spring:
     name: peticionamento
   cloud:
     config:
-      uri: http://discovery:8761
+      uri: http://discovery:8761/configuration
