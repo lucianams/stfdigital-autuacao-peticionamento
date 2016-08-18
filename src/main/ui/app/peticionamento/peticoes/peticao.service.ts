@@ -131,8 +131,8 @@ export class PeticaoService {
 
     /** @ngInject **/
     constructor(private $http: IHttpService, private properties: app.support.constants.Properties, private commandService: cmd.CommandService) {
-    	commandService.setValidator("peticionar", new ValidadorPeticionamentoAdvogado());
-        commandService.setValidator("peticionar-orgao", new ValidadorPeticionamentoOrgao());
+    	commandService.addValidator("peticionar", new ValidadorPeticionamentoAdvogado());
+        commandService.addValidator("peticionar-orgao", new ValidadorPeticionamentoOrgao());
     }
 
     public enviarPeticaoAdvogado(peticionarCommand: PeticionarCommand): IPromise<any> {
@@ -183,7 +183,7 @@ export class PeticaoService {
 
 class ValidadorPeticionamentoAdvogado implements cmd.CommandValidator {
     
-    constructor() {}
+	constructor() {}
     
     public isValid(command: PeticionarCommand): boolean {
         if (command.poloAtivo.length > 0 &&
@@ -200,7 +200,7 @@ class ValidadorPeticionamentoAdvogado implements cmd.CommandValidator {
 
 class ValidadorPeticionamentoOrgao implements cmd.CommandValidator {
     
-    constructor() {}
+	constructor() {}
     
     public isValid(command: PeticionarOrgaoCommand): boolean {
         if (command.poloAtivo.length > 0 &&
