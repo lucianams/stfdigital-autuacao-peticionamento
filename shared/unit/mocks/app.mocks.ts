@@ -79,7 +79,7 @@ namespace app.support {
 		.config(config);
 
     class CommandServiceMock {
-    	setValidator(){}
+    	addValidator(){}
     }
     
     angular
