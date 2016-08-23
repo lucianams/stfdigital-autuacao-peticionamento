@@ -59,7 +59,7 @@ public class Evento extends EntitySupport<Evento, Long> {
 		catch (IOException e) {
 			throw new IllegalArgumentException(String.format("Não foi possível converter o objeto: %s", detalhes), e);
 		}
-		this.tipo = detalhes.getClass().getSimpleName();
+		this.tipo = detalhes.getClass().getName();
 		criacao = new Date();
 	}
 
@@ -68,6 +68,14 @@ public class Evento extends EntitySupport<Evento, Long> {
 	 */
 	public Date criacao() {
 		return criacao;
+	}
+	
+	public String tipo() {
+		return tipo;
+	}
+	
+	public String detalhes() {
+		return detalhes;
 	}
 	
 	@Override
