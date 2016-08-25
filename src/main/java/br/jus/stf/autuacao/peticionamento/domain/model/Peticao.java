@@ -180,6 +180,20 @@ public class Peticao extends EntitySupport<Peticao, ProtocoloId> implements Aggr
 	public TipoProcesso tipoProcesso() {
 		return tipoProcesso;
 	}
+	
+	/**
+	 * @return
+	 */
+	public ClassePeticionavel classe() {
+		return classe;
+	}
+	
+	/**
+	 * @return
+	 */
+	public Sigilo sigilo() {
+		return sigilo;
+	}
     
 	@Override
 	public ProtocoloId identity() {

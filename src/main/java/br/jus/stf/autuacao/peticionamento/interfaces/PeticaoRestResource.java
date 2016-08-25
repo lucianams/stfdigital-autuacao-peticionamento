@@ -28,6 +28,8 @@ import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.EnvolvidoDtoAssembler;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.OrgaoPeticionadorDto;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.OrgaoPeticionadorDtoAssembler;
+import br.jus.stf.autuacao.peticionamento.interfaces.dto.PeticaoDto;
+import br.jus.stf.autuacao.peticionamento.interfaces.dto.PeticaoDtoAssembler;
 import br.jus.stf.autuacao.peticionamento.interfaces.dto.SigiloDto;
 import br.jus.stf.core.shared.processo.Sigilo;
 import br.jus.stf.core.shared.protocolo.ProtocoloId;
@@ -56,6 +58,9 @@ public class PeticaoRestResource {
     
     @Autowired
     private OrgaoPeticionadorDtoAssembler orgaoDtoAssembler;
+    
+    @Autowired
+    private PeticaoDtoAssembler peticaoDtoAssembler;
 
     /**
      * @param command
@@ -111,6 +116,15 @@ public class PeticaoRestResource {
 	@RequestMapping(value="/sigilos", method = RequestMethod.GET)
     public List<SigiloDto> consultarSigilos(){
     	return Arrays.asList(Sigilo.values()).stream().map(sigilo -> new SigiloDto(sigilo.toString(), sigilo.descricao())).collect(Collectors.toList());
+    }
+	
+	/**
+     * @param id
+     * @return
+     */
+    @RequestMapping(value="/{protocoloId}", method = RequestMethod.GET)
+    public PeticaoDto consultarPeticao(@PathVariable("protocoloId") Long id){
+    	return  peticaoDtoAssembler.toDto(peticaoRepository.findOne(new ProtocoloId(id)));
     }
     
 }

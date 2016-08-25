@@ -91,7 +91,7 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
     }
 	
 	@Test
-    public void consultarPeticaoOriginaria() throws Exception {
+    public void consultarEnvolvidosPeticaoOriginaria() throws Exception {
 		loadDataTests("peticaoOriginario-limpar.sql", "peticaoOriginario.sql");
 		
     	mockMvc.perform(get("/api/peticoes/9002/envolvidos")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
@@ -119,5 +119,12 @@ public class PeticaoOriginarioIntegrationTests extends IntegrationTestsSupport {
         
         result.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)));
 	}
+	
+	@Test
+    public void consultarPeticaoOriginaria() throws Exception {
+		loadDataTests("peticaoOriginario-limpar.sql", "peticaoOriginario.sql");
+		
+    	mockMvc.perform(get("/api/peticoes/9002")).andExpect(status().isOk()).andExpect(jsonPath("$.envolvidos", hasSize(3)));
+    }
     
 }
