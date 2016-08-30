@@ -9,6 +9,9 @@ import br.jus.stf.core.shared.eventos.EnvolvidoRegistrado;
 import br.jus.stf.core.shared.eventos.PeticaoRegistrada;
 
 /**
+ * Configuração do mecanismo que será usado pelo serviço para 
+ * publicação e/ou recebimento de eventos de domínio.
+ * 
  * @author Rodrigo Barreiros
  * 
  * @since 1.0.0
@@ -26,8 +29,7 @@ public class StreamConfigurer extends StreamConfigurerSupport {
 	}
 	
 	/**
-	 * Configuração dos canais que serão usados pelo serviço de peticionamento
-	 * para publicação de eventos de domínio.
+	 * Declaração dos canais mencionados acima.
 	 * 
 	 * @author Rodrigo Barreiros
 	 * 
