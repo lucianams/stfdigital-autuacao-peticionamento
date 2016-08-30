@@ -6,5 +6,5 @@ ADD app-additional-layer/BOOT-INF/lib /app/BOOT-INF/lib/
 ADD app-layer/BOOT-INF/classes/ /app/BOOT-INF/classes/
 ADD app-layer/META-INF/ /app/META-INF/
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-ADD truststore.jks truststores/truststore.jks
+ADD truststore.jks shared/truststores/truststore.jks
 ENTRYPOINT ["/docker-entrypoint.sh"]
