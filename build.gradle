@@ -8,7 +8,7 @@ buildscript {
         gradleGulpPluginVersion = '0.12'
         sonarqubeGradlePluginVersion = '2.0.1'
         
-        springCloudReleaseTrainVersion = 'Brixton.SR4'
+        springCloudReleaseTrainVersion = 'Brixton.SR5'
         apacheCommonsVersion = '3.3.2'
         jacksonVersion = '2.8.1'
         jacksonMapperVersion = '1.9.13'
@@ -235,6 +235,6 @@ dockerPrepare {
 docker {
     name dockerImageName + (dockerImageTag ? ':' + dockerImageTag : '')
     dockerfile 'src/main/docker/Dockerfile'
-    files 'src/main/docker/docker-entrypoint.sh', 'truststores/truststore.jks'
+    files 'src/main/docker/docker-entrypoint.sh', 'shared/truststores/truststore.jks'
     dependsOn tasks.jar, tasks.bootRepackage, tasks.build
 }
