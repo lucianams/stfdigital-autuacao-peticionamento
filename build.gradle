@@ -135,6 +135,8 @@ dependencies {
     testCompile("org.springframework.security:spring-security-test")
     
     testCompile("br.jus.stf.digital:test:${stfdigitalTestVersion}")
+    
+    testCompile("org.springframework.cloud:spring-cloud-stream-test-support")
 
 }
 
