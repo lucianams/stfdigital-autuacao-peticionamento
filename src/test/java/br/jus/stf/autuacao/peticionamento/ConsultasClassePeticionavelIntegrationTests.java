@@ -24,7 +24,7 @@ public class ConsultasClassePeticionavelIntegrationTests extends IntegrationTest
 	
 	@Test
 	public void listarClassesPeticionaveis() throws Exception{
-		mockMvc.perform(get("/api/classes-peticionaveis")).andExpect(status().isOk())
+		mockMvc.perform(get("/api/classes")).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(26)));
 	}
 
