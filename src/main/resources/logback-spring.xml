@@ -17,6 +17,7 @@
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+			<provider class="net.logstash.logback.composite.loggingevent.ArgumentsJsonProvider"/>
 			<customFields>{"app_name":"${appName}"}}</customFields>
 		</encoder>
 	</appender>
@@ -54,7 +55,11 @@
     <logger name="org.springframework.jdbc" level="WARN"/>
     <logger name="io.undertow" level="WARN"/>
     <logger name="org.xnio" level="WARN"/>
-    <logger name="com.netflix.discovery" level="WARN"/>    
+    <logger name="com.netflix.discovery" level="WARN"/>
+    
+    <logger name="br.jus.stf.core.framework.monitoring.RequestTraceReporter" level="TRACE" additivity="false">
+        <appender-ref ref="JSON"/>
+    </logger>
     
 </configuration>
 
