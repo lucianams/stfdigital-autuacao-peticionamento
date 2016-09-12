@@ -119,7 +119,7 @@ export class PeticaoService {
     private static apiOrgaosPeticionadores: string = '/peticionamento/api/peticoes/orgaos';
     
     //Endereço do serviço de classes peticionáveis.
-    private static servicoClassePeticionavel: string = '/peticionamento/api/classes-peticionaveis';
+    private static servicoClassePeticionavel: string = '/peticionamento/api/classes';
     
     private static servicoTiposAnexo: string = '/peticionamento/api/anexos/tipos';
     
