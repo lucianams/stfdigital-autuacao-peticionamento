@@ -20,8 +20,8 @@ import br.jus.stf.autuacao.peticionamento.interfaces.dto.ClassePeticionavelDtoAs
  *
  */
 @RestController
-@RequestMapping("/api/classes-peticionaveis")
-public class ClassePeticionavelRestResource {
+@RequestMapping("/api/classes")
+public class ClasseRestResource {
 	
 	@Autowired
 	private ClassePeticionavelRepository classePeticionavelRepository;
