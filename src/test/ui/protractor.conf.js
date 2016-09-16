@@ -15,7 +15,8 @@ exports.config = {
 
   // Capabilities to be passed to the webdriver instance.
   capabilities: {
-	  'browserName': 'chrome'
+	  'browserName': 'chrome', 
+	  'chromeOptions': { 'args' : ['no-sandbox']}
   },
   
   framework: 'jasmine2',
