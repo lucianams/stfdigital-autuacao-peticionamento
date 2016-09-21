@@ -49,3 +49,6 @@ bin
 data
 
 logs
+
+# WebStorm
+.idea
