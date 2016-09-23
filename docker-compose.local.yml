@@ -43,16 +43,16 @@ services:
     depends_on:
      - rabbit
      - discovery
-  mongo:
+  cassandra:
     extends:
       file: shared/compose/common.yml
-      service: mongo
+      service: cassandra
   documents:
     extends:
       file: shared/compose/common.yml
       service: documents
     image: stfdigital-plataforma-documents
     depends_on:
-     - mongo
+     - cassandra
      - rabbit
      - discovery

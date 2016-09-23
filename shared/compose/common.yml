@@ -11,11 +11,11 @@ services:
     ports:
      - "${RABBIT_OUT_NODE_PORT}:5672"
      - "${RABBIT_OUT_DIST_PORT}:15672"
-  mongo:
-    container_name: mongo
-    image: mongo:3
+  cassandra:
+    container_name: cassandra
+    image: cassandra:2.1
     ports:
-     - "27017:27017"
+     - "9042:9042"
   onlyoffice_ambassador: # Ambassador apontando para um servidor onlyoffice corporativo
     container_name: onlyoffice
     image: svendowideit/ambassador
