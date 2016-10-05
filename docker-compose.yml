@@ -21,7 +21,7 @@ services:
   services:
     extends:
       file: shared/compose/common.yml
-      service: services
+      service: processos
     depends_on:
      - rabbit
      - discovery

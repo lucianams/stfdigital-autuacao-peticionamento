@@ -23,8 +23,8 @@ services:
   services:
     extends:
       file: shared/compose/common.yml
-      service: services
-    image: stfdigital-plataforma-services
+      service: processos
+    image: stfdigital-plataforma-processos
     depends_on:
      - rabbit
      - discovery
