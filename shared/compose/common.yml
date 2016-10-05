@@ -86,7 +86,7 @@ services:
     environment:
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
-  services:
+  processos:
     container_name: processos
     image: supremotribunalfederal/stfdigital-plataforma-processos
     volumes:
