@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @since 1.0.0
  * @since 01.07.2016
  */
-@FeignClient(name = "services")
+@FeignClient(name = "processos")
 public interface ProtocoloRestClient {
 
 	/**
