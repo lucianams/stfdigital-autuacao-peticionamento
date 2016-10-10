@@ -8,7 +8,7 @@ buildscript {
         gradleGulpPluginVersion = '0.12'
         sonarqubeGradlePluginVersion = '2.0.1'
         
-        springCloudReleaseTrainVersion = 'Brixton.SR5'
+        springCloudReleaseTrainVersion = 'Brixton.SR6'
         apacheCommonsVersion = '3.3.2'
         jacksonVersion = '2.8.1'
         jacksonMapperVersion = '1.9.13'
