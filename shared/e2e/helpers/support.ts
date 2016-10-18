@@ -1,6 +1,6 @@
 namespace support {
     export function printBrowserLogs() {
-        browser.manage().logs().get('browser').then(function(browserLogs) {
+        browser.manage().logs().get("browser").then(function(browserLogs) {
             browserLogs.forEach(function(log){
                 console.log(log.message);
             });

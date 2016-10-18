@@ -22,7 +22,7 @@ services:
     ports:
      - "443:443"
     environment:
-     - ONLYOFFICE_PORT_443_TCP=tcp://10.112.20.123:443
+     - ONLYOFFICE_PORT_443_TCP=tcp://${ONLYOFFICE_ADDRESS}:443
   onlyoffice: # Container rodando o onlyoffice de verdade
     container_name: onlyoffice
     image: supremotribunalfederal/onlyoffice:4.x
@@ -73,7 +73,7 @@ services:
      - spring.profiles.active=${JAVA_SERVICE_SPRING_PROFILES}
      - JAVA_OPTS=${JAVA_DEBUG_OPTS} ${JAVA_SERVICE_OPTS}
      - eureka.instance.ip-address=${DOCKER_IP_ADDRESS}
-     - onlyoffice.documentserver.host=gateway
+     - onlyoffice.documentserver.host=${HOST_ADDRESS}
      - onlyoffice.server.address=https://docker:443
   gateway:
     container_name: gateway
@@ -104,9 +104,9 @@ services:
     image: supremotribunalfederal/stfdigital-plataforma-ui
     ports:
      - "8443:8443"
-  userauthentication:
-    container_name: userauthentication
-    image: supremotribunalfederal/stfdigital-plataforma-userauthentication
+  identidades:
+    container_name: identidades
+    image: supremotribunalfederal/stfdigital-plataforma-identidades
     volumes:
      - logs:/logs
     ports:

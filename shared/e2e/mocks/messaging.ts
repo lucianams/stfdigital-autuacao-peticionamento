@@ -13,35 +13,41 @@ declare var angular;
  */
 function messagingModuleDefineFunction() {
 
-	let mockMessagingModule = angular.module('e2e.mocks.messaging', ['app.support.messaging']);
+    let mockMessagingModule = angular.module("e2e.mocks.messaging", ["app.support.messaging"]);
 
-	let mockMessagesService = ['$delegate', '$q', '$interval', ($delegate, $q, $interval) => {
-		$delegate.success = (message: string) => {
-			let el = $('<md-toast md-theme="success-toast" class="ng-scope _md _md-bottom _md-right md-success-toast-theme"><div class="md-toast-content"><span flex="" class="md-toast-text ng-binding flex" role="alert" aria-relevant="all" aria-atomic="true">' + message + '</span></div></md-toast>');
-			$('body').prepend(el);
-			$interval(() => {
-				el.remove();
-  			}, 3000, 1);
-		};
+    let mockMessagesService = ["$delegate", "$q", "$interval", ($delegate, $q, $interval) => {
+        $delegate.success = (message: string) => {
+            let el = $(`<md-toast md-theme="success-toast"
+ class="ng-scope _md _md-bottom _md-right md-success-toast-theme">
+ <div class="md-toast-content"><span flex="" class="md-toast-text ng-binding flex"
+ role="alert" aria-relevant="all" aria-atomic="true">${message}</span></div></md-toast>`);
+            $("body").prepend(el);
+            $interval(() => {
+                el.remove();
+            }, 3000, 1);
+        };
 
-		$delegate.error = (message: string) => {
-			let el = $('<md-toast md-theme="error-toast" class="ng-scope _md _md-bottom _md-right md-error-toast-theme"><div class="md-toast-content"><span flex="" class="md-toast-text ng-binding flex" role="alert" aria-relevant="all" aria-atomic="true">' + message + '</span></div></md-toast>');
-			$('body').prepend(el);
-			$interval(() => {
-				el.remove();
-  			}, 3000, 1);
-		};
+        $delegate.error = (message: string) => {
+            let el = $(`<md-toast md-theme="error-toast"
+ class="ng-scope _md _md-bottom _md-right md-error-toast-theme"><div class="md-toast-content">
+ <span flex="" class="md-toast-text ng-binding flex" role="alert" aria-relevant="all"
+  aria-atomic="true">" + message + "</span></div></md-toast>`);
+            $("body").prepend(el);
+            $interval(() => {
+                el.remove();
+            }, 3000, 1);
+        };
 
-		return $delegate;
-	}];
+        return $delegate;
+    }];
 
-	mockMessagingModule.config(['$provide', ($provide) => {
-		$provide.decorator('messagesService', mockMessagesService);
-	}]);
+    mockMessagingModule.config(["$provide", ($provide) => {
+        $provide.decorator("messagesService", mockMessagesService);
+    }]);
 
-	mockMessagingModule.run(['messagesService', (messagesService) => {
-		// É necessário injetar esse serviço para que o decorator acima seja executado corretamente.
-	}]);
+    mockMessagingModule.run(["messagesService", (messagesService) => {
+        // É necessário injetar esse serviço para que o decorator acima seja executado corretamente.
+    }]);
 }
 
 export default messagingModuleDefineFunction;

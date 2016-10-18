@@ -5,4 +5,4 @@ services:
     container_name: gateway
     image: svendowideit/ambassador
     environment:
-     - GATEWAY_PORT_8765_TCP=tcp://${AMBASSADOR_HOST}:8765
+     - GATEWAY_PORT_8765_TCP=tcp://${HOST_ADDRESS}:8765
