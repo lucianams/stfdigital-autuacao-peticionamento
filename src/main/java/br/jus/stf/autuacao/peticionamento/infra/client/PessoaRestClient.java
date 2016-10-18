@@ -16,7 +16,7 @@ import br.jus.stf.core.shared.identidade.PessoaId;
  * @since 1.0.0
  * @since 29.06.2016
  */
-@FeignClient(name = "userauthentication")
+@FeignClient(name = "identidades")
 @FunctionalInterface
 public interface PessoaRestClient {
 

@@ -31,10 +31,10 @@ services:
       service: ui
     depends_on:
      - gateway
-  userauthentication:
+  identidades:
     extends:
       file: shared/compose/common.yml
-      service: userauthentication
+      service: identidades
     depends_on:
      - rabbit
      - discovery

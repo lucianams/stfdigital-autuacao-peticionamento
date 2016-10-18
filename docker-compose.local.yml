@@ -35,11 +35,11 @@ services:
     image: stfdigital-plataforma-ui
     depends_on:
      - gateway
-  userauthentication:
+  identidades:
     extends:
       file: shared/compose/common.yml
-      service: userauthentication
-    image: stfdigital-plataforma-userauthentication
+      service: identidades
+    image: stfdigital-plataforma-identidades
     depends_on:
      - rabbit
      - discovery
