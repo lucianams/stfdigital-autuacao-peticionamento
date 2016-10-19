@@ -93,3 +93,5 @@ namespace app.support {
 angular.module("angularFileUpload", []);
 
 angular.module("ngCookies", []);
+
+angular.module("ui.sortable", []);
