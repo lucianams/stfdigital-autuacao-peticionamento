@@ -1,0 +1,8 @@
+# Define a configuração para rodar esse contexto construído localmente
+version: '2'
+services:
+  identidades: # Ambassador apontando para o identidades rodando localmente
+    container_name: identidades
+    image: svendowideit/ambassador
+    environment:
+     - IDENTIDADES_PORT_8095_TCP=tcp://${HOST_ADDRESS}:8095
