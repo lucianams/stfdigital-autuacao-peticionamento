@@ -8,24 +8,20 @@ services:
     extends:
       file: shared/compose/common.yml
       service: rabbit
-    image: registry.stf.jus.br/rabbitmq:management
   discovery:
     extends:
       file: shared/compose/common.yml
       service: discovery
-    image: registry.stf.jus.br/stfdigital/plataforma-discovery
   gateway:
     extends:
       file: shared/compose/common.yml
       service: gateway
-    image: registry.stf.jus.br/stfdigital/plataforma-gateway
     depends_on:
      - discovery
-  processos:
+  services:
     extends:
       file: shared/compose/common.yml
       service: processos
-    image: registry.stf.jus.br/stfdigital/plataforma-processos
     depends_on:
      - rabbit
      - discovery
@@ -33,14 +29,12 @@ services:
     extends:
       file: shared/compose/common.yml
       service: ui
-    image: registry.stf.jus.br/stfdigital/plataforma-ui
     depends_on:
      - gateway
   identidades:
     extends:
       file: shared/compose/common.yml
       service: identidades
-    image: registry.stf.jus.br/stfdigital/plataforma-identidades
     depends_on:
      - rabbit
      - discovery
@@ -48,12 +42,10 @@ services:
     extends:
       file: shared/compose/common.yml
       service: cassandra
-    image: registry.stf.jus.br/cassandra:2.1
   documents:
     extends:
       file: shared/compose/common.yml
       service: documents
-    image: registry.stf.jus.br/stfdigital/plataforma-documents
     depends_on:
      - cassandra
      - rabbit
