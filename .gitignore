@@ -52,3 +52,6 @@ logs
 
 # WebStorm
 .idea
+
+# Certificado do registro
+stfca.pem
