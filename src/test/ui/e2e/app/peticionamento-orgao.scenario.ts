@@ -20,7 +20,7 @@ describe("Peticionamento - Órgão", () => {
     });
 
     it("Deveria escolher o órgão de representação", () => {
-        peticionamentoPage.selecionarOrgaoPeticionador("Tribunal Superior do Trabalho");
+        peticionamentoPage.selecionarOrgaoPeticionador("Superior Tribunal de Justiça");
     });
 
     it("Deveria preencher as informações básicas da petição", () => {
