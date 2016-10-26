@@ -1,0 +1,3 @@
+insert into peticionamento.associado (seq_associado, seq_pessoa, nom_pessoa, tip_associado, dsc_cargo_funcao, seq_pessoa_orgao) values (1, 18, 'Representante', 'REPRESENTANTE', 'Analista Representante', 12452261);
+insert into peticionamento.associado (seq_associado, seq_pessoa, nom_pessoa, tip_associado, dsc_cargo_funcao, seq_pessoa_orgao) values (2, 27, 'Gestor Orgao', 'GESTOR', 'Analista Gestor', 12452261);
+insert into peticionamento.associado (seq_associado, seq_pessoa, nom_pessoa, tip_associado, dsc_cargo_funcao, seq_pessoa_orgao) values (3, 41, 'Representante Tribunal', 'REPRESENTANTE', 'Analista Representante', 12452180);

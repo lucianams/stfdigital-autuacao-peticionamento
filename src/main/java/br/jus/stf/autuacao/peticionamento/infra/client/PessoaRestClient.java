@@ -20,7 +20,7 @@ import br.jus.stf.core.shared.identidade.PessoaId;
 @FunctionalInterface
 public interface PessoaRestClient {
 
-	@RequestMapping(method = RequestMethod.POST, value = "/api/pessoas/alocar")
-	Set<PessoaId> identificadores(Map<String, List<String>> nomes);
+    @RequestMapping(method = RequestMethod.POST, value = "/api/pessoas/alocacoes-id")
+    Set<PessoaId> identificadores(Map<String, List<String>> nomes);
 
 }
