@@ -37,7 +37,7 @@ export class PeticaoController {
         private properties, protected peticaoService: PeticaoService, FileUploader: any, private messagesService: app.support.messaging.MessagesService) {
 
         this.uploader = new FileUploader({
-            url: properties.url + ":" + properties.port + "/documents/api/documentos/upload/assinado",
+            url: properties.url + ":" + properties.port + "/documents/api/documentos/conteudo/assinado",
             headers : {"X-XSRF-TOKEN": $cookies.get('access_token'), "Authorization":  'Bearer ' + $cookies.get('access_token')},
             formData: [{name: "file"}],
             filters: [{
