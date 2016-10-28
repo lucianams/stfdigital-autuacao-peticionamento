@@ -127,7 +127,7 @@ export class PeticaoService {
     private static url: string = "/peticionamento/api/classes";
     
     //Endereço do serviço para salvar um documento temporário.
-    private static urlExcluiDocTemporario: string = "/documents/api/documentos/temporarios/delete";
+    private static urlExcluiDocTemporario: string = "/documents/api/documentos/conteudo/exclusao";
 
     /** @ngInject **/
     constructor(private $http: IHttpService, private properties: app.support.constants.Properties, private commandService: cmd.CommandService) {
