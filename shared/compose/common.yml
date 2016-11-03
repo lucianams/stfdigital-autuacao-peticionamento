@@ -16,6 +16,12 @@ services:
     image: cassandra:2.1
     ports:
      - "9042:9042"
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:2.3
+    ports:
+     - "9201:9200"
+     - "9300:9300"
   onlyoffice_ambassador: # Ambassador apontando para um servidor onlyoffice corporativo
     container_name: onlyoffice
     image: svendowideit/ambassador
