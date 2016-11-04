@@ -21,12 +21,18 @@ services:
     image: registry.stf.jus.br/stfdigital/plataforma-gateway
     depends_on:
      - discovery
+  elasticsearch:
+    extends:
+      file: shared/compose/common.yml
+      service: elasticsearch
+    image: registry.stf.jus.br/elasticsearch:2.3
   processos:
     extends:
       file: shared/compose/common.yml
       service: processos
     image: registry.stf.jus.br/stfdigital/plataforma-processos
     depends_on:
+     - elasticsearch
      - rabbit
      - discovery
   ui:
