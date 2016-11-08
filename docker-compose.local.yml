@@ -20,12 +20,17 @@ services:
     image: stfdigital-plataforma-gateway
     depends_on:
      - discovery
+  elasticsearch:
+    extends:
+      file: shared/compose/common.yml
+      service: elasticsearch
   processos:
     extends:
       file: shared/compose/common.yml
       service: processos
     image: stfdigital-plataforma-processos
     depends_on:
+     - elasticsearch
      - rabbit
      - discovery
   ui:

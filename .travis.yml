@@ -22,6 +22,10 @@ cache:
 before_install:
 - ./shared/scripts/upgrade-docker.sh
 - mkdir -p $HOME/docker_cache
+- export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+- echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+- export PUSH_TAG=$(if [ "$BRANCH" == "master" ]; then echo "latest"; else echo $BRANCH; fi)
+- echo "PUSH_TAG=$PUSH_TAG"
 install: docker load -i $HOME/docker_cache/docker.tar || true
 script: gradle docker --refresh-dependencies && gradle gulpTestUnit && ./shared/scripts/test-e2e.sh .dh
 after_failure: docker logs peticionamento
@@ -29,8 +33,8 @@ after_success:
 - gradle gulpPublishUnitCoverage
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 - export REPO=supremotribunalfederal/stfdigital-autuacao-peticionamento
-- docker tag stfdigital-autuacao-peticionamento $REPO:latest
-- docker push $REPO:latest
+- docker tag stfdigital-autuacao-peticionamento $REPO:$PUSH_TAG
+- if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push $REPO:$PUSH_TAG; fi
 notifications:
   slack:
     secure: J+SnEKgkdotNZyd/U57nEylQPHPMo4gaaCfbkTXmI4VESsZybWox267g+BJxzzgF0111g3/qk5GtC+a5/V5Na/YVkTugpxZ8jWH6VIcqR5q9IOzfZoM+WHcJmxdB0x5g9QtLG759xBt91BghrVdsc0TV4VUhxWYndJiKNEdDfH2U9PhkurkOKMD73fDSsPLQTxreeB/mcuGxQhD1YQhiuPIZFKqIEQKu3golavqkvAb8LBaIkELKzQTH84JUuOajFY0p88sBa1OzY2AFkeb7yWKokp9zy342G/YaKxPXHyXI0E64D1a0IZoWhmjYo/harVpCM520fo8CetCkt0eGsQrk5RQ1qaJn5jvehLDfBnvRn22vxFABwxwLiHIBkhhZP0Cm/ZwAbyUv/PVZQi/j6/LmEPnROU7IBcWm1FfWhBkY0iNgAMU0QS169JLB0qvPZBSKjR7bw+SdiyRZwfPFIkEwS3uj4SFNPNjxSXkBR5yI89PeQ4cR+0H01FyU1hh0FQM1e8EYW50JIpIxYof47DSmwZdmrXnr9M/C4FGLUpXttsPe4ogaNmOFmwXlxrHPil+B9AJKF8Q5lHOGUkWqelFLHzx2N9kM9C01VLmYD/WcM/kWSVvNnCVF+pN4w22ehyD/xuChBYM/YhqZp3nnf816nvR1Bc/KQ8RBlBlbenw=

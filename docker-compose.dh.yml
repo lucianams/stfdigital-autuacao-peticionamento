@@ -18,11 +18,16 @@ services:
       service: gateway
     depends_on:
      - discovery
+  elasticsearch:
+    extends:
+      file: shared/compose/common.yml
+      service: elasticsearch
   processos:
     extends:
       file: shared/compose/common.yml
       service: processos
     depends_on:
+     - elasticsearch
      - rabbit
      - discovery
   ui:
